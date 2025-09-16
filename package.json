@@ -1,0 +1,57 @@
+{
+  "name": "git-training-cli",
+  "version": "1.0.0",
+  "description": "An interactive CLI application for learning Git and GitHub fundamentals",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "git-trainer": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test test/**/*.test.js",
+    "lint": "eslint src/**/*.js",
+    "build": "npm run test && npm run lint",
+    "install-global": "npm install -g .",
+    "clean": "rm -rf node_modules package-lock.json"
+  },
+  "keywords": [
+    "git",
+    "cli",
+    "training",
+    "education",
+    "interactive",
+    "learning"
+  ],
+  "author": "CS-25-2-Team3",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "chalk": "^5.3.0",
+    "ora": "^7.0.1",
+    "figlet": "^1.7.0",
+    "gradient-string": "^2.0.2",
+    "node-emoji": "^2.1.3",
+    "boxen": "^7.1.1",
+    "cli-progress": "^3.12.0",
+    "simple-git": "^3.20.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-node": "^11.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/code-differently/cs-25-2-team3.git"
+  },
+  "bugs": {
+    "url": "https://github.com/code-differently/cs-25-2-team3/issues"
+  },
+  "homepage": "https://github.com/code-differently/cs-25-2-team3#readme"
+}
