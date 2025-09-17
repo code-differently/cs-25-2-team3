@@ -1,0 +1,21 @@
+{
+  "commands": [
+    {
+      "name": "",
+      "alias": [],
+      "description": "",
+      "usage": "",
+      "className": ""
+    }
+  ],
+  "commandGroups": [
+    {
+      "name": "General",
+      "commands": []
+    },
+    {
+      "name": "Utility",
+      "commands": []
+    }
+  ]
+}
