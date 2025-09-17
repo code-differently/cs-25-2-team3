@@ -1,0 +1,24 @@
+{
+  "application": {
+    "name": "",
+    "version": "1.0.0",
+    "description": "",
+    "author": ""
+  },
+  "cli": {
+    "prompt": "> ",
+    "exitCommands": ["exit", "quit", "q"],
+    "helpCommands": ["help", "h", "?"]
+  },
+  "features": {
+    "colorOutput": true,
+    "autoComplete": false,
+    "history": true,
+    "logLevel": "INFO"
+  },
+  "storage": {
+    "dataDirectory": "./data",
+    "configFile": "user-config.json",
+    "logFile": "app.log"
+  }
+}

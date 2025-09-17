@@ -1,0 +1,18 @@
+{
+  "user": {
+    "name": "",
+    "preferences": {
+      "theme": "default",
+      "colorScheme": "auto"
+    }
+  },
+  "session": {
+    "lastLogin": "",
+    "totalSessions": 0,
+    "settings": {}
+  },
+  "history": {
+    "maxEntries": 100,
+    "commands": []
+  }
+}
