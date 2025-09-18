@@ -15,8 +15,8 @@ public class QuestCreationTest {
     void testQuestCreation_ShouldAssignFieldsCorrectly() {
         // Arrange: Set up quest data
         String questName = "Learn Java";
-        int difficulty = 3;
-        boolean completed = false;
+        String difficulty = "***"; 
+        boolean completed = true;
         List<String> modules = Arrays.asList("Variables", "Loops", "Methods");
 
         // Act: Create a new Quest
