@@ -3,12 +3,70 @@
  */
 package org.example;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import org.junit.jupiter.api.Test;
+
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+
+    @Test
+    void test_getStringInput_isValid() {
+        String simulatedInput = "John\n";
+        InputStream originalIn = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        try {
+            App classUnderTest = new App();
+            String result = classUnderTest.getStringInput("Enter your name: ");
+            assertEquals("John", result);
+        } finally {
+            System.setIn(originalIn);
+        }
+    }
+
+    @Test
+    void test_getStringInput_isEmpty() {
+        String simulatedInput = "\n";
+        InputStream originalIn = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        try {
+            App classUnderTest = new App();
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                classUnderTest.getStringInput("Enter your name: ");
+            });
+            assertEquals("Input cannot be empty.", exception.getMessage());
+        } finally {
+            System.setIn(originalIn);
+        }
+    }
+
+    @Test
+    void test_getIntInput_isValid() {
+        String simulatedInput = "25\n";
+        InputStream originalIn = System.in; // Save original System.in
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        try {     
+            App classUnderTest = new App();
+            int result = classUnderTest.getIntInput("Enter your age: ");
+            assertEquals(25, result);
+        } finally {
+            System.setIn(originalIn); // Restore original System.in
+        }
+    }
+
+    @Test
+    void test_getIntInput_isInvalidThenValid() {
+        String simulatedInput = "abc\n30\n";
+        InputStream originalIn = System.in; // Save original System.in
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        try {
+            App classUnderTest = new App();
+            int result = classUnderTest.getIntInput("Enter your age: ");
+            assertEquals(30, result);
+        } finally {
+            System.setIn(originalIn); // Restore original System.in
+        }
     }
 }

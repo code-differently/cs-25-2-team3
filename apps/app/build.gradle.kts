@@ -20,6 +20,7 @@ dependencies {
     testImplementation(libs.junit.jupiter)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 
     // This dependency is used by the application.
     implementation(libs.guava)
@@ -35,6 +36,10 @@ java {
 application {
     // Define the main class for the application.
     mainClass = "org.example.App"
+}
+
+tasks.getByName("run", JavaExec::class) {
+ standardInput = System.`in`
 }
 
 tasks.named<Test>("test") {

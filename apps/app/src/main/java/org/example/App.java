@@ -3,12 +3,42 @@
  */
 package org.example;
 
+import java.util.Scanner;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+    private Scanner scanner = new Scanner(System.in);
+
+    public String getStringInput(String prompt) {
+        System.out.println(prompt);
+        String input = scanner.nextLine();
+        if (input == null || input.trim().isEmpty()) {
+            throw new IllegalArgumentException("Input cannot be empty.");
+        }
+        return input;
+    }
+
+    public int getIntInput(String prompt) {
+        System.out.println(prompt);
+        while (!scanner.hasNextInt()) {
+            System.out.println("Invalid input. Please enter a valid integer.");
+            scanner.next(); // discard invalid input
+            System.out.println(prompt);
+        }
+        int value = scanner.nextInt();
+        scanner.nextLine(); // consume the leftover newline
+        return value;
+    }
+
+    public void run() {
+        String name = getStringInput("Enter your name: ");
+        int age = getIntInput("Enter your age: ");
+        System.out.println("Hello " + name + ", you are " + age + " years old.");
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        System.out.println("Starting application...");
+
+        App app = new App();
+        app.run();
     }
 }
