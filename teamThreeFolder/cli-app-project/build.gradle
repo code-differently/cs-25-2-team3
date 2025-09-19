@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.commons:commons-cli:1.5.0'
+    implementation 'commons-cli:commons-cli:1.5.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
@@ -24,6 +24,10 @@ application {
 tasks.named('test') {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+}
+
+run {
+    standardInput = System.in
 }
 
 jacocoTestReport {
