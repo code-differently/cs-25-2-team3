@@ -1,8 +1,9 @@
 package com.cliapp.commands;
 
-import com.cliapp.io.Console;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import com.cliapp.io.Console;
 
 /**
  * Command to display help information about available commands.
