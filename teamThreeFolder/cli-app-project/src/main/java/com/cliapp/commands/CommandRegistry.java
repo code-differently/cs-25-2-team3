@@ -1,39 +1,50 @@
 package com.cliapp.commands;
 
+import com.cliapp.io.Console;
 import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Registry for managing CLI commands
+ * Registry for managing available commands.
  */
 public class CommandRegistry {
     
-    private Map<String, Command> commands;
-    private Map<String, String> aliases;
+    private final Map<String, Command> commands;
+    private final Console console;
     
-    public CommandRegistry() {
-        // Initialize command registry
+    public CommandRegistry(Console console) {
+        this.console = console;
+        this.commands = new HashMap<>();
+        registerDefaultCommands();
     }
     
-    public void registerCommand(Command command) {
-        // Register a new command
+    private void registerDefaultCommands() {
+        register("help", new HelpCommand(console));
+        register("exit", new ExitCommand(console));
+        
+        // For now, register basic commands - can be enhanced later
+        // These would need proper service injection in a full implementation
     }
     
-    public void registerAlias(String alias, String commandName) {
-        // Register command alias
+    public void register(String name, Command command) {
+        commands.put(name.toLowerCase(), command);
+        
+        // If registering with HelpCommand, add to its registry too
+        if (commands.containsKey("help") && commands.get("help") instanceof HelpCommand) {
+            HelpCommand helpCommand = (HelpCommand) commands.get("help");
+            helpCommand.registerCommand(name, command);
+        }
     }
     
     public Command getCommand(String name) {
-        // Get command by name or alias
-        return null;
-    }
-    
-    public void listCommands() {
-        // List all available commands
+        return commands.get(name.toLowerCase());
     }
     
     public boolean hasCommand(String name) {
-        // Check if command exists
-        return false;
+        return commands.containsKey(name.toLowerCase());
+    }
+    
+    public Map<String, Command> getAllCommands() {
+        return new HashMap<>(commands);
     }
 }

@@ -1,19 +1,23 @@
 package com.cliapp.commands;
 
+import com.cliapp.io.Console;
+
 /**
- * Exit command implementation
+ * Command to exit the application gracefully.
  */
 public class ExitCommand implements Command {
     
-    private CLIApplication app;
+    private final Console console;
     
-    public ExitCommand(CLIApplication app) {
-        // Initialize exit command
+    public ExitCommand(Console console) {
+        this.console = console;
     }
     
     @Override
     public void execute(String[] args) {
-        // Execute exit command
+        console.println("Thank you for using the CLI Learning Application!");
+        console.println("Goodbye!");
+        System.exit(0);
     }
     
     @Override
@@ -23,16 +27,16 @@ public class ExitCommand implements Command {
     
     @Override
     public String getDescription() {
-        return "";
+        return "Exit the application";
     }
     
     @Override
     public String getUsage() {
-        return "";
+        return "exit";
     }
     
     @Override
     public boolean validateArgs(String[] args) {
-        return true;
+        return true; // No arguments required
     }
 }

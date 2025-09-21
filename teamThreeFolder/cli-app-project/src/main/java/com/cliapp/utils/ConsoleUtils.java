@@ -1,45 +1,62 @@
 package com.cliapp.utils;
 
+import com.cliapp.io.Console;
+
 /**
- * Console utility for colored output and formatting
+ * Utility class for console operations.
  */
 public class ConsoleUtils {
     
-    // ANSI Color Constants
-    public static final String RESET = "\033[0m";
-    public static final String BOLD = "\033[1m";
-    public static final String RED = "\033[31m";
-    public static final String GREEN = "\033[32m";
-    public static final String YELLOW = "\033[33m";
-    public static final String BLUE = "\033[34m";
-    public static final String CYAN = "\033[36m";
-    
-    public static void printSuccess(String message) {
-        // Print success message in green
+    /**
+     * Display a formatted header.
+     */
+    public static void displayHeader(Console console, String title) {
+        console.println("");
+        console.println("=".repeat(title.length() + 4));
+        console.println("  " + title + "  ");
+        console.println("=".repeat(title.length() + 4));
+        console.println("");
     }
     
-    public static void printError(String message) {
-        // Print error message in red
+    /**
+     * Display a separator line.
+     */
+    public static void displaySeparator(Console console) {
+        console.println("-".repeat(50));
     }
     
-    public static void printWarning(String message) {
-        // Print warning message in yellow
+    /**
+     * Display a formatted message with padding.
+     */
+    public static void displayFormattedMessage(Console console, String message) {
+        console.println("");
+        console.println("  " + message);
+        console.println("");
     }
     
-    public static void printInfo(String message) {
-        // Print info message in blue
+    /**
+     * Prompt user for input with a message.
+     */
+    public static String promptForInput(Console console, String prompt) {
+        console.print(prompt + ": ");
+        return console.readLine();
     }
     
-    public static void clearScreen() {
-        // Clear console screen
+    /**
+     * Display an error message.
+     */
+    public static void displayError(Console console, String error) {
+        console.println("");
+        console.println("ERROR: " + error);
+        console.println("");
     }
     
-    public static void printSeparator() {
-        // Print separator line
-    }
-    
-    public static String formatTable(String[][] data) {
-        // Format data as table
-        return "";
+    /**
+     * Display a success message.
+     */
+    public static void displaySuccess(Console console, String message) {
+        console.println("");
+        console.println("SUCCESS: " + message);
+        console.println("");
     }
 }

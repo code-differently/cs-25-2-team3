@@ -1,18 +1,19 @@
 {
-  "user": {
-    "name": "",
-    "preferences": {
-      "theme": "default",
-      "colorScheme": "auto"
-    }
+  "defaultSettings": {
+    "autoSave": true,
+    "showHints": true,
+    "difficulty": "normal",
+    "soundEnabled": false
   },
-  "session": {
-    "lastLogin": "",
-    "totalSessions": 0,
-    "settings": {}
+  "preferences": {
+    "colorScheme": "default",
+    "fontSize": "medium",
+    "animationSpeed": "normal"
   },
-  "history": {
-    "maxEntries": 100,
-    "commands": []
+  "progress": {
+    "currentQuest": null,
+    "totalScore": 0,
+    "badgesEarned": [],
+    "lastPlayTime": null
   }
 }

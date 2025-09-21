@@ -1,21 +1,28 @@
 {
-  "commands": [
-    {
-      "name": "",
-      "alias": [],
-      "description": "",
-      "usage": "",
-      "className": ""
-    }
-  ],
-  "commandGroups": [
-    {
-      "name": "General",
-      "commands": []
+  "commands": {
+    "help": {
+      "class": "com.cliapp.commands.HelpCommand",
+      "description": "Show available commands"
     },
-    {
-      "name": "Utility",
-      "commands": []
+    "quest": {
+      "class": "com.cliapp.commands.QuestCommand", 
+      "description": "Start or continue a quest"
+    },
+    "glossary": {
+      "class": "com.cliapp.commands.GlossaryCommand",
+      "description": "View glossary entries"
+    },
+    "badge": {
+      "class": "com.cliapp.commands.BadgeCommand",
+      "description": "View earned badges"
+    },
+    "continue": {
+      "class": "com.cliapp.commands.ContinueCommand",
+      "description": "Continue saved progress"
+    },
+    "exit": {
+      "class": "com.cliapp.commands.ExitCommand",
+      "description": "Exit the application"
     }
-  ]
+  }
 }
