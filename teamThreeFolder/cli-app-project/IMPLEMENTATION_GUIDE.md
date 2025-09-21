@@ -1,117 +1,177 @@
-# Implementation Guide for User Story 1 - Quest Feature
+# CLI Application Implementation Guide
 
 ## Overview
-This guide is for your project partner to implement the Quest feature that shows a long list of learning modules with difficulty levels (asterisks) and completion status (Y/N) when the user selects "quest" from the CLI menu.
+This CLI Learning Application provides an interactive quest-based learning experience with glossary management and badge system.
 
-## Classes Created (Skeleton Only - Need Implementation)
+## Quick Start
 
-### 1. Quest.java (Domain Object)
-**Location:** `src/main/java/com/cliapp/domain/Quest.java`
+### Prerequisites
+- Java 11 or higher
+- No additional dependencies required (all included in Gradle)
 
-**Key methods to implement:**
-- `getDifficultyAsAsterisks()` - Return "*", "***", or "*****" based on difficulty level
-- `getCompletionStatus()` - Return "Y" if completed, "N" if not
-- `addLearningModule(String module)` - Add a learning module to the quest
-- `removeLearningModule(String module)` - Remove a learning module from the quest
+### Running the Application
 
-### 2. QuestCollection.java (Custom Data Structure)
-**Location:** `src/main/java/com/cliapp/collections/QuestCollection.java`
+1. **Build and Run**:
+   ```bash
+   ./gradlew run
+   ```
 
-**Key methods to implement:**
-- `add(Quest quest)` - Add quest to both list and index map
-- `remove(Quest quest)` - Remove quest from both collections
-- `update(String id, Quest quest)` - Update existing quest
-- `getById(String id)` - Get quest by ID from index map
-- `getAllQuests()` - Return copy of all quests
-- `getQuestsByDifficulty(int level)` - Filter quests by difficulty
-- `getQuestsByCompletionStatus(boolean completed)` - Filter by completion
-- `size()` and `isEmpty()` - Collection utility methods
-- `iterator()` - Make collection iterable
+2. **For Windows**:
+   ```bash
+   gradlew.bat run
+   ```
 
-### 3. QuestListCommand.java (CLI Command)
-**Location:** `src/main/java/com/cliapp/commands/QuestListCommand.java`
+3. **Run Tests**:
+   ```bash
+   ./gradlew test
+   ```
 
-**Key methods to implement:**
-- `execute(String[] args)` - Main command execution
-- `displayQuestList()` - Format and display all quests
-- `formatQuestDisplay(Quest quest)` - Format individual quest display
-
-### 4. QuestService.java (Business Logic)
-**Location:** `src/main/java/com/cliapp/services/QuestService.java`
-
-**Key methods to implement:**
-- `initializeDefaultQuests()` - Create sample quests with learning modules
-- `getAllQuests()` - Get all quests from collection
-- `getQuestById(String id)` - Get specific quest
-- `markQuestAsCompleted(String questId)` - Mark quest as done
-- Various filtering methods
-
-## Test Implementation
-
-### Unit Tests (QuestTest.java)
-**Location:** `src/test/java/com/cliapp/domain/QuestTest.java`
-
-Follow the README guidance with AAVE/Philly vernacular for:
-1. Quest creation tests
-2. Difficulty asterisk display tests  
-3. Completion status Y/N tests
-4. Learning modules management tests
-5. Edge case tests (null values, empty lists)
-
-### Integration Test (QuestListUserStoryTest.java)
-**Location:** `src/test/java/com/cliapp/integration/QuestListUserStoryTest.java`
-
-Test the complete user story flow - when user selects "quest", they see the formatted list.
-
-## Expected CLI Output Format
-
-When user types "quest", they should see something like:
+## Project Structure
 
 ```
-Available Learning Quests:
-========================
+src/main/java/com/cliapp/
+├── CLIApplication.java          # Main application entry point
+├── commands/                    # Command pattern implementations
+│   ├── Command.java            # Base command interface
+│   ├── QuestListCommand.java   # Quest selection and execution
+│   ├── GlossaryCommand.java    # Glossary display
+│   ├── BadgeCommand.java       # Badge management
+│   ├── ContinueCommand.java    # Save/load functionality
+│   ├── HelpCommand.java        # Help system
+│   ├── ExitCommand.java        # Application exit
+│   └── CommandRegistry.java    # Command management
+├── services/                   # Business logic services
+│   ├── QuestGameService.java   # Interactive quest engine
+│   ├── GlossaryService.java    # Glossary management
+│   └── BadgeService.java       # Badge system
+├── domain/                     # Domain models
+│   ├── Quest.java              # Quest data structure
+│   ├── Question.java           # Question for interactive quests
+│   ├── GlossaryEntry.java      # Glossary definitions
+│   └── Badge.java              # Achievement system
+├── io/                         # I/O abstractions
+│   ├── Console.java            # Console interface
+│   ├── SystemConsole.java      # Production console
+│   └── TestConsole.java        # Testing console
+├── collections/                # Data collections
+├── utils/                      # Utility classes
+└── exceptions/                 # Custom exceptions
 
-1. Web Development Intro [*] - Y
-   - Learn HTML basics and structure
-   - Understand CSS styling and layouts  
-   - Master JavaScript fundamentals
+src/main/resources/
+├── Quest.json                  # Quest and question data
+└── glossary.json              # Glossary definitions
 
-2. Java Programming [***] - N
-   - Understand Java syntax and variables
-   - Learn object-oriented programming concepts
-   - Master collections and data structures
-   - Handle exceptions properly
-
-3. Full Stack Mastery [*****] - N  
-   - Build React frontend applications
-   - Create Node.js backend services
-   - Design and implement databases
-   - Develop REST APIs
-   - Deploy applications to production
+config/
+├── app-config.json            # Application configuration
+├── data-config.json           # Data file paths
+├── commands.json              # Command registry
+└── user-config.json           # User preferences
 ```
 
-## Implementation Priority
+## Key Features
 
-1. **Start with Quest.java** - Implement the TODO methods first
-2. **Write unit tests** - Follow the README guidance with AAVE style
-3. **Implement QuestCollection** - Custom data structure with add/remove/update
-4. **Create QuestService** - Initialize default quests for testing
-5. **Implement QuestListCommand** - Display logic for CLI
-6. **Test integration** - Make sure everything works together
+### Interactive Quest System
+- Multiple choice questions with immediate feedback
+- Retry mechanism for incorrect answers
+- Point-based scoring system
+- Progress tracking
 
-## Key Requirements
+### Commands Available
+- `quest` - Start interactive quest selection
+- `glossary` - View Git command glossary
+- `badge` - View earned achievements
+- `continue` - Resume saved progress
+- `help` - Display available commands
+- `exit` - Exit application
 
-- Learning modules are strings explaining what to learn
-- Difficulty shown as asterisks: * (easy), *** (medium), ***** (hard)  
-- Completion status as Y (completed) or N (not completed)
-- Quest list should be a "long list" showing all the information
-- Must work when user selects "quest" option from CLI menu
+### Architecture Highlights
+- **Command Pattern**: Modular command system
+- **Strategy Pattern**: Pluggable I/O for testing
+- **Service Layer**: Separated business logic
+- **JSON Data**: External configuration and content
 
-## Testing Notes
+## Configuration
 
-- Follow the AAVE/Philly vernacular style in test comments as shown in README
-- Test edge cases (empty collections, null values)
-- Ensure 90% code coverage as required by project
-- Write integration test that demonstrates complete user story
+The application uses JSON configuration files in the `config/` directory:
 
-Good luck! Keep it real and make sure that jawn works properly! 💪
+- **app-config.json**: Core application settings
+- **data-config.json**: Data file locations
+- **commands.json**: Available commands
+- **user-config.json**: User preferences and progress
+
+## Testing
+
+### Running Tests
+```bash
+./gradlew test
+```
+
+### Test Coverage
+```bash
+./gradlew jacocoTestReport
+```
+
+### Test Categories
+- **Unit Tests**: Individual component testing
+- **Integration Tests**: Service interaction testing
+- **E2E Tests**: Complete user story testing
+- **TDD Tests**: Test-driven development examples
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"Main class not found"**
+   - Ensure `CLIApplication.java` exists in `src/main/java/com/cliapp/`
+   - Check that `mainClass` in `build.gradle` is correct
+
+2. **"Resource files not found"**
+   - Verify `Quest.json` and `glossary.json` exist in `src/main/resources/`
+   - Check file paths in configuration
+
+3. **"Console input not working"**
+   - Ensure you're using `./gradlew run` (not just `java -jar`)
+   - The `build.gradle` includes `standardInput = System.in` for interactive mode
+
+4. **"Tests failing"**
+   - Run `./gradlew clean test` to rebuild
+   - Check that test resources are properly configured
+
+### Build Issues
+```bash
+# Clean and rebuild
+./gradlew clean build
+
+# Force dependency refresh
+./gradlew --refresh-dependencies clean build
+```
+
+## Development Notes
+
+### Adding New Commands
+1. Implement the `Command` interface
+2. Add to `CommandRegistry`
+3. Update `commands.json` configuration
+4. Write corresponding tests
+
+### Modifying Quest Content
+- Edit `src/main/resources/Quest.json` for questions and content
+- Edit `src/main/resources/glossary.json` for glossary entries
+- Restart application to reload changes
+
+### Interactive Features
+The application supports interactive input through the Console abstraction:
+- `SystemConsole` for production use
+- `TestConsole` for automated testing
+- All interactive features are testable
+
+## Contributing
+
+1. Follow existing code patterns
+2. Write tests for new features
+3. Update configuration files as needed
+4. Document new functionality
+
+## Contact
+
+For questions about this implementation, refer to the test files for usage examples or check the service classes for business logic details.
