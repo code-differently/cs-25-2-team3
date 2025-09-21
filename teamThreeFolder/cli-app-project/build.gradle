@@ -1,6 +1,7 @@
 plugins {
     id 'application'
     id 'jacoco'
+    id 'com.diffplug.spotless' version '6.22.0'
 }
 
 repositories {
@@ -8,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.commons:commons-cli:1.5.0'
+    implementation 'commons-cli:commons-cli:1.5.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
@@ -19,6 +20,17 @@ dependencies {
 
 application {
     mainClass = 'com.cliapp.CLIApplication'
+}
+
+// Enable interactive input for the run task
+run {
+    standardInput = System.in
+    enableAssertions = true
+    jvmArgs = ['-Djava.awt.headless=true', '-Dfile.encoding=UTF-8']
+    args = []
+    
+    // Ensure proper console handling
+    systemProperties System.getProperties()
 }
 
 tasks.named('test') {
@@ -50,4 +62,24 @@ jacocoTestCoverageVerification {
             }
         }
     }
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat('1.17.0').aosp()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+// Custom task for interactive CLI testing
+task runInteractive(type: JavaExec) {
+    group = 'application'
+    description = 'Run the CLI application interactively'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.cliapp.CLIApplication'
+    standardInput = System.in
+    jvmArgs = ['-Djava.awt.headless=true', '-Dfile.encoding=UTF-8']
 }
