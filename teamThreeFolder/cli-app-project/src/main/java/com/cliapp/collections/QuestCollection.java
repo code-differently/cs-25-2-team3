@@ -1,103 +1,121 @@
 package com.cliapp.collections;
 
+import com.cliapp.domain.Quest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.cliapp.domain.Quest;
-
 /**
- * Custom data structure for managing quests
- * Requirement: Custom data structure with add, remove, update operations
- * SOLID: Single Responsibility - manages only quests
+ * Custom data structure for managing quests Requirement: Custom data structure with add, remove,
+ * update operations SOLID: Single Responsibility - manages only quests
  */
 public class QuestCollection implements Iterable<Quest> {
-    
+
     private List<Quest> quests;
     private Map<String, Quest> questIndex;
-    
+
     public QuestCollection() {
         this.quests = new ArrayList<>();
         this.questIndex = new HashMap<>();
     }
-    
-    /**
-     * Add a quest to the collection
-     */
+
+    /** Add a quest to the collection */
     public boolean add(Quest quest) {
-        // TODO: Implement - add quest to both list and index map
-        return false;
+        if (quest == null || quest.getId() == null) {
+            return false;
+        }
+
+        // Check if quest already exists
+        if (questIndex.containsKey(quest.getId())) {
+            return false;
+        }
+
+        quests.add(quest);
+        questIndex.put(quest.getId(), quest);
+        return true;
     }
-    
-    /**
-     * Remove a quest from the collection
-     */
+
+    /** Remove a quest from the collection */
     public boolean remove(Quest quest) {
-        // TODO: Implement - remove from both list and index map
-        return false;
+        if (quest == null || quest.getId() == null) {
+            return false;
+        }
+
+        boolean removedFromList = quests.remove(quest);
+        Quest removedFromIndex = questIndex.remove(quest.getId());
+
+        return removedFromList && removedFromIndex != null;
     }
-    
-    /**
-     * Update a quest in the collection
-     */
+
+    /** Update a quest in the collection */
     public boolean update(String id, Quest quest) {
-        // TODO: Implement - update quest in collection
-        return false;
+        if (id == null || quest == null) {
+            return false;
+        }
+
+        Quest existingQuest = questIndex.get(id);
+        if (existingQuest == null) {
+            return false;
+        }
+
+        // Remove old quest
+        quests.remove(existingQuest);
+        questIndex.remove(id);
+
+        // Add updated quest
+        quest.setId(id); // Ensure ID matches
+        quests.add(quest);
+        questIndex.put(id, quest);
+
+        return true;
     }
-    
-    /**
-     * Get quest by ID
-     */
+
+    /** Get quest by ID */
     public Quest getById(String id) {
-        // TODO: Implement - return quest from index map
-        return null;
+        return questIndex.get(id);
     }
-    
-    /**
-     * Get all quests
-     */
+
+    /** Get all quests */
     public List<Quest> getAllQuests() {
-        // TODO: Implement - return copy of quests list
-        return null;
+        return new ArrayList<>(quests);
     }
-    
-    /**
-     * Get quests by completion status
-     */
+
+    /** Get quests by completion status */
     public List<Quest> getQuestsByCompletionStatus(boolean completed) {
-        // TODO: Implement - filter quests by completion status
-        return null;
+        List<Quest> filteredQuests = new ArrayList<>();
+        for (Quest quest : quests) {
+            if (quest.isCompleted() == completed) {
+                filteredQuests.add(quest);
+            }
+        }
+        return filteredQuests;
     }
-    
-    /**
-     * Get quests by difficulty level
-     */
+
+    /** Get quests by difficulty level */
     public List<Quest> getQuestsByDifficulty(int difficultyLevel) {
-        // TODO: Implement - filter quests by difficulty
-        return null;
+        List<Quest> filteredQuests = new ArrayList<>();
+        for (Quest quest : quests) {
+            if (quest.getDifficultyLevel() == difficultyLevel) {
+                filteredQuests.add(quest);
+            }
+        }
+        return filteredQuests;
     }
-    
-    /**
-     * Get the size of the collection
-     */
+
+    /** Get the size of the collection */
     public int size() {
-        // TODO: Implement - return size of quests list
-        return 0;
+        return quests.size();
     }
-    
-    /**
-     * Check if collection is empty
-     */
+
+    /** Check if collection is empty */
     public boolean isEmpty() {
-        // TODO: Implement - check if quests list is empty
-        return false;
+        return quests.isEmpty();
     }
-    
+
     @Override
     public Iterator<Quest> iterator() {
-        // TODO: Implement - return iterator for quests list
-        return null;
+        return quests.iterator();
     }
 }

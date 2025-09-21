@@ -1,0 +1,124 @@
+{
+  "glossaryEntries": [
+    {
+      "command": "git init",
+      "definition": "Initialize a new Git repository in the current directory",
+      "example": "git init my-project",
+      "category": "Repository Setup"
+    },
+    {
+      "command": "git add",
+      "definition": "Add files to the staging area to be included in the next commit",
+      "example": "git add file.txt or git add .",
+      "category": "Staging Changes"
+    },
+    {
+      "command": "git commit",
+      "definition": "Create a new commit with the changes in the staging area",
+      "example": "git commit -m \"Add new feature\"",
+      "category": "Committing Changes"
+    },
+    {
+      "command": "git status",
+      "definition": "Display the current status of the working directory and staging area",
+      "example": "git status",
+      "category": "Information"
+    },
+    {
+      "command": "git log",
+      "definition": "Display the commit history of the current branch",
+      "example": "git log --oneline",
+      "category": "Information"
+    },
+    {
+      "command": "git branch",
+      "definition": "List, create, or delete branches in the repository",
+      "example": "git branch feature-branch",
+      "category": "Branching"
+    },
+    {
+      "command": "git checkout",
+      "definition": "Switch to a different branch or commit",
+      "example": "git checkout main",
+      "category": "Branching"
+    },
+    {
+      "command": "git merge",
+      "definition": "Merge changes from one branch into the current branch",
+      "example": "git merge feature-branch",
+      "category": "Branching"
+    },
+    {
+      "command": "git push",
+      "definition": "Upload local commits to a remote repository",
+      "example": "git push origin main",
+      "category": "Remote Operations"
+    },
+    {
+      "command": "git pull",
+      "definition": "Download and integrate changes from a remote repository",
+      "example": "git pull origin main",
+      "category": "Remote Operations"
+    },
+    {
+      "command": "git clone",
+      "definition": "Create a local copy of a remote repository",
+      "example": "git clone https://github.com/user/repo.git",
+      "category": "Remote Operations"
+    },
+    {
+      "command": "git diff",
+      "definition": "Show differences between commits, branches, or working directory",
+      "example": "git diff HEAD~1",
+      "category": "Information"
+    },
+    {
+      "command": "git reset",
+      "definition": "Reset the current branch to a specific commit",
+      "example": "git reset --hard HEAD~1",
+      "category": "Undoing Changes"
+    },
+    {
+      "command": "git revert",
+      "definition": "Create a new commit that undoes changes from a previous commit",
+      "example": "git revert HEAD",
+      "category": "Undoing Changes"
+    },
+    {
+      "command": "git stash",
+      "definition": "Temporarily save changes that are not ready to be committed",
+      "example": "git stash save \"work in progress\"",
+      "category": "Temporary Storage"
+    },
+    {
+      "command": "git remote",
+      "definition": "Manage remote repository connections",
+      "example": "git remote add origin https://github.com/user/repo.git",
+      "category": "Remote Operations"
+    },
+    {
+      "command": "git tag",
+      "definition": "Create, list, or delete tags for marking specific commits",
+      "example": "git tag v1.0.0",
+      "category": "Tagging"
+    },
+    {
+      "command": "git fetch",
+      "definition": "Download objects and refs from a remote repository without merging",
+      "example": "git fetch origin",
+      "category": "Remote Operations"
+    },
+    {
+      "command": "git rebase",
+      "definition": "Reapply commits on top of another base commit",
+      "example": "git rebase main",
+      "category": "Branching"
+    },
+    {
+      "command": "git config",
+      "definition": "Set or get Git configuration options",
+      "example": "git config --global user.name \"Your Name\"",
+      "category": "Configuration"
+    }
+  ]
+}
