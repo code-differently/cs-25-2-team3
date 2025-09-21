@@ -1,16 +1,8 @@
 {
-  "database": {
-    "type": "file",
-    "connection": {
-      "filePath": "./data/app.db"
-    }
-  },
-  "api": {
-    "endpoints": [],
-    "timeout": 5000,
-    "retries": 3
-  },
-  "external": {
-    "services": []
-  }
+  "questDataPath": "src/main/resources/Quest.json",
+  "glossaryDataPath": "src/main/resources/glossary.json",
+  "saveGamePath": "saves/",
+  "backupPath": "backups/",
+  "autoSave": true,
+  "fileEncoding": "UTF-8"
 }

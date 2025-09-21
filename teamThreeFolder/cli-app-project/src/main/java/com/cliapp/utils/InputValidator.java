@@ -1,45 +1,54 @@
 package com.cliapp.utils;
 
-import java.util.List;
-import java.util.ArrayList;
-
 /**
- * Input validation and parsing utilities
+ * Utility class for input validation.
  */
 public class InputValidator {
     
-    public static boolean isValidEmail(String email) {
-        // Validate email format
-        return false;
+    /**
+     * Check if input is not null or empty.
+     */
+    public static boolean isValidInput(String input) {
+        return input != null && !input.trim().isEmpty();
     }
     
-    public static boolean isValidNumber(String input) {
-        // Check if string is a valid number
-        return false;
+    /**
+     * Check if input is a valid integer.
+     */
+    public static boolean isValidInteger(String input) {
+        if (!isValidInput(input)) {
+            return false;
+        }
+        try {
+            Integer.parseInt(input.trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
     
+    /**
+     * Check if input is within valid range.
+     */
     public static boolean isInRange(int value, int min, int max) {
-        // Check if value is in range
-        return false;
+        return value >= min && value <= max;
     }
     
-    public static String[] parseCommand(String input) {
-        // Parse command line input into arguments
-        return new String[0];
+    /**
+     * Check if input is a valid choice from available options.
+     */
+    public static boolean isValidChoice(String input, int maxOptions) {
+        if (!isValidInteger(input)) {
+            return false;
+        }
+        int choice = Integer.parseInt(input.trim());
+        return isInRange(choice, 1, maxOptions);
     }
     
-    public static boolean isEmpty(String input) {
-        // Check if string is null or empty
-        return false;
-    }
-    
+    /**
+     * Sanitize user input by trimming whitespace.
+     */
     public static String sanitizeInput(String input) {
-        // Sanitize user input
-        return "";
-    }
-    
-    public static List<String> getAvailableOptions(String[] options, String partial) {
-        // Get autocomplete suggestions
-        return new ArrayList<>();
+        return input != null ? input.trim() : "";
     }
 }

@@ -1,44 +1,53 @@
 package com.cliapp.utils;
 
-import java.io.*;
-import java.nio.file.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
- * File utility for reading/writing JSON and other files
+ * Utility class for file operations.
  */
 public class FileUtils {
     
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    
-    public static <T> T readJsonFile(String filePath, Class<T> clazz) throws IOException {
-        // Read and parse JSON file
-        return null;
-    }
-    
-    public static void writeJsonFile(String filePath, Object data) throws IOException {
-        // Write object to JSON file
-    }
-    
+    /**
+     * Check if a file exists at the given path.
+     */
     public static boolean fileExists(String filePath) {
-        // Check if file exists
-        return false;
+        return Files.exists(Paths.get(filePath));
     }
     
-    public static void createDirectories(String dirPath) throws IOException {
-        // Create directories if they don't exist
+    /**
+     * Read all content from a file as string.
+     */
+    public static String readFileAsString(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        return new String(Files.readAllBytes(path));
     }
     
-    public static String readTextFile(String filePath) throws IOException {
-        // Read entire text file
-        return "";
+    /**
+     * Write content to a file.
+     */
+    public static void writeToFile(String filePath, String content) throws IOException {
+        Path path = Paths.get(filePath);
+        Files.createDirectories(path.getParent());
+        Files.write(path, content.getBytes());
     }
     
-    public static void writeTextFile(String filePath, String content) throws IOException {
-        // Write text to file
+    /**
+     * Create directory if it doesn't exist.
+     */
+    public static void createDirectoryIfNotExists(String dirPath) throws IOException {
+        Path path = Paths.get(dirPath);
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
     }
     
-    public static void appendToFile(String filePath, String content) throws IOException {
-        // Append text to file
+    /**
+     * Get the resource path for the application.
+     */
+    public static String getResourcePath(String fileName) {
+        return "src/main/resources/" + fileName;
     }
 }
