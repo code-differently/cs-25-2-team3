@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Comprehensive End-to-End tests covering complete user journeys from application start to
  * completion of learning goals.
- 
+
 public class CompleteUserJourneyE2ETest {
 
     private TestConsole testConsole;

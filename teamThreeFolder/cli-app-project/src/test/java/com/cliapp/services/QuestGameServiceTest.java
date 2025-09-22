@@ -28,17 +28,38 @@ public class QuestGameServiceTest {
     static class MockConsole implements Console {
         private final Queue<String> inputs = new LinkedList<>();
         private final StringBuilder output = new StringBuilder();
-        public void addInput(String input) { inputs.add(input); }
-        @Override public void println(String s) { output.append(s).append("\n"); }
-        @Override public void print(String s) { output.append(s); }
-        @Override public String readLine() { return inputs.isEmpty() ? "a" : inputs.poll(); }
-        public String getOutput() { return output.toString(); }
-        @Override public void close() {}
+
+        public void addInput(String input) {
+            inputs.add(input);
+        }
+
+        @Override
+        public void println(String s) {
+            output.append(s).append("\n");
+        }
+
+        @Override
+        public void print(String s) {
+            output.append(s);
+        }
+
+        @Override
+        public String readLine() {
+            return inputs.isEmpty() ? "a" : inputs.poll();
+        }
+
+        public String getOutput() {
+            return output.toString();
+        }
+
+        @Override
+        public void close() {}
     }
 
     private MockConsole mockConsole;
 
-    private static final String TEST_QUEST_JSON = """
+    private static final String TEST_QUEST_JSON =
+            """
     {
       "questions": [
         {
@@ -158,6 +179,7 @@ public class QuestGameServiceTest {
     void testGetQuestTitle() {
         String title = questGameService.getQuestTitle();
         assertNotNull(title, "Quest title should not be null");
+
         assertTrue(title.contains("Git Quest"), "Title should contain 'Git Quest'");
     }
 
@@ -169,10 +191,18 @@ public class QuestGameServiceTest {
     }
 
     @Test
-    void testLoadQuestionsFromJsonHandlesMissingFile() {
-        // Should not throw even if file is missing
-        QuestGameService missingFileService = new QuestGameService(testConsole);
-        assertNotNull(missingFileService);
+    void testConstructorWithConsole() {
+        Console console = new MockConsole();
+        QuestGameService service = new QuestGameService(console);
+        assertNotNull(service);
+    }
+
+    @Test
+    void testLoadQuestionsFromJsonHandlesMissingFileCustom() {
+        Console console = new MockConsole();
+        // Simulate missing file by not providing a file, just check that service can be created
+        QuestGameService service = new QuestGameService(console);
+        assertNotNull(service);
     }
 
     @Test
@@ -192,10 +222,17 @@ public class QuestGameServiceTest {
     void testCalculatePointsForLevelBranches(String level) {
         double expected;
         switch (level) {
-            case "beginner": expected = 5; break;
-            case "intermediate": expected = 7.5; break;
-            case "advanced": expected = 10; break;
-            default: expected = 5;
+            case "beginner":
+                expected = 5;
+                break;
+            case "intermediate":
+                expected = 7.5;
+                break;
+            case "advanced":
+                expected = 10;
+                break;
+            default:
+                expected = 5;
         }
         assertEquals(expected, questGameService.calculatePointsForLevel(level));
     }
@@ -217,24 +254,26 @@ public class QuestGameServiceTest {
     @ParameterizedTest
     @ValueSource(strings = {"beginner", "intermediate", "advanced", "unknown", "", "null"})
     void testCalculatePointsForLevelHandlesInvalid(String level) {
-        double expected = switch (level) {
-            case "beginner" -> 5;
-            case "intermediate" -> 7.5;
-            case "advanced" -> 10;
-            default -> 5;
-        };
+        double expected =
+                switch (level) {
+                    case "beginner" -> 5;
+                    case "intermediate" -> 7.5;
+                    case "advanced" -> 10;
+                    default -> 5;
+                };
         assertEquals(expected, questGameService.calculatePointsForLevel(level));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"beginner", "intermediate", "advanced", "unknown", "", "null"})
     void testCalculatePointsForLevelHandlesNullAndEmpty(String level) {
-        double expected = switch (level) {
-            case "beginner" -> 5;
-            case "intermediate" -> 7.5;
-            case "advanced" -> 10;
-            default -> 5;
-        };
+        double expected =
+                switch (level) {
+                    case "beginner" -> 5;
+                    case "intermediate" -> 7.5;
+                    case "advanced" -> 10;
+                    default -> 5;
+                };
         assertEquals(expected, questGameService.calculatePointsForLevel(level));
         assertEquals(5, questGameService.calculatePointsForLevel(null));
     }
@@ -244,5 +283,6 @@ public class QuestGameServiceTest {
         assertThrows(NoSuchElementException.class, () -> questGameService.playQuest());
     }
 
-    // Add more tests for edge cases and error handling as needed
+    // Removed tests for private methods and duplicate/invalid overrides
+    // Only public method tests and logic remain
 }

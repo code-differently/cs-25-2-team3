@@ -1,9 +1,8 @@
 package com.cliapp.services;
 
-import com.cliapp.io.Console;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.cliapp.io.Console;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
@@ -13,8 +12,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayName("QuestGameService Additional Coverage Tests")
 class QuestGameServiceAdditionalCoverageTest {
@@ -23,7 +20,8 @@ class QuestGameServiceAdditionalCoverageTest {
     private ByteArrayOutputStream outputStream;
     private PrintStream originalOut;
 
-    private static final String TEST_QUEST_JSON = """
+    private static final String TEST_QUEST_JSON =
+            """
         {
           "questions": [
             {
@@ -63,12 +61,32 @@ class QuestGameServiceAdditionalCoverageTest {
     static class MockConsole implements Console {
         private final Queue<String> inputs = new LinkedList<>();
         private final StringBuilder output = new StringBuilder();
-        public void addInput(String input) { inputs.add(input); }
-        @Override public void println(String s) { output.append(s).append("\n"); }
-        @Override public void print(String s) { output.append(s); }
-        @Override public String readLine() { return inputs.isEmpty() ? "a" : inputs.poll(); }
-        public String getOutput() { return output.toString(); }
-        @Override public void close() {}
+
+        public void addInput(String input) {
+            inputs.add(input);
+        }
+
+        @Override
+        public void println(String s) {
+            output.append(s).append("\n");
+        }
+
+        @Override
+        public void print(String s) {
+            output.append(s);
+        }
+
+        @Override
+        public String readLine() {
+            return inputs.isEmpty() ? "a" : inputs.poll();
+        }
+
+        public String getOutput() {
+            return output.toString();
+        }
+
+        @Override
+        public void close() {}
     }
 
     private MockConsole mockConsole;

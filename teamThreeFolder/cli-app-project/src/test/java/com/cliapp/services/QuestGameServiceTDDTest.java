@@ -1,14 +1,13 @@
 package com.cliapp.services;
 
-import com.cliapp.io.Console;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.cliapp.io.Console;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +21,8 @@ public class QuestGameServiceTDDTest {
     private ByteArrayOutputStream outputCapture;
     private PrintStream originalOut;
 
-    private static final String TEST_QUEST_JSON = """
+    private static final String TEST_QUEST_JSON =
+            """
         {
           "questions": [
             {
@@ -70,12 +70,32 @@ public class QuestGameServiceTDDTest {
     static class MockConsole implements Console {
         private final Queue<String> inputs = new LinkedList<>();
         private final StringBuilder output = new StringBuilder();
-        public void addInput(String input) { inputs.add(input); }
-        @Override public void println(String s) { output.append(s).append("\n"); }
-        @Override public void print(String s) { output.append(s); }
-        @Override public String readLine() { return inputs.isEmpty() ? "a" : inputs.poll(); }
-        public String getOutput() { return output.toString(); }
-        @Override public void close() {}
+
+        public void addInput(String input) {
+            inputs.add(input);
+        }
+
+        @Override
+        public void println(String s) {
+            output.append(s).append("\n");
+        }
+
+        @Override
+        public void print(String s) {
+            output.append(s);
+        }
+
+        @Override
+        public String readLine() {
+            return inputs.isEmpty() ? "a" : inputs.poll();
+        }
+
+        public String getOutput() {
+            return output.toString();
+        }
+
+        @Override
+        public void close() {}
     }
 
     private MockConsole mockConsole;
@@ -245,8 +265,10 @@ public class QuestGameServiceTDDTest {
     @Test
     @DisplayName("Given_QuestGameService_When_PlayQuest_Then_ThrowsNoSuchElementException")
     void testPlayQuestThrowsNoSuchElementException() {
-        assertThrows(NoSuchElementException.class, () -> {
-            questGameService.playQuest();
-        });
+        assertThrows(
+                NoSuchElementException.class,
+                () -> {
+                    questGameService.playQuest();
+                });
     }
 }
