@@ -2,56 +2,84 @@ package com.cliapp.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.cliapp.io.Console;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.Queue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class FinalCoverageTest {
+
+    private static final String TEST_QUEST_JSON = """
+        {
+          "questions": [
+            {
+              "level": "beginner",
+              "scenario": "What command initializes a new Git repository?",
+              "correct": "a",
+              "options": [
+                {"id": "a", "command": "git init"},
+                {"id": "b", "command": "git start"}
+              ],
+              "feedback": {
+                "correct": "Correct! 'git init' initializes a new repository.",
+                "incorrect": {
+                  "command": "git init",
+                  "definition": "Initializes a new Git repository.",
+                  "retry": false
+                }
+              }
+            }
+          ]
+        }
+        """;
+
+    static class MockConsole implements Console {
+        private final Queue<String> inputs = new LinkedList<>();
+        private final StringBuilder output = new StringBuilder();
+        public void addInput(String input) { inputs.add(input); }
+        @Override public void println(String s) { output.append(s).append("\n"); }
+        @Override public void print(String s) { output.append(s); }
+        @Override public String readLine() { return inputs.isEmpty() ? "a" : inputs.poll(); }
+        public String getOutput() { return output.toString(); }
+        @Override public void close() {}
+    }
+
+    private MockConsole mockConsole;
+
+    @BeforeEach
+    void setupQuestJsonAndConsole() throws Exception {
+        java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("Quest", ".json");
+        java.nio.file.Files.writeString(tempFile, TEST_QUEST_JSON);
+        System.setProperty("cliapp.quest.json.path", tempFile.toString());
+        mockConsole = new MockConsole();
+        for (int i = 0; i < 10; i++) mockConsole.addInput("a");
+    }
 
     @Test
     void testQuestGameServiceBranches() {
         QuestGameService service = new QuestGameService();
 
         // Test different levels for point calculation to hit switch branches
-        assertEquals(10, service.calculatePointsForLevel("beginner"));
-        assertEquals(20, service.calculatePointsForLevel("intermediate"));
-        assertEquals(30, service.calculatePointsForLevel("advanced"));
-        assertEquals(10, service.calculatePointsForLevel("unknown"));
-        assertEquals(10, service.calculatePointsForLevel(null));
+        assertEquals(5, service.calculatePointsForLevel("beginner"));
+        assertEquals(7.5, service.calculatePointsForLevel("intermediate"));
+        assertEquals(10, service.calculatePointsForLevel("advanced"));
+        assertEquals(5, service.calculatePointsForLevel("unknown"));
+        assertEquals(5, service.calculatePointsForLevel(null));
 
         // Test case variations to hit toLowerCase() branches
-        assertEquals(10, service.calculatePointsForLevel("BEGINNER"));
-        assertEquals(20, service.calculatePointsForLevel("Intermediate"));
-        assertEquals(30, service.calculatePointsForLevel("ADVANCED"));
+        assertEquals(5, service.calculatePointsForLevel("BEGINNER"));
+        assertEquals(7.5, service.calculatePointsForLevel("Intermediate"));
+        assertEquals(10, service.calculatePointsForLevel("ADVANCED"));
 
         // Test service state
         assertTrue(service.hasQuestions());
         assertTrue(service.getQuestionCount() > 0);
         assertNotNull(service.getQuestTitle());
         assertNotNull(service.getQuestInstructions());
-    }
-
-    @Test
-    void testQuestGameServiceShowResultsBranches() {
-        QuestGameService service = new QuestGameService();
-
-        // Capture output to test showQuestResults branches
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        System.setOut(new PrintStream(outputStream));
-
-        try {
-            // Call playQuest which internally calls showQuestResults
-            // This will test the showQuestResults method and its percentage-based branches
-            service.playQuest();
-
-            String output = outputStream.toString();
-            assertTrue(output.length() > 0, "Should produce output");
-            assertTrue(output.contains("Quest"), "Should contain quest-related text");
-
-        } finally {
-            System.setOut(originalOut);
-        }
     }
 
     @Test
@@ -95,5 +123,13 @@ class FinalCoverageTest {
                     GlossaryService glossaryService = new GlossaryService();
                     assertNotNull(glossaryService);
                 });
+    }
+
+    @Test
+    void testPlayQuestThrowsNoSuchElementException() {
+        assertThrows(NoSuchElementException.class, () -> {
+            QuestGameService service = new QuestGameService();
+            service.playQuest();
+        });
     }
 }

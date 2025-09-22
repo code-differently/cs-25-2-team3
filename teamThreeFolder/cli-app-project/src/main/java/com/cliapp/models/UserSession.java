@@ -1,6 +1,5 @@
 package com.cliapp.models;
 
-import com.cliapp.domain.Badge;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +14,7 @@ public class UserSession {
     private int totalCommands;
     private boolean isActive;
     private String currentQuestId;
-    private int totalPoints;
-    private List<Badge> earnedBadges;
+    private double totalPoints;
     private List<String> completedQuests;
 
     public UserSession() {
@@ -24,7 +22,6 @@ public class UserSession {
         this.startTime = LocalDateTime.now();
         this.lastActivity = LocalDateTime.now();
         this.isActive = true;
-        this.earnedBadges = new ArrayList<>();
         this.completedQuests = new ArrayList<>();
         this.totalPoints = 0;
     }
@@ -102,22 +99,17 @@ public class UserSession {
         this.currentQuestId = currentQuestId;
     }
 
-    public int getTotalPoints() {
+    public double getTotalPoints() {
         return totalPoints;
     }
 
-    public void setTotalPoints(int totalPoints) {
+    public void setTotalPoints(double totalPoints) {
         this.totalPoints = totalPoints;
     }
 
-    public List<Badge> getEarnedBadges() {
-        return new ArrayList<>(earnedBadges);
-    }
-
-    public void addBadge(Badge badge) {
-        if (badge != null) {
-            this.earnedBadges.add(badge);
-            this.totalPoints += badge.getPointsEarned();
+    public void addPoints(double points) {
+        if (points > 0) {
+            this.totalPoints += points;
         }
     }
 
@@ -138,7 +130,7 @@ public class UserSession {
     /** Get points summary for display */
     public String getPointsSummary() {
         return String.format(
-                "Total Points: %d | Badges Earned: %d", totalPoints, earnedBadges.size());
+                "Total Points: %.1f | Badges Earned: %d", totalPoints, completedQuests.size());
     }
 
     // Helper methods for BadgeService

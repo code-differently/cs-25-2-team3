@@ -14,6 +14,11 @@ public class QuestGameService {
     private final ObjectMapper objectMapper;
     private final Console console;
 
+    public QuestGameService() {
+        this(new com.cliapp.io.SystemConsole());
+        loadQuestionsFromJson();
+    }
+
     public QuestGameService(Console console) {
         this.questions = new ArrayList<>();
         this.objectMapper = new ObjectMapper();
@@ -99,6 +104,10 @@ public class QuestGameService {
         }
     }
 
+    public void playQuest() {
+        playQuest("beginner");
+    }
+
     public void playQuest(String level) {
         Question question = getQuestionByLevel(level);
         if (question == null) {
@@ -108,11 +117,11 @@ public class QuestGameService {
 
         console.println("🎮 Starting " + level + " level quest!");
         console.println("");
-        
+
         boolean correct = askQuestion(question);
-        
+
         if (correct) {
-            int points = getPointsForLevel(level);
+            double points = getPointsForLevel(level);
             console.println("🌟 Quest completed! You earned " + points + " points!");
         } else {
             console.println("💪 Keep practicing! Try again when you're ready.");
@@ -157,23 +166,23 @@ public class QuestGameService {
         }
     }
 
-    private int getPointsForLevel(String level) {
+    private double getPointsForLevel(String level) {
         if (level == null) {
-            return 10;
+            return 5;
         }
         switch (level.toLowerCase()) {
             case "beginner":
-                return 10;
+                return 5;
             case "intermediate":
-                return 20;
+                return 7.5;
             case "advanced":
-                return 30;
-            default:
                 return 10;
+            default:
+                return 5;
         }
     }
 
-    public int calculatePointsForLevel(String level) {
+    public double calculatePointsForLevel(String level) {
         return getPointsForLevel(level);
     }
 
@@ -220,14 +229,13 @@ public class QuestGameService {
 
     private Question getQuestionByLevel(String level) {
         // Find questions matching the level
-        List<Question> levelQuestions = questions.stream()
-            .filter(q -> q.getLevel().equalsIgnoreCase(level))
-            .toList();
-        
+        List<Question> levelQuestions =
+                questions.stream().filter(q -> q.getLevel().equalsIgnoreCase(level)).toList();
+
         if (levelQuestions.isEmpty()) {
             return null;
         }
-        
+
         // Return a random question from the level
         Random random = new Random();
         return levelQuestions.get(random.nextInt(levelQuestions.size()));

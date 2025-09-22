@@ -9,6 +9,7 @@ import com.cliapp.exceptions.NoSavedGameException;
 import com.cliapp.io.Console;
 import com.cliapp.io.SystemConsole;
 import com.cliapp.models.UserSession;
+import com.cliapp.services.BadgeManager;
 import com.cliapp.services.BadgeService;
 import com.cliapp.services.GlossaryService;
 import com.cliapp.services.QuestService;
@@ -21,6 +22,7 @@ public class CLIApplication {
     private UserSession userSession;
     private QuestService questService;
     private GlossaryService glossaryService;
+    private BadgeManager badgeManager;
     private BadgeService badgeService;
 
     public CLIApplication() {
@@ -35,6 +37,7 @@ public class CLIApplication {
         this.questService = new QuestService();
         this.glossaryService = new GlossaryService();
         this.badgeService = new BadgeService();
+        this.badgeManager = new BadgeManager(this.badgeService, this.questService);
     }
 
     public static void main(String[] args) {
@@ -123,6 +126,7 @@ public class CLIApplication {
         QuestListCommand questCommand =
                 new QuestListCommand(
                         questService.getQuestCollection(),
+                        badgeManager,
                         console,
                         false); // Interactive mode for production
         questCommand.execute(new String[] {});
@@ -145,7 +149,7 @@ public class CLIApplication {
     }
 
     private void executeBadgeCommand() {
-        BadgeCommand badgeCommand = new BadgeCommand(badgeService);
+        BadgeCommand badgeCommand = new BadgeCommand(badgeService, badgeManager);
         badgeCommand.execute(new String[] {});
     }
 

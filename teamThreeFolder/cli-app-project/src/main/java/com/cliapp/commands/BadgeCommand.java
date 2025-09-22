@@ -1,6 +1,7 @@
 package com.cliapp.commands;
 
 import com.cliapp.domain.Badge;
+import com.cliapp.services.BadgeManager;
 import com.cliapp.services.BadgeService;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +13,16 @@ import java.util.List;
 public class BadgeCommand implements Command {
 
     private final BadgeService badgeService;
+    private final BadgeManager badgeManager;
 
     public BadgeCommand(BadgeService badgeService) {
         this.badgeService = badgeService;
+        this.badgeManager = null;
+    }
+
+    public BadgeCommand(BadgeService badgeService, BadgeManager badgeManager) {
+        this.badgeService = badgeService;
+        this.badgeManager = badgeManager;
     }
 
     @Override
@@ -22,69 +30,51 @@ public class BadgeCommand implements Command {
         try {
             System.out.println("\n=== Your Achievement Badges ===");
 
-            List<Badge> earnedBadges = badgeService.getEarnedBadges();
             List<Badge> allBadges = badgeService.getAllBadges();
-            int totalPoints = badgeService.getTotalPointsEarned();
-
-            // Handle null badge lists
-            if (earnedBadges == null) {
-                earnedBadges = new ArrayList<>();
-            }
             if (allBadges == null) {
                 allBadges = new ArrayList<>();
             }
 
-            // Display summary
-            System.out.printf("Badges Earned: %d/%d\n", earnedBadges.size(), allBadges.size());
-            System.out.printf("Total Points: %d\n", totalPoints);
-            System.out.println("─".repeat(50));
-
-            if (earnedBadges.isEmpty()) {
-                System.out.println("🏆 No badges earned yet!");
+            if (allBadges.isEmpty()) {
+                System.out.println("🏆 No badges available yet!");
                 System.out.println(
                         "Complete quests and explore the glossary to earn your first badge!");
             } else {
-                System.out.println("🏆 EARNED BADGES:");
-                for (Badge badge : earnedBadges) {
+                System.out.println("🏆 BADGES:");
+                for (Badge badge : allBadges) {
                     if (badge != null) {
-                        System.out.println("✅ " + badge.formatForDisplay());
-                        System.out.println();
-                    }
-                }
-            }
-
-            // Show available badges not yet earned
-            List<Badge> availableBadges = new ArrayList<>();
-            for (Badge badge : allBadges) {
-                if (badge != null && !earnedBadges.contains(badge)) {
-                    availableBadges.add(badge);
-                }
-            }
-
-            if (!availableBadges.isEmpty()) {
-                System.out.println("🎯 AVAILABLE BADGES:");
-                for (Badge badge : availableBadges) {
-                    if (badge != null) {
-                        System.out.println(
-                                "⬜ "
-                                        + badge.getName()
-                                        + " - "
-                                        + badge.getPointsEarned()
-                                        + " points");
+                        double pointsEarned = badge.getPointsEarned();
+                        double maxPoints = badge.getMaxPoints();
+                        double progress =
+                                maxPoints > 0 ? (double) pointsEarned / maxPoints * 100 : 0.0;
+                        System.out.printf(
+                                "%s: %.1f/%.1f points (%.1f%% complete)\n",
+                                badge.getName(), pointsEarned, maxPoints, progress);
                         System.out.println("   " + badge.getDescription());
                         System.out.println();
                     }
                 }
             }
 
-            // Show progress motivation
-            if (earnedBadges.size() < allBadges.size()) {
-                double progress = (double) earnedBadges.size() / allBadges.size() * 100;
-                System.out.printf("Progress: %.1f%% complete\n", progress);
+            // Show overall progress motivation
+            double totalPoints = 0;
+            double totalMaxPoints = 0;
+            for (Badge badge : allBadges) {
+                if (badge != null) {
+                    totalPoints += badge.getPointsEarned();
+                    totalMaxPoints += badge.getMaxPoints();
+                }
+            }
+            double overallProgress =
+                    totalMaxPoints > 0 ? (double) totalPoints / totalMaxPoints * 100 : 0.0;
+            System.out.printf(
+                    "Overall Progress: %.1f/%.1f points (%.1f%% complete)\n",
+                    totalPoints, totalMaxPoints, overallProgress);
+            if (overallProgress < 100.0) {
                 System.out.println(
-                        "Keep going! Complete more quests to unlock additional badges! 🚀");
+                        "Keep going! Complete more quests to unlock additional points and badges! 🚀");
             } else {
-                System.out.println("🎉 Congratulations! You've earned all available badges!");
+                System.out.println("🎉 Congratulations! You've earned all available badge points!");
             }
         } catch (Exception e) {
             System.err.println("Error displaying badges: " + e.getMessage());

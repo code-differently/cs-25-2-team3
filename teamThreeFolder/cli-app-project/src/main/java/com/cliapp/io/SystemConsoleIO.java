@@ -2,9 +2,7 @@ package com.cliapp.io;
 
 import java.util.Scanner;
 
-/**
- * Production implementation of ConsoleIO using System.in and System.out.
- */
+/** Production implementation of ConsoleIO using System.in and System.out. */
 public class SystemConsoleIO implements ConsoleIO {
     private final Scanner scanner;
 

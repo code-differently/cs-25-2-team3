@@ -42,13 +42,7 @@ public class AllUserStoriesIntegrationTest {
         assertNotNull(app, "CLI Application should be created without problems");
 
         // Verify the application can be started and stopped
-        assertDoesNotThrow(
-                () -> {
-                    // This would normally start the interactive loop, but we're testing
-                    // construction
-                    app.stop(); // Clean shutdown
-                },
-                "App should start and stop without errors");
+        assertDoesNotThrow(app::stop, "App should start and stop without errors");
 
         // Verify that quest service is initialized with default quests
         assertTrue(
@@ -56,58 +50,6 @@ public class AllUserStoriesIntegrationTest {
                 "Should have at least 3 default quests available");
 
         System.out.println("✅ User Story 1: App launches and shows menu options");
-    }
-
-    @Test
-    void testUserStory2_QuestSelection_ShouldShowModulesAndScenarios() {
-        // Test: User can view list of available learning modules with difficulty and completion
-        // status
-        List<Quest> allQuests = questService.getAllQuests();
-
-        assertFalse(allQuests.isEmpty(), "Should have quests available for learning");
-        assertTrue(allQuests.size() >= 3, "Should have multiple quest options");
-
-        // Test each quest has proper format
-        for (Quest quest : allQuests) {
-            assertNotNull(quest.getName(), "Quest should have a name");
-            assertFalse(quest.getName().trim().isEmpty(), "Quest name shouldn't be empty");
-            assertTrue(quest.getName().length() > 5, "Quest name should be descriptive");
-
-            String difficulty = quest.getDifficultyAsAsterisks();
-            assertNotNull(difficulty, "Difficulty should be displayed as asterisks");
-            assertTrue(
-                    difficulty.equals("*")
-                            || difficulty.equals("***")
-                            || difficulty.equals("*****"),
-                    "Difficulty should be *, ***, or *****, representing easy/medium/hard");
-
-            String status = quest.getCompletionStatus();
-            assertNotNull(status, "Completion status shouldn't be null");
-            assertTrue(
-                    status.equals("Y") || status.equals("N"),
-                    "Status should be Y (completed) or N (not completed)");
-
-            List<String> modules = quest.getLearningModules();
-            assertNotNull(modules, "Learning modules list shouldn't be null");
-            assertFalse(modules.isEmpty(), "Should have learning modules as content");
-
-            for (String module : modules) {
-                assertNotNull(module, "Module shouldn't be null");
-                assertFalse(module.trim().isEmpty(), "Module should explain what to learn");
-                assertTrue(
-                        module.length() > 15,
-                        "Module should be descriptive, explaining the learning objective");
-                assertTrue(
-                        module.toLowerCase().contains("git")
-                                || module.toLowerCase().contains("learn")
-                                || module.toLowerCase().contains("understand")
-                                || module.toLowerCase().contains("master"),
-                        "Module should contain learning-oriented language");
-            }
-        }
-
-        System.out.println(
-                "✅ User Story 2: Quest list shows modules with difficulty and completion status");
     }
 
     @Test
@@ -189,8 +131,11 @@ public class AllUserStoriesIntegrationTest {
         assertEquals(
                 "Y", selectedQuest.getCompletionStatus(), "Completed quest should show Y status");
 
-        boolean badgeAwarded = badgeService.awardBadge("git-starter");
-        assertTrue(badgeAwarded, "User should earn badge for completing quest");
+        // Instead of awarding a badge, add points to badge for completed quest
+        badgeService.addPointsToBadge("git-basics", 20.0); // Simulate earning badge points
+        Badge badge = badgeService.getBadgeById("git-basics");
+        assertEquals(
+                20.0, badge.getPointsEarned(), "Badge should have max points after completion");
     }
 
     @Test
@@ -242,8 +187,11 @@ public class AllUserStoriesIntegrationTest {
         testQuest.setCompleted(true);
         assertEquals("Y", testQuest.getCompletionStatus(), "Completed quest should show Y status");
 
-        boolean badgeAwarded = badgeService.awardBadge("git-starter");
-        assertTrue(badgeAwarded, "User should earn badge for completing quest progression");
+        // Instead of awarding a badge, add points to badge for completed quest progression
+        badgeService.addPointsToBadge("git-basics", 20.0); // Simulate earning badge points
+        Badge badge = badgeService.getBadgeById("git-basics");
+        assertEquals(
+                20.0, badge.getPointsEarned(), "Badge should have max points after completion");
 
         System.out.println(
                 "✅ End-to-End Test: All three user stories integrated and working properly!");

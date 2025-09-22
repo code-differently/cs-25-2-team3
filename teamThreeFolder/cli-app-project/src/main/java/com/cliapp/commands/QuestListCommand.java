@@ -4,6 +4,7 @@ import com.cliapp.collections.QuestCollection;
 import com.cliapp.domain.Quest;
 import com.cliapp.exceptions.InvalidInputException;
 import com.cliapp.io.Console;
+import com.cliapp.services.BadgeManager;
 import com.cliapp.services.QuestGameService;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 public class QuestListCommand implements Command {
 
     private QuestCollection questCollection;
+    private BadgeManager badgeManager;
     private QuestGameService questGameService;
     private Console console;
     private boolean isTestMode;
@@ -34,8 +36,13 @@ public class QuestListCommand implements Command {
     }
 
     // Constructor for dependency injection
-    public QuestListCommand(QuestCollection questCollection, Console console, boolean testMode) {
+    public QuestListCommand(
+            QuestCollection questCollection,
+            BadgeManager badgeManager,
+            Console console,
+            boolean testMode) {
         this.questCollection = questCollection;
+        this.badgeManager = badgeManager;
         this.console = console;
         this.questGameService = new QuestGameService(console);
         this.isTestMode = testMode;
@@ -153,14 +160,17 @@ public class QuestListCommand implements Command {
 
         // Map quest difficulty to question level
         String questionLevel = mapDifficultyToLevel(quest.getDifficultyLevel());
-        
+
         // Start the interactive quest game
         questGameService.playQuest(questionLevel);
 
         // Mark quest as completed (simplified for now)
         quest.setCompleted(true);
+
+        // Award points based on quest difficulty
+        badgeManager.onQuestCompleted(quest.getId());
     }
-    
+
     /** Map quest difficulty number to question level string */
     private String mapDifficultyToLevel(int difficultyLevel) {
         switch (difficultyLevel) {

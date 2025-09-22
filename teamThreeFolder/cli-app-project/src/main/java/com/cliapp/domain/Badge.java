@@ -9,7 +9,8 @@ public class Badge {
     private String id;
     private String name;
     private String description;
-    private int pointsEarned;
+    private double pointsEarned;
+    private double maxPoints;
     private String questId;
     private String dateEarned;
 
@@ -17,11 +18,18 @@ public class Badge {
         // Default constructor
     }
 
-    public Badge(String id, String name, String description, int pointsEarned, String questId) {
+    public Badge(
+            String id,
+            String name,
+            String description,
+            double pointsEarned,
+            double maxPoints,
+            String questId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.pointsEarned = pointsEarned;
+        this.maxPoints = maxPoints;
         this.questId = questId;
     }
 
@@ -50,12 +58,20 @@ public class Badge {
         this.description = description;
     }
 
-    public int getPointsEarned() {
+    public double getPointsEarned() {
         return pointsEarned;
     }
 
-    public void setPointsEarned(int pointsEarned) {
+    public void setPointsEarned(double pointsEarned) {
         this.pointsEarned = pointsEarned;
+    }
+
+    public void addPoints(double points) {
+        this.pointsEarned = Math.min(this.pointsEarned + points, this.maxPoints);
+    }
+
+    public double getMaxPoints() {
+        return maxPoints;
     }
 
     public String getQuestId() {
@@ -76,7 +92,9 @@ public class Badge {
 
     /** Format badge for display */
     public String formatForDisplay() {
-        return String.format("%s - %d points (%s)", name, pointsEarned, description);
+        // Use %.1f for double points, or %s for string points
+        String pointsStr = pointsEarned == (int) pointsEarned ? String.format("%d", (int) pointsEarned) : String.format("%.1f", pointsEarned);
+        return String.format("%s - %s points (%s)", name, pointsStr, description);
     }
 
     @Override

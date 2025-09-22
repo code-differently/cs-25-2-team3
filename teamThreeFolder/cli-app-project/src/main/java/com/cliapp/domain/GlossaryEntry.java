@@ -83,4 +83,18 @@ public class GlossaryEntry {
                 + '\''
                 + '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        GlossaryEntry other = (GlossaryEntry) obj;
+        // Only compare command for equality, not definition/example/category
+        return command != null && command.equals(other.command);
+    }
+
+    @Override
+    public int hashCode() {
+        return command != null ? command.hashCode() : 0;
+    }
 }

@@ -156,6 +156,14 @@ public class QuestService {
         return true;
     }
 
+    public boolean recieveBadgeScore(int score) {
+        if (currentQuest == null || !currentQuest.isCompleted()) {
+            return false;
+        }
+        // Logic to award badge/score can be implemented here
+        return true;
+    }
+
     public boolean isQuestActive() {
         return currentQuest != null;
     }
