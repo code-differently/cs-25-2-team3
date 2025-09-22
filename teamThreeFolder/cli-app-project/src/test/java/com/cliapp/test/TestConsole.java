@@ -65,7 +65,7 @@ public class TestConsole implements Console {
     @Override
     public String readLine() {
         if (inputQueue.isEmpty()) {
-            return ""; // return empty string per tests expecting graceful behavior
+            return "a"; // Return default answer for quiz/test flows
         }
         return inputQueue.poll();
     }

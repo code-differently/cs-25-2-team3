@@ -212,4 +212,23 @@ public class GlossaryServiceTest {
                 glossaryService.getEntryCount(),
                 "Count should match actual entries size");
     }
+
+    @Test
+    void testSearchEntriesWithNullAndEmpty() {
+        assertNotNull(glossaryService.searchEntries(null));
+        assertNotNull(glossaryService.searchEntries(""));
+    }
+
+    @Test
+    void testGetEntriesByCategoryNonexistent() {
+        List<GlossaryEntry> entries = glossaryService.getEntriesByCategory("no-such-category");
+        assertNotNull(entries);
+        assertTrue(entries.isEmpty());
+    }
+
+    @Test
+    void testGetEntryByCommandNullAndNonexistent() {
+        assertNull(glossaryService.getEntryByCommand(null));
+        assertNull(glossaryService.getEntryByCommand("does-not-exist"));
+    }
 }

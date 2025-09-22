@@ -30,171 +30,74 @@ public class BadgeServiceTest {
     @Test
     void testGetAllBadges() {
         List<Badge> badges = badgeService.getAllBadges();
-        assertTrue(badges.size() >= 6, "Should have at least 6 default badges");
+        assertTrue(badges.size() >= 3, "Should have at least 3 default badges");
 
-        boolean hasGitStarter = badges.stream().anyMatch(b -> b.getId().equals("git-starter"));
-        assertTrue(hasGitStarter, "Should have git-starter badge");
-    }
-
-    @Test
-    void testAwardBadge() {
-        boolean result = badgeService.awardBadge("git-starter");
-        assertTrue(result, "Should successfully award existing badge");
-
-        List<Badge> earned = badgeService.getEarnedBadges();
-        assertEquals(1, earned.size(), "Should have 1 earned badge");
-        assertEquals("git-starter", earned.get(0).getId(), "Should be the git-starter badge");
-        assertNotNull(earned.get(0).getDateEarned(), "Badge should have earned date");
-
-        boolean failResult = badgeService.awardBadge("nonexistent-badge");
-        assertFalse(failResult, "Should return false for nonexistent badge");
-    }
-
-    @Test
-    void testGetEarnedBadges() {
-        List<Badge> initialEarned = badgeService.getEarnedBadges();
-        assertTrue(initialEarned.isEmpty(), "Should start with no earned badges");
-
-        badgeService.awardBadge("git-starter");
-        badgeService.awardBadge("quest-master");
-
-        List<Badge> earned = badgeService.getEarnedBadges();
-        assertEquals(2, earned.size(), "Should have 2 earned badges");
-
-        boolean hasGitStarter = earned.stream().anyMatch(b -> b.getId().equals("git-starter"));
-        boolean hasQuestMaster = earned.stream().anyMatch(b -> b.getId().equals("quest-master"));
-        assertTrue(hasGitStarter, "Should have git-starter badge");
-        assertTrue(hasQuestMaster, "Should have quest-master badge");
+        boolean hasGitBasics = badges.stream().anyMatch(b -> b.getId().equals("git-basics"));
+        boolean hasGitBranching = badges.stream().anyMatch(b -> b.getId().equals("git-branching"));
+        boolean hasGitRemote = badges.stream().anyMatch(b -> b.getId().equals("git-remote"));
+        assertTrue(hasGitBasics, "Should have git-basics badge");
+        assertTrue(hasGitBranching, "Should have git-branching badge");
+        assertTrue(hasGitRemote, "Should have git-remote badge");
     }
 
     @Test
     void testGetBadgeById() {
-        Badge found = badgeService.getBadgeById("git-starter");
+        Badge found = badgeService.getBadgeById("git-basics");
         assertNotNull(found, "Should find badge by ID");
-        assertEquals("git-starter", found.getId(), "Should return correct badge");
-        assertEquals("Git Starter", found.getName(), "Should have correct name");
+        assertEquals("git-basics", found.getId(), "Should return correct badge");
+        assertEquals("Git Fundamentals", found.getName(), "Should have correct name");
 
         Badge notFound = badgeService.getBadgeById("nonexistent");
         assertNull(notFound, "Should return null for nonexistent badge");
     }
 
     @Test
-    void testHasBadge() {
-        assertFalse(badgeService.hasBadge("git-starter"), "Badge should not be earned initially");
-
-        badgeService.awardBadge("git-starter");
-        assertTrue(badgeService.hasBadge("git-starter"), "Badge should be earned after awarding");
-
-        assertFalse(badgeService.hasBadge("quest-master"), "Other badges should not be earned");
-    }
-
-    @Test
-    void testGetTotalPointsEarned() {
-        assertEquals(0, badgeService.getTotalPointsEarned(), "Should start with 0 points");
-
-        badgeService.awardBadge("git-starter"); // 10 points
-        assertEquals(
-                10, badgeService.getTotalPointsEarned(), "Should have 10 points after first badge");
-
-        badgeService.awardBadge("quest-master"); // 50 points
-        assertEquals(60, badgeService.getTotalPointsEarned(), "Should have 60 points total");
+    void testAddPointsToBadge() {
+        Badge badge = badgeService.getBadgeById("git-basics");
+        assertEquals(0.0, badge.getPointsEarned(), "Initial points should be zero");
+        badgeService.addPointsToBadge("git-basics", 10.0);
+        assertEquals(10.0, badge.getPointsEarned(), "Should add points correctly");
+        badgeService.addPointsToBadge("git-basics", 15.0); // Exceeds maxPoints
+        assertEquals(20.0, badge.getPointsEarned(), "Should cap points at maxPoints");
     }
 
     @Test
     void testAddCustomBadge() {
         int initialCount = badgeService.getAllBadges().size();
-
         badgeService.addBadge(
-                "custom-badge", "Custom Badge", "Custom description", 25, "custom-quest");
-
+                "custom-badge", "Custom Badge", "Custom description", 5, 25, "custom-quest");
         List<Badge> badges = badgeService.getAllBadges();
         assertEquals(initialCount + 1, badges.size(), "Should have one more badge");
-
         Badge custom = badgeService.getBadgeById("custom-badge");
         assertNotNull(custom, "Should find custom badge");
         assertEquals("Custom Badge", custom.getName(), "Should have correct name");
-        assertEquals(25, custom.getPointsEarned(), "Should have correct points");
+        assertEquals(5, custom.getPointsEarned(), "Should have correct initial points");
     }
 
     @Test
-    void testDisplayEarnedBadges() {
-        badgeService.awardBadge("git-starter");
-        badgeService.awardBadge("quest-master");
-
-        List<Badge> earned = badgeService.getEarnedBadges();
-        assertNotNull(earned, "Earned badges should not be null");
-        assertEquals(2, earned.size(), "Should have 2 earned badges");
-
-        Badge gitStarter =
-                earned.stream()
-                        .filter(b -> b.getId().equals("git-starter"))
-                        .findFirst()
-                        .orElse(null);
-        assertNotNull(gitStarter, "Should contain git starter badge");
-        assertEquals(10, gitStarter.getPointsEarned(), "Should have correct points");
+    void testAddPointsToBadgeInvalidCases() {
+        List<Badge> badges = badgeService.getAllBadges();
+        Badge badge = badges.get(0);
+        double originalPoints = badge.getPointsEarned();
+        badgeService.addPointsToBadge(null, 10.0); // Should do nothing
+        badgeService.addPointsToBadge("nonexistent", 10.0); // Should do nothing
+        badgeService.addPointsToBadge(badge.getId(), -5.0); // Should do nothing
+        assertEquals(
+                originalPoints,
+                badge.getPointsEarned(),
+                "Points should remain unchanged for invalid cases");
     }
 
     @Test
-    void testDuplicateBadgeAward() {
-        assertTrue(badgeService.awardBadge("git-starter"), "First award should succeed");
-        assertFalse(badgeService.awardBadge("git-starter"), "Duplicate award should fail");
-
-        List<Badge> earned = badgeService.getEarnedBadges();
-        assertEquals(1, earned.size(), "Should only have one instance of the badge");
+    void testPointsCapping() {
+        Badge badge = badgeService.getAllBadges().get(0);
+        badgeService.addPointsToBadge(badge.getId(), 100.0); // Exceeds maxPoints
+        assertTrue(badge.getPointsEarned() <= badge.getMaxPoints());
     }
 
     @Test
-    void testGetBadgesForQuest() {
-        // Test with quest that has associated badges
-        List<Badge> questBadges = badgeService.getBadgesForQuest("quest-1");
-        assertNotNull(questBadges, "Should return a list");
-
-        // Award a badge and verify it's filtered out from available
-        badgeService.awardBadge("git-starter");
-        List<Badge> availableAfterAward = badgeService.getBadgesForQuest("quest-1");
-
-        // Should not contain already earned badges
-        boolean hasEarnedBadge =
-                availableAfterAward.stream().anyMatch(b -> b.getId().equals("git-starter"));
-        assertFalse(hasEarnedBadge, "Should not include already earned badges");
-
-        // Test with nonexistent quest
-        List<Badge> nonexistentQuest = badgeService.getBadgesForQuest("nonexistent-quest");
-        assertTrue(nonexistentQuest.isEmpty(), "Should return empty list for nonexistent quest");
-    }
-
-    @Test
-    void testCheckBadgeEligibility() {
-        // Test no eligibility initially
-        List<Badge> eligible = badgeService.checkBadgeEligibility(0, 0);
-        assertTrue(eligible.isEmpty(), "Should have no eligible badges initially");
-
-        // Test git-starter eligibility (1 completed quest)
-        List<Badge> starterEligible = badgeService.checkBadgeEligibility(1, 0);
-        assertEquals(1, starterEligible.size(), "Should be eligible for git-starter");
-        assertEquals("git-starter", starterEligible.get(0).getId(), "Should be git-starter badge");
-
-        // Award git-starter and test it's no longer eligible
-        badgeService.awardBadge("git-starter");
-        List<Badge> afterStarter = badgeService.checkBadgeEligibility(1, 0);
-        assertTrue(afterStarter.isEmpty(), "Should not be eligible for already earned badge");
-
-        // Test quest-master eligibility (3 completed quests)
-        List<Badge> masterEligible = badgeService.checkBadgeEligibility(3, 0);
-        assertEquals(1, masterEligible.size(), "Should be eligible for quest-master");
-        assertEquals("quest-master", masterEligible.get(0).getId(), "Should be quest-master badge");
-
-        // Test glossary-guru eligibility (10 lookups)
-        List<Badge> guruEligible = badgeService.checkBadgeEligibility(0, 10);
-        assertEquals(1, guruEligible.size(), "Should be eligible for glossary-guru");
-        assertEquals("glossary-guru", guruEligible.get(0).getId(), "Should be glossary-guru badge");
-
-        // Test multiple eligibilities
-        List<Badge> multipleEligible = badgeService.checkBadgeEligibility(3, 10);
-        assertEquals(2, multipleEligible.size(), "Should be eligible for multiple badges");
-
-        // Test edge cases - exactly at thresholds
-        List<Badge> exactThresholds = badgeService.checkBadgeEligibility(3, 10);
-        assertTrue(exactThresholds.size() >= 2, "Should include badges at exact thresholds");
+    void testGetBadgeByIdNullAndNonexistent() {
+        assertNull(badgeService.getBadgeById(null));
+        assertNull(badgeService.getBadgeById("does-not-exist"));
     }
 }

@@ -1,8 +1,7 @@
 package com.cliapp;
 
-import java.util.Scanner;
-
 import com.cliapp.io.TestConsole;
+import java.util.Scanner;
 
 public class InteractiveDemo {
     public static void main(String[] args) {

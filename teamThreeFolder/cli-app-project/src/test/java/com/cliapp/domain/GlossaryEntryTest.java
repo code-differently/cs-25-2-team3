@@ -52,4 +52,30 @@ public class GlossaryEntryTest {
         assertTrue(formatted.contains("git status"), "Command should still show");
         assertTrue(formatted.contains("Show status"), "Definition should still be there");
     }
+
+    @Test
+    void testEqualsAndHashCode() {
+        GlossaryEntry entry1 = new GlossaryEntry("cmd", "def", "ex", "cat");
+        GlossaryEntry entry2 = new GlossaryEntry("cmd", "def2", "ex2", "cat2");
+        assertEquals(entry1, entry2);
+        assertEquals(entry1.hashCode(), entry2.hashCode());
+        GlossaryEntry entry3 = new GlossaryEntry("other", "def", "ex", "cat");
+        assertNotEquals(entry1, entry3);
+    }
+
+    @Test
+    void testToStringNotNull() {
+        GlossaryEntry entry = new GlossaryEntry("cmd", "def", "ex", "cat");
+        assertNotNull(entry.toString());
+        assertTrue(entry.toString().contains("cmd"));
+    }
+
+    @Test
+    void testNullAndEmptyFields() {
+        GlossaryEntry entry = new GlossaryEntry();
+        assertNull(entry.getCommand());
+        assertNull(entry.getDefinition());
+        assertNull(entry.getExample());
+        assertNull(entry.getCategory());
+    }
 }
