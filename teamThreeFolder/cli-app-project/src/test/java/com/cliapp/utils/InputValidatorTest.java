@@ -1,8 +1,8 @@
 package com.cliapp.utils;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import com.cliapp.utils.InputValidator;
+
+import org.junit.jupiter.api.Test;
 
 class InputValidatorTest {
     @Test

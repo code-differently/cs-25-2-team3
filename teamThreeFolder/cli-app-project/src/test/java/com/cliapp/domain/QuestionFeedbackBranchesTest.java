@@ -1,9 +1,10 @@
 package com.cliapp.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
 import com.cliapp.domain.Question.Feedback;
 import com.cliapp.domain.Question.IncorrectFeedback;
+import org.junit.jupiter.api.Test;
 
 class QuestionFeedbackBranchesTest {
     @Test

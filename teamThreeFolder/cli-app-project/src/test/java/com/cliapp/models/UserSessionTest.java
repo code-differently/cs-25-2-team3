@@ -1,9 +1,10 @@
 package com.cliapp.models;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class UserSessionTest {
     @Test
@@ -35,7 +36,9 @@ class UserSessionTest {
         assertEquals(1, session.getTotalCommands());
         LocalDateTime before = session.getLastActivity();
         session.updateActivity();
-        assertTrue(session.getLastActivity().isAfter(before) || session.getLastActivity().isEqual(before));
+        assertTrue(
+                session.getLastActivity().isAfter(before)
+                        || session.getLastActivity().isEqual(before));
     }
 
     @Test
@@ -66,4 +69,3 @@ class UserSessionTest {
         assertEquals(0, session.getGlossaryLookupCount());
     }
 }
-

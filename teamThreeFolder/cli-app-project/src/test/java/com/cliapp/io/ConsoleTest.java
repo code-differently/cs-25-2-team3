@@ -1,16 +1,33 @@
 package com.cliapp.io;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class ConsoleTest {
     static class DummyConsole implements Console {
         String lastMessage = null;
         boolean closed = false;
-        @Override public void println(String message) { lastMessage = message + "\n"; }
-        @Override public void print(String message) { lastMessage = message; }
-        @Override public String readLine() { return "input"; }
-        @Override public void close() { closed = true; }
+
+        @Override
+        public void println(String message) {
+            lastMessage = message + "\n";
+        }
+
+        @Override
+        public void print(String message) {
+            lastMessage = message;
+        }
+
+        @Override
+        public String readLine() {
+            return "input";
+        }
+
+        @Override
+        public void close() {
+            closed = true;
+        }
     }
 
     @Test

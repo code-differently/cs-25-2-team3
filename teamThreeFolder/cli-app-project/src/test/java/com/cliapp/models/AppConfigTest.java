@@ -1,9 +1,10 @@
 package com.cliapp.models;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.HashMap;
 import java.util.Map;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class AppConfigTest {
     @Test
@@ -32,4 +33,3 @@ class AppConfigTest {
         assertEquals(10, config.getSetting("volume"));
     }
 }
-

@@ -1,8 +1,9 @@
 package com.cliapp.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
 import com.cliapp.domain.Question.Option;
+import org.junit.jupiter.api.Test;
 
 class QuestionOptionBranchesTest {
     @Test

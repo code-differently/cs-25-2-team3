@@ -93,7 +93,10 @@ public class Badge {
     /** Format badge for display */
     public String formatForDisplay() {
         // Use %.1f for double points, or %s for string points
-        String pointsStr = pointsEarned == (int) pointsEarned ? String.format("%d", (int) pointsEarned) : String.format("%.1f", pointsEarned);
+        String pointsStr =
+                pointsEarned == (int) pointsEarned
+                        ? String.format("%d", (int) pointsEarned)
+                        : String.format("%.1f", pointsEarned);
         return String.format("%s - %s points (%s)", name, pointsStr, description);
     }
 

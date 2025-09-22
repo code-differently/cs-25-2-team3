@@ -23,7 +23,8 @@ class ComprehensiveCoverageTest {
     private ByteArrayOutputStream errorStream;
     private PrintStream originalErr;
 
-    private static final String TEST_QUEST_JSON = """
+    private static final String TEST_QUEST_JSON =
+            """
         {
           "questions": [
             {
@@ -67,12 +68,32 @@ class ComprehensiveCoverageTest {
     static class MockConsole implements Console {
         private final Queue<String> inputs = new LinkedList<>();
         private final StringBuilder output = new StringBuilder();
-        public void addInput(String input) { inputs.add(input); }
-        @Override public void println(String s) { output.append(s).append("\n"); }
-        @Override public void print(String s) { output.append(s); }
-        @Override public String readLine() { return inputs.isEmpty() ? "a" : inputs.poll(); }
-        public String getOutput() { return output.toString(); }
-        @Override public void close() {}
+
+        public void addInput(String input) {
+            inputs.add(input);
+        }
+
+        @Override
+        public void println(String s) {
+            output.append(s).append("\n");
+        }
+
+        @Override
+        public void print(String s) {
+            output.append(s);
+        }
+
+        @Override
+        public String readLine() {
+            return inputs.isEmpty() ? "a" : inputs.poll();
+        }
+
+        public String getOutput() {
+            return output.toString();
+        }
+
+        @Override
+        public void close() {}
     }
 
     private MockConsole mockConsole;
@@ -88,10 +109,12 @@ class ComprehensiveCoverageTest {
 
     @Test
     void testPlayQuestThrowsNoSuchElementException() {
-        assertThrows(NoSuchElementException.class, () -> {
-            QuestGameService service = new QuestGameService();
-            service.playQuest();
-        });
+        assertThrows(
+                NoSuchElementException.class,
+                () -> {
+                    QuestGameService service = new QuestGameService();
+                    service.playQuest();
+                });
     }
 
     @Test

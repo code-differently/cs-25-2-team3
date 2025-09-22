@@ -1,12 +1,13 @@
 package com.cliapp.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.cliapp.domain.Badge;
-import org.junit.jupiter.api.Test;
+import com.cliapp.domain.Quest;
 import java.util.Arrays;
 import java.util.List;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-import com.cliapp.domain.Quest;
+import org.junit.jupiter.api.Test;
 
 class BadgeManagerTest {
     @Test
