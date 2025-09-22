@@ -158,6 +158,7 @@ public class QuestGameServiceTest {
     void testGetQuestTitle() {
         String title = questGameService.getQuestTitle();
         assertNotNull(title, "Quest title should not be null");
+     
         assertTrue(title.contains("Git Quest"), "Title should contain 'Git Quest'");
     }
 
@@ -169,10 +170,18 @@ public class QuestGameServiceTest {
     }
 
     @Test
-    void testLoadQuestionsFromJsonHandlesMissingFile() {
-        // Should not throw even if file is missing
-        QuestGameService missingFileService = new QuestGameService(testConsole);
-        assertNotNull(missingFileService);
+    void testConstructorWithConsole() {
+        Console console = new MockConsole();
+        QuestGameService service = new QuestGameService(console);
+        assertNotNull(service);
+    }
+
+    @Test
+    void testLoadQuestionsFromJsonHandlesMissingFileCustom() {
+        Console console = new MockConsole();
+        // Simulate missing file by not providing a file, just check that service can be created
+        QuestGameService service = new QuestGameService(console);
+        assertNotNull(service);
     }
 
     @Test
@@ -244,5 +253,6 @@ public class QuestGameServiceTest {
         assertThrows(NoSuchElementException.class, () -> questGameService.playQuest());
     }
 
-    // Add more tests for edge cases and error handling as needed
+    // Removed tests for private methods and duplicate/invalid overrides
+    // Only public method tests and logic remain
 }
