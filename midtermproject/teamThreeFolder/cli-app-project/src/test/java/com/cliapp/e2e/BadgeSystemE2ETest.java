@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 /**
  * End-to-End tests for Badge System Testing achievement and display of badges as learners complete
  * quests.
- 
+
 public class BadgeSystemE2ETest {
 
     private TestConsole testConsole;

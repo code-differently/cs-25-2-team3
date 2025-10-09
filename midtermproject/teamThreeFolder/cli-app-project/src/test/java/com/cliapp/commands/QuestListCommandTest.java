@@ -3,9 +3,14 @@ package com.cliapp.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.cliapp.collections.QuestCollection;
 import com.cliapp.domain.Quest;
+import com.cliapp.services.BadgeManager;
+import com.cliapp.io.Console;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
