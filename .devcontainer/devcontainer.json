@@ -25,8 +25,15 @@
 	  "80": {
 		"requireLocalPort": true,
 		"elevateIfNeeded": true
+	  },
+	  "5173":{
+		"label": "Application",
+		"onAutoForward": "notify",
+		"requireLocalPort": true,
+		"elevateIfNeeded": true
 	  }
 	},
+	"forwardPorts": [5173],
 	"customizations": {
 		"vscode": {
 			"extensions": [
