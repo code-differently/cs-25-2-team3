@@ -6,7 +6,7 @@ export function NavBar() {
           onClick={() => {
             window.location.href = "/";
           }}>
-          AI Forum Voting App
+          TITLE_GOES_HERE
         </button>
       </div>
       <button
