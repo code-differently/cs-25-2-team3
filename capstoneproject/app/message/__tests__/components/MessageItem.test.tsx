@@ -79,14 +79,17 @@ describe('MessageItem', () => {
   test('displays reaction buttons with initial zero counts', () => {
     render(<MessageItem message={mockMessage} />);
     
-    // Check for emoji presence and zero counts
+    // Check for unique emojis that appear once
     expect(screen.getByText('👍')).toBeInTheDocument();
     expect(screen.getByText('❤️')).toBeInTheDocument();
-    expect(screen.getByText('👎')).toBeInTheDocument();
+    
+    // Check for 👎 emojis (there are multiple since many reactions use this emoji)
+    const thumbsDownElements = screen.getAllByText('👎');
+    expect(thumbsDownElements.length).toBeGreaterThan(0);
     
     // Check for multiple zero count displays (one for each reaction type)
     const zeroCountElements = screen.getAllByText('0');
-    expect(zeroCountElements.length).toBeGreaterThan(0);
+    expect(zeroCountElements.length).toBe(6); // Should be 6 reaction types
   });
 
   // Test: Message selection triggers onSelect callback
