@@ -19,11 +19,11 @@ export default function CreateForum() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Redirect if not authenticated
-  if (!isAuthenticated) {
+  /*  if (!isAuthenticated) {
     navigate('/');
     return null;
-  }
+  } */
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
