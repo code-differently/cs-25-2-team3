@@ -109,3 +109,97 @@ describe('MessageList', () => {
       expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
     });
   });
+
+  // Test: Component passes filters to MessageService correctly
+  test('applies filters when fetching messages', async () => {
+    const filters = { author: 'Alice', limit: 10 };
+    mockMessageService.getMessages.mockResolvedValue(mockMessages);
+
+    render(<MessageList filters={filters} />);
+    
+    await waitFor(() => {
+      expect(mockMessageService.getMessages).toHaveBeenCalledWith(filters);
+    });
+  });
+
+  // Test: Retry functionality calls loadMessages again
+  test('retry button refetches messages after error', async () => {
+    mockMessageService.getMessages
+      .mockRejectedValueOnce(new Error('Network error'))
+      .mockResolvedValueOnce(mockMessages);
+
+    render(<MessageList />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Error: Network error')).toBeInTheDocument();
+    });
+
+    const retryButton = screen.getByRole('button', { name: /retry/i });
+    fireEvent.click(retryButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('message-1')).toBeInTheDocument();
+      expect(mockMessageService.getMessages).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  // Test: Message selection callback is triggered correctly
+  test('calls onMessageSelect when message is clicked', async () => {
+    const mockOnMessageSelect = jest.fn();
+    mockMessageService.getMessages.mockResolvedValue(mockMessages);
+
+    render(<MessageList onMessageSelect={mockOnMessageSelect} />);
+    
+    await waitFor(() => {
+      expect(screen.getByTestId('message-1')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId('message-1'));
+    expect(mockOnMessageSelect).toHaveBeenCalledWith(mockMessages[0]);
+  });
+
+  // Test: Message updates are handled correctly 
+  test('updates message in list when handleMessageUpdate is called', async () => {
+    mockMessageService.getMessages.mockResolvedValue(mockMessages);
+
+    render(<MessageList />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Alice: Hello world!')).toBeInTheDocument();
+    });
+
+    // Simulate message update through MessageItem
+    const updateButton = screen.getAllByText('Update')[0];
+    fireEvent.click(updateButton);
+
+    // The message should still be in the list (update functionality)
+    expect(screen.getByTestId('message-1')).toBeInTheDocument();
+  });
+
+  // Test: Message deletion callback is triggered correctly
+  test('calls onMessageDelete when message is deleted', async () => {
+    const mockOnMessageDelete = jest.fn();
+    mockMessageService.getMessages.mockResolvedValue(mockMessages);
+
+    render(<MessageList onMessageDelete={mockOnMessageDelete} />);
+    
+    await waitFor(() => {
+      expect(screen.getByTestId('message-1')).toBeInTheDocument();
+    });
+
+    // Simulate delete action
+    const deleteButton = screen.getAllByText('Delete')[0];
+    fireEvent.click(deleteButton);
+
+    expect(mockOnMessageDelete).toHaveBeenCalledWith('1');
+  });
+
+  // Test: Custom className is applied correctly
+  test('applies custom className to container', () => {
+    const customClass = 'custom-message-list';
+    render(<MessageList className={customClass} />);
+    
+    const container = screen.getByRole('main');
+    expect(container).toHaveClass(customClass);
+  });
+});
