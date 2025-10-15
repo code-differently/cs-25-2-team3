@@ -1,3 +1,4 @@
+import { Footer } from "~/components/footer/footer";
 import { NavBar } from "../components/navbar/navbar";
 
 export function HomePage() {
@@ -44,10 +45,8 @@ export function HomePage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="text-center text-gray-400 py-6 border-t border-gray-200 dark:border-gray-800 text-sm">
-        &copy; {new Date().getFullYear()} TITLE_GOES_HERE. All rights reserved.
-      </footer>
+      <Footer />
+      
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { Footer } from "~/components/footer/footer";
 import { NavBar } from "../components/navbar/navbar";
 
 export function ForumsPage() {
@@ -51,6 +52,9 @@ export function ForumsPage() {
           ))}
         </ul>
       </main>
+
+      <Footer />
+
     </div>
   );
 }
