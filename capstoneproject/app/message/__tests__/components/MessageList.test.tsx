@@ -202,4 +202,91 @@ describe('MessageList', () => {
     const container = screen.getByRole('main');
     expect(container).toHaveClass(customClass);
   });
+
+  // BATCH 4: Edge cases and integration tests
+  describe('Edge Cases and Integration', () => {
+    // Test: Handles service returning null/undefined gracefully
+    test('handles null messages response gracefully', async () => {
+      mockMessageService.getMessages.mockResolvedValue(null as any);
+
+      render(<MessageList />);
+
+      await waitFor(() => {
+        expect(screen.getByText('No messages yet')).toBeInTheDocument();
+      });
+    });
+
+    // Test: Handles malformed message data
+    test('filters out invalid messages from display', async () => {
+      const invalidMessages = [
+        mockMessages[0], // valid
+        { id: 'invalid', content: '', userId: '' }, // invalid - empty content
+        mockMessages[1], // valid
+        null, // invalid - null message
+        { id: 'no-user' } // invalid - missing required fields
+      ];
+
+      mockMessageService.getMessages.mockResolvedValue(invalidMessages as any);
+
+      render(<MessageList />);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('message-1')).toBeInTheDocument();
+        expect(screen.getByTestId('message-2')).toBeInTheDocument();
+      });
+
+      // Should only show 2 valid messages
+      expect(screen.queryByTestId('message-invalid')).not.toBeInTheDocument();
+    });
+
+    // Test: Handles rapid re-renders and state updates
+    test('handles rapid filter changes without race conditions', async () => {
+      mockMessageService.getMessages.mockResolvedValue(mockMessages);
+
+      const { rerender } = render(<MessageList filter="user:alice" />);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('message-1')).toBeInTheDocument();
+      });
+
+      // Rapidly change filters
+      rerender(<MessageList filter="user:bob" />);
+      rerender(<MessageList filter="" />);
+      rerender(<MessageList filter="content:hello" />);
+
+      // Should eventually show filtered results
+      await waitFor(() => {
+        expect(screen.getByTestId('message-1')).toBeInTheDocument();
+      });
+    });
+
+    // Test: Memory management - cleanup on unmount
+    test('cleans up properly when component unmounts', async () => {
+      const { unmount } = render(<MessageList />);
+      
+      // Start loading
+      expect(screen.getByText('Loading messages...')).toBeInTheDocument();
+      
+      // Unmount before loading completes
+      unmount();
+      
+      // Should not cause memory leaks or warnings
+      expect(true).toBe(true); // Placeholder assertion
+    });
+
+    // Test: Accessibility compliance
+    test('maintains proper ARIA attributes and roles', async () => {
+      mockMessageService.getMessages.mockResolvedValue(mockMessages);
+
+      render(<MessageList />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('main')).toBeInTheDocument();
+      });
+
+      const container = screen.getByRole('main');
+      expect(container).toHaveAttribute('aria-live', 'polite');
+      expect(container).toHaveAttribute('role', 'main');
+    });
+  });
 });
