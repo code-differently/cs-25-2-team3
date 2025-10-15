@@ -13,7 +13,7 @@ export function Navigation() {
               AI Forum
             </Link>
             <Link 
-              to="/forum" 
+              to="/forums" 
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
             >
               Forums

@@ -1,0 +1,343 @@
+/* Forum Container - Instagram-like styling */
+.forum-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+/* Header */
+.forum-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.forum-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0;
+}
+
+.create-forum-btn {
+  background: #0095f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.create-forum-btn:hover {
+  background: #1877f2;
+}
+
+/* Auth Prompt */
+.auth-prompt {
+  background: white;
+  border: 1px solid #dbdbdb;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.auth-prompt p {
+  color: #8e8e8e;
+  margin: 0;
+}
+
+/* Loading */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #8e8e8e;
+  font-size: 16px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #8e8e8e;
+}
+
+.empty-state h2 {
+  color: #262626;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Forums Feed */
+.forums-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Forum Card - Instagram-like post design */
+.forum-card {
+  background: white;
+  border: 1px solid #dbdbdb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.forum-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Forum Header Info - Similar to Instagram post header */
+.forum-header-info {
+  padding: 16px;
+  border-bottom: 1px solid #efefef;
+}
+
+.forum-creator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.creator-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.creator-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.creator-name {
+  font-weight: 600;
+  color: #262626;
+  font-size: 14px;
+}
+
+.post-time {
+  color: #8e8e8e;
+  font-size: 12px;
+}
+
+/* Forum Content - Instagram-like content area */
+.forum-content {
+  padding: 16px;
+}
+
+.forum-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.expired-badge {
+  background: #ed4956;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.forum-description {
+  color: #262626;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 0 16px 0;
+}
+
+.forum-question {
+  background: #f8f9fa;
+  border-left: 4px solid #0095f6;
+  padding: 12px;
+  border-radius: 0 8px 8px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.forum-question strong {
+  color: #0095f6;
+}
+
+/* Forum Actions - Reddit-like voting + Instagram-like interactions */
+.forum-actions {
+  padding: 12px 16px;
+  border-top: 1px solid #efefef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vote-section {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.net-score {
+  display: flex;
+  align-items: center;
+}
+
+.score {
+  font-weight: 700;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.score.positive {
+  color: #00ba7c;
+  background: rgba(0, 186, 124, 0.1);
+}
+
+.score.negative {
+  color: #ed4956;
+  background: rgba(237, 73, 86, 0.1);
+}
+
+.score.neutral {
+  color: #8e8e8e;
+  background: #f8f9fa;
+}
+
+.vote-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #8e8e8e;
+  transition: all 0.2s ease;
+}
+
+.vote-btn:hover {
+  background: #f8f9fa;
+}
+
+.vote-btn.upvote:hover {
+  color: #00ba7c;
+  background: rgba(0, 186, 124, 0.1);
+}
+
+.vote-btn.downvote:hover {
+  color: #ed4956;
+  background: rgba(237, 73, 86, 0.1);
+}
+
+.vote-btn.active.upvote {
+  color: #00ba7c;
+  background: rgba(0, 186, 124, 0.1);
+}
+
+.vote-btn.active.downvote {
+  color: #ed4956;
+  background: rgba(237, 73, 86, 0.1);
+}
+
+.vote-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vote-btn:disabled:hover {
+  background: none;
+  color: #8e8e8e;
+}
+
+.voting-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #0095f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.comments-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #8e8e8e;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.comments-link:hover {
+  background: #f8f9fa;
+  color: #262626;
+}
+
+/* Responsive Design - Mobile-first like Instagram */
+@media (max-width: 768px) {
+  .forum-container {
+    padding: 12px;
+    background: white;
+  }
+  
+  .forum-card {
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    margin: 0 -12px;
+  }
+  
+  .forum-header {
+    padding: 0 12px;
+  }
+  
+  .forum-header h1 {
+    font-size: 20px;
+  }
+  
+  .create-forum-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}

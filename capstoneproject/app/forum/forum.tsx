@@ -1,6 +1,8 @@
+import type { User } from "firebase/auth";
+import { useState } from "react";
 import { Link } from "react-router";
 import { useAuthState } from "../hooks/useAuthState";
-import { useForums } from "../hooks/useFirestore";
+import { useFirestore, useForums, type Forum } from "../hooks/useFirestore";
 import "./forum.css";
 
 export default function Forum() {
@@ -49,19 +51,49 @@ export default function Forum() {
 }
 
 interface ForumCardProps {
-  forum: any; // We'll properly type this
-  currentUser: any;
+  forum: Forum;
+  currentUser: User | null;
 }
 
 function ForumCard({ forum, currentUser }: ForumCardProps) {
+  const { voteOnForum } = useFirestore();
+  const [votingState, setVotingState] = useState<'upvote' | 'downvote' | null>(null);
+  
   const formatDate = (timestamp: any) => {
     if (!timestamp) return '';
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
-      Math.floor((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
-      'day'
-    );
+    const now = Date.now();
+    const diffMs = now - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+    if (diffDays > 0) {
+      return `${diffDays}d ago`;
+    } else if (diffHours > 0) {
+      return `${diffHours}h ago`;
+    } else if (diffMinutes > 0) {
+      return `${diffMinutes}m ago`;
+    } else {
+      return 'Just now';
+    }
   };
+
+  const handleVote = async (voteType: 'upvote' | 'downvote') => {
+    if (!currentUser || votingState) return;
+    
+    setVotingState(voteType);
+    try {
+      await voteOnForum(forum.id, currentUser.uid, voteType);
+    } catch (error) {
+      console.error('Error voting:', error);
+    } finally {
+      setVotingState(null);
+    }
+  };
+
+  const isExpired = forum.endTime && forum.endTime.toDate() < new Date();
+  const netScore = (forum.upvotes || 0) - (forum.downvotes || 0);
 
   return (
     <div className="forum-card">
@@ -78,8 +110,11 @@ function ForumCard({ forum, currentUser }: ForumCardProps) {
       </div>
 
       <div className="forum-content">
-        <h2 className="forum-title">{forum.title}</h2>
-        <p className="forum-description">{forum.description}</p>
+        <h2 className="forum-title">
+          {forum.title}
+          {isExpired && <span className="expired-badge">CLOSED</span>}
+        </h2>
+        {forum.description && <p className="forum-description">{forum.description}</p>}
         <div className="forum-question">
           <strong>Question:</strong> {forum.question}
         </div>
@@ -87,16 +122,39 @@ function ForumCard({ forum, currentUser }: ForumCardProps) {
 
       <div className="forum-actions">
         <div className="vote-section">
-          <button className="vote-btn upvote">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M7 14l5-5 5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <div className="net-score">
+            <span className={`score ${netScore > 0 ? 'positive' : netScore < 0 ? 'negative' : 'neutral'}`}>
+              {netScore > 0 ? '+' : ''}{netScore}
+            </span>
+          </div>
+          <button 
+            className="vote-btn upvote"
+            onClick={() => handleVote('upvote')}
+            disabled={!currentUser || isExpired || !!votingState}
+            title={!currentUser ? "Sign in to vote" : isExpired ? "Forum is closed" : "Upvote"}
+          >
+            {votingState === 'upvote' ? (
+              <div className="voting-spinner"></div>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M7 14l5-5 5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            )}
             {forum.upvotes || 0}
           </button>
-          <button className="vote-btn downvote">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M17 10l-5 5-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <button 
+            className="vote-btn downvote"
+            onClick={() => handleVote('downvote')}
+            disabled={!currentUser || isExpired || !!votingState}
+            title={!currentUser ? "Sign in to vote" : isExpired ? "Forum is closed" : "Downvote"}
+          >
+            {votingState === 'downvote' ? (
+              <div className="voting-spinner"></div>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M17 10l-5 5-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            )}
             {forum.downvotes || 0}
           </button>
         </div>
