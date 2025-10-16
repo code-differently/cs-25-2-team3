@@ -1,31 +1,33 @@
+import type { User } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { db } from "../firebase";
 import { useAuthState } from "../hooks/useAuthState";
-import { useComments, useFirestore, type Forum } from "../hooks/useFirestore";
+import { useComments, useFirestore, useForum, type Forum, type Comment } from "../hooks/useFirestore";
 import "./forum.css";
 
 export default function ForumDetail() {
-  const { id } = useParams();
+  const { forumId } = useParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthState();
-  const { comments, loading: commentsLoading } = useComments(id || '');
-  const { createComment, voteOnForum, voteOnComment } = useFirestore();
+  const { forum, loading: forumLoading } = useForum(forumId || '');
+  const { comments, loading: commentsLoading } = useComments(forumId || '');
+  const { voteOnForum, createComment } = useFirestore();
   
-  const [forum, setForum] = useState<Forum | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [votingState, setVotingState] = useState<'upvote' | 'downvote' | null>(null);
   const [newComment, setNewComment] = useState('');
-  const [submittingComment, setSubmittingComment] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchForum = async () => {
-      if (!id) return;
+      if (!forumId) return;
       
       try {
-        const forumDoc = await getDoc(doc(db, 'forums', id));
+        const forumDoc = await getDoc(doc(db, 'forums', forumId));
         if (forumDoc.exists()) {
-          setForum({ id: forumDoc.id, ...forumDoc.data() } as Forum);
+          // setForum({ id: forumDoc.id, ...forumDoc.data() } as Forum);
         } else {
           navigate('/forums');
         }
@@ -33,48 +35,46 @@ export default function ForumDetail() {
         console.error('Error fetching forum:', error);
         navigate('/forums');
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
     fetchForum();
-  }, [id, navigate]);
+  }, [forumId, navigate]);
 
-  const handleVote = async (voteType: 'upvote' | 'downvote') => {
-    if (!isAuthenticated || !user || !forum) return;
-    
-    try {
-      await voteOnForum(forum.id, user.uid, voteType);
-    } catch (error) {
-      console.error('Error voting:', error);
-    }
-  };
+  if (forumLoading) {
+    return (
+      <div className="forum-detail-container">
+        <div className="loading-spinner">Loading forum...</div>
+      </div>
+    );
+  }
 
-  const handleCommentSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isAuthenticated || !user || !forum || !newComment.trim()) return;
-    
-    setSubmittingComment(true);
-    try {
-      await createComment({
-        forumId: forum.id,
-        userId: user.uid,
-        userName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
-        content: newComment.trim(),
-      });
-      setNewComment('');
-    } catch (error) {
-      console.error('Error creating comment:', error);
-    } finally {
-      setSubmittingComment(false);
-    }
-  };
+  if (!forum) {
+    return (
+      <div className="forum-detail-container">
+        <div className="error-message">Forum not found</div>
+        <Link to="/forums" className="back-link">← Back to Forums</Link>
+      </div>
+    );
+  }
 
   const formatDate = (timestamp: any) => {
     if (!timestamp) return '';
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleString();
-  };
+    const now = Date.now();
+    const diffMs = now - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+    if (diffDays > 0) {
+      return `${diffDays}d ago`;
+    } else if (diffHours > 0) {
+      return `${diffHours}h ago`;
+    } else if (diffMinutes > 0) {
+      return `${diffMinutes}m ago`;
+    } else {
 
   if (loading) {
     return (
