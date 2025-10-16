@@ -1,9 +1,10 @@
-import { Footer } from "../components/footer/footer";
-import { NavBar } from "../components/navbar/navbar";
+// import { Footer } from "../components/footer/footer";
+// import { NavBar } from "../components/navbar/navbar
 
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig'; // Assuming firebaseConfig.ts or .js exports 'auth'
+import { firebaseAuth } from "../firebase";
+
 
 export const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -15,7 +16,7 @@ export const SignUpPage: React.FC = () => {
     setError(null);
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(firebaseAuth, email, password);
       alert('User created successfully!');
       // Optionally redirect user to another page, e.g., login or dashboard
       // window.location.replace('/login'); 
@@ -53,7 +54,6 @@ export const SignUpPage: React.FC = () => {
         <button type="submit">Sign Up</button>
       </form>
 
-      <Footer />
     </div>
   );
 };

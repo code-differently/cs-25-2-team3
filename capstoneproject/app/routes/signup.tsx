@@ -1,5 +1,9 @@
+/* eslint-disable react/jsx-no-undef */
+import { SignUpPage } from "~/account/signup";
 import type { Route } from "./+types/signup";
-import { SignupPage } from "../signup/signuppage";
+
+
+
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -9,5 +13,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Signup() {
-    return <SignupPage />;
+    return <SignUpPage />;
 }
