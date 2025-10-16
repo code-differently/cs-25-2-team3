@@ -27,6 +27,7 @@ export interface Forum {
   createdAt: Timestamp;
   endTime?: Timestamp;
   isActive: boolean;
+  isAdminDeleted: boolean; // New field to track admin deletion
   upvotes: number;
   downvotes: number;
   commentCount: number;

@@ -15,15 +15,10 @@ export default function CreateForum() {
     description: '',
     question: '',
     endTime: '',
+    timeLimitHours: '24', // Default 24 hours
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  /*  if (!isAuthenticated) {
-    navigate('/');
-    return null;
-  } */
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +32,17 @@ export default function CreateForum() {
     setError('');
 
     try {
-      const endTime = formData.endTime ? new Date(formData.endTime) : null;
+      // Calculate end time based on user selection
+      let endTime: Date | null = null;
+      
+      if (formData.endTime) {
+        // User selected specific date
+        endTime = new Date(formData.endTime);
+      } else if (formData.timeLimitHours) {
+        // User selected time limit in hours
+        const hours = parseInt(formData.timeLimitHours);
+        endTime = new Date(Date.now() + (hours * 60 * 60 * 1000));
+      }
       
       await createForum({
         title: formData.title.trim(),
@@ -45,8 +50,9 @@ export default function CreateForum() {
         question: formData.question.trim(),
         creatorId: user?.uid || '',
         creatorName: user?.displayName || user?.email?.split('@')[0] || 'Anonymous',
-        endTime: endTime ? Timestamp.fromDate(new Date(endTime.getTime() + 24 * 60 * 60 * 1000)) : undefined,
+        endTime: endTime ? Timestamp.fromDate(endTime) : undefined,
         isActive: true,
+        isAdminDeleted: false, // Track if admin manually deleted
       });
 
       navigate('/forums');
@@ -58,11 +64,17 @@ export default function CreateForum() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    // Clear endTime if user selects time limit, and vice versa
+    if (name === 'timeLimitHours' && value) {
+      setFormData(prev => ({ ...prev, [name]: value, endTime: '' }));
+    } else if (name === 'endTime' && value) {
+      setFormData(prev => ({ ...prev, [name]: value, timeLimitHours: '' }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   return (
@@ -132,16 +144,45 @@ export default function CreateForum() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="endTime">Discussion End Date (Optional)</label>
-          <input
-            type="date"
-            id="endTime"
-            name="endTime"
-            value={formData.endTime}
-            onChange={handleChange}
-            min={new Date().toISOString().split('T')[0]}
-          />
-          <small>Leave empty for no end date. Forums will auto-close after 7 days by default.</small>
+          <label>Forum Duration</label>
+          <div className="duration-options">
+            <div className="duration-option">
+              <label htmlFor="timeLimitHours">Quick Duration:</label>
+              <select
+                id="timeLimitHours"
+                name="timeLimitHours"
+                value={formData.timeLimitHours}
+                onChange={handleChange}
+              >
+                <option value="">Select duration...</option>
+                <option value="1">1 hour</option>
+                <option value="6">6 hours</option>
+                <option value="12">12 hours</option>
+                <option value="24">24 hours (1 day)</option>
+                <option value="72">3 days</option>
+                <option value="168">1 week</option>
+                <option value="336">2 weeks</option>
+              </select>
+            </div>
+            
+            <div className="duration-divider">OR</div>
+            
+            <div className="duration-option">
+              <label htmlFor="endTime">Custom End Date:</label>
+              <input
+                type="datetime-local"
+                id="endTime"
+                name="endTime"
+                value={formData.endTime}
+                onChange={handleChange}
+                min={new Date().toISOString().slice(0, 16)}
+              />
+            </div>
+          </div>
+          <small>
+            Choose how long the forum should stay open for discussions. 
+            Leave both empty for permanent forum (admin can still close manually).
+          </small>
         </div>
 
         <div className="form-actions">
