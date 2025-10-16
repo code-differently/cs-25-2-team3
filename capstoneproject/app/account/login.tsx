@@ -13,11 +13,9 @@ export function LoginPage() {
      {/* Hero Section */}
      <main className="flex-1 flex flex-col items-center justify-center text-center px-4">
        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mt-16 mb-4">
-           Join Our Community!
+           !
        </h1>
-       <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mb-8">   Enter your name and email to create your account.
- Choose whether to register as a User or Admin to get the right level of access.
-                </p>
+       <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mb-8">  !
        <div className="flex flex-col md:flex-row gap-4 justify-center mb-12">
          <button
            className="px-8 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow"
