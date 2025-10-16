@@ -80,7 +80,7 @@ function ForumCard({ forum, currentUser }: ForumCardProps) {
   };
 
   const handleVote = async (voteType: 'upvote' | 'downvote') => {
-    if (!currentUser || votingState) return;
+    if (!currentUser || votingState || isExpired) return;
     
     setVotingState(voteType);
     try {
@@ -92,11 +92,12 @@ function ForumCard({ forum, currentUser }: ForumCardProps) {
     }
   };
 
+  // Simple time-based expiration only
   const isExpired = forum.endTime && forum.endTime.toDate() < new Date();
   const netScore = (forum.upvotes || 0) - (forum.downvotes || 0);
 
   return (
-    <div className="forum-card">
+    <div className={`forum-card ${isExpired ? 'expired' : ''}`}>
       <div className="forum-header-info">
         <div className="forum-creator">
           <div className="creator-avatar">
@@ -118,6 +119,13 @@ function ForumCard({ forum, currentUser }: ForumCardProps) {
         <div className="forum-question">
           <strong>Question:</strong> {forum.question}
         </div>
+        
+        {/* Show time remaining for active forums */}
+        {forum.endTime && !isExpired && (
+          <div className="time-remaining">
+            <small>Closes: {forum.endTime.toDate().toLocaleString()}</small>
+          </div>
+        )}
       </div>
 
       <div className="forum-actions">
@@ -159,7 +167,11 @@ function ForumCard({ forum, currentUser }: ForumCardProps) {
           </button>
         </div>
 
-        <Link to={`/forums/${forum.id}`} className="comments-link">
+        <Link 
+          to={isExpired ? "#" : `/forums/${forum.id}`} 
+          className={`comments-link ${isExpired ? 'disabled' : ''}`}
+          onClick={(e) => isExpired && e.preventDefault()}
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
