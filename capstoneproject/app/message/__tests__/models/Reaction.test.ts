@@ -56,4 +56,10 @@ describe('Reaction Model', () => {
     const laughReaction = new Reaction({ ...mockReactionData, type: ReactionType.LAUGH });
     expect(laughReaction.getEmoji()).toBe('😂');
   });
+
+  // Edge case: getEmoji fallback for invalid type
+  it('should return default emoji for invalid reaction type', () => {
+    const invalidReaction = new Reaction({ ...mockReactionData, type: 'unknown' as ReactionType });
+    expect(invalidReaction.getEmoji()).toBe('👍');
+  });
 });
