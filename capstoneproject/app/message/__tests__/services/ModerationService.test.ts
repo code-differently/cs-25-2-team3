@@ -12,4 +12,17 @@ global.fetch = jest.fn();
 describe('ModerationService', () => {
   let moderationService: ModerationService;
   const mockedFetch = global.fetch as jest.MockedFunction<typeof fetch>;
+  
+  // Mock data for testing
+  const mockModerationResult: ModerationResult = {
+    isApproved: true,
+    flaggedWords: [],
+    severity: 'low',
+    suggestedAction: 'approve'
+  };
+
+  beforeEach(() => {
+    moderationService = new ModerationService();
+    mockedFetch.mockClear();
+  });
 });
