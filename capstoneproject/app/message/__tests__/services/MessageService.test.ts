@@ -113,5 +113,39 @@ describe('MessageService', () => {
       expect(mockedFetch).toHaveBeenCalledWith(expectedUrl);
     });
     // ✅ Commit: Add filters test for getMessages()
+
+    // Error case: throws error when fetch fails
+    it('should throw error when fetch messages fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500
+      } as Response);
+
+      await expect(messageService.getMessages())
+        .rejects.toThrow('Failed to fetch messages');
+    });
+  });
+
+  // ============ updateMessage() Tests ============
+  describe('updateMessage()', () => {
+    // Success case: updates message and returns Message instance
+    it('should update message and return Message instance on success', async () => {
+      const updatedData = { ...mockMessageData, content: 'Updated content' };
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => updatedData
+      } as Response);
+
+      const result = await messageService.updateMessage(1, 'Updated content');
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/messages/1', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: 'Updated content' })
+      });
+      expect(result).toBeInstanceOf(Message);
+      expect(result.content).toBe('Updated content');
+    });
+    // ✅ Commit: Add success test for updateMessage()
   });
 });
