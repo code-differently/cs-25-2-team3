@@ -48,5 +48,17 @@ describe('ModerationService', () => {
       expect(result).toEqual(mockModerationResult);
       expect(result.isApproved).toBe(true);
     });
+
+    it('should throw error when content moderation check fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500
+      } as Response);
+
+      await expect(moderationService.checkContent('Test message'))
+        .rejects.toThrow('Failed to check content moderation');
+      
+      expect(mockedFetch).toHaveBeenCalledTimes(1);
+    });
   });
 });
