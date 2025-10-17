@@ -25,4 +25,14 @@ describe('Reaction Model', () => {
     expect(reaction.type).toBe(ReactionType.LIKE);
     expect(reaction.timestamp).toBe('2024-01-01T00:00:00Z');
   });
+
+  // toObject returns plain object matching ReactionData interface
+  it('should return plain object via toObject method', () => {
+    const reaction = new Reaction(mockReactionData);
+    const result = reaction.toObject();
+    
+    expect(result).toEqual(mockReactionData);
+    expect(typeof result).toBe('object');
+    expect(result.constructor).toBe(Object);
+  });
 });
