@@ -81,4 +81,20 @@ describe('ModerationService', () => {
       expect(result).toBe('This is a *** **** message');
     });
   });
+
+  // ============ loadBannedWords() Tests ============
+  describe('loadBannedWords()', () => {
+    it('should load banned words list from server on success', async () => {
+      const mockBannedWords = ['spam', 'abuse', 'hate'];
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockBannedWords
+      } as Response);
+
+      await moderationService.loadBannedWords();
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/moderation/banned-words');
+      expect((moderationService as any).bannedWords).toEqual(mockBannedWords);
+    });
+  });
 });
