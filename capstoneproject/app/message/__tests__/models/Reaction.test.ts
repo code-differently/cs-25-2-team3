@@ -44,4 +44,16 @@ describe('Reaction Model', () => {
     const invalidReaction = new Reaction({ ...mockReactionData, type: 'invalid' as ReactionType });
     expect(invalidReaction.isValid()).toBe(false);
   });
+
+  // getEmoji returns correct emoji for reaction type
+  it('should return correct emoji for each reaction type', () => {
+    const likeReaction = new Reaction({ ...mockReactionData, type: ReactionType.LIKE });
+    expect(likeReaction.getEmoji()).toBe('👍');
+    
+    const loveReaction = new Reaction({ ...mockReactionData, type: ReactionType.LOVE });
+    expect(loveReaction.getEmoji()).toBe('❤️');
+    
+    const laughReaction = new Reaction({ ...mockReactionData, type: ReactionType.LAUGH });
+    expect(laughReaction.getEmoji()).toBe('😂');
+  });
 });
