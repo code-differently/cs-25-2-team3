@@ -94,4 +94,33 @@ describe('User Model', () => {
       expect(user2.getDisplayName()).toBe('minimaluser');
     });
   });
+
+  // Edge Cases and Data Integrity Tests
+  describe('Edge Cases', () => {
+    // Handles special characters in username and email
+    it('should handle special characters in username and email', () => {
+      const specialUserData: UserData = {
+        id: 3,
+        username: 'user@#$%^&*()',
+        email: 'test+special@domain.co.uk',
+        createdAt: '2024-01-03T00:00:00Z'
+      };
+      
+      const user = new User(specialUserData);
+      expect(user.username).toBe('user@#$%^&*()');
+      expect(user.email).toBe('test+special@domain.co.uk');
+      expect(user.getDisplayName()).toBe('user@#$%^&*()');
+    });
+
+    // Data immutability - toObject doesn't affect original instance
+    it('should maintain data integrity after toObject call', () => {
+      const user = new User(mockUserData);
+      const originalUsername = user.username;
+      const obj = user.toObject();
+      
+      obj.username = 'modified';
+      expect(user.username).toBe(originalUsername);
+      expect(user.getDisplayName()).toBe('testuser');
+    });
+  });
 });
