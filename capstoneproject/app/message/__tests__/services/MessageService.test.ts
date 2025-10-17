@@ -142,4 +142,30 @@ describe('MessageService', () => {
         .rejects.toThrow('Failed to update message');
     });
   });
+
+  // ============ deleteMessage() Tests ============
+  describe('deleteMessage()', () => {
+    it('should return true when message is successfully deleted', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: true
+      } as Response);
+
+      const result = await messageService.deleteMessage(1);
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/messages/1', {
+        method: 'DELETE'
+      });
+      expect(result).toBe(true);
+    });
+
+    it('should return false when message deletion fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404
+      } as Response);
+
+      const result = await messageService.deleteMessage(1);
+      expect(result).toBe(false);
+    });
+  });
 });
