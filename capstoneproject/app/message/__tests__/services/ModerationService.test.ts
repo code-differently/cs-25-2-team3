@@ -25,4 +25,18 @@ describe('ModerationService', () => {
     moderationService = new ModerationService();
     mockedFetch.mockClear();
   });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  // ============ checkContent() Tests ============
+  describe('checkContent()', () => {
+    it('should check content and return moderation result on success', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockModerationResult
+      } as Response);
+    });
+  });
 });
