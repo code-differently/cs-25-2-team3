@@ -1,0 +1,25 @@
+/**
+ * __tests__/services/MessageService.test.ts
+ * Jest tests for the MessageService class
+ */
+
+import { MessageService } from '../../services/MessageService';
+import type { CreateMessageRequest, MessageFilters } from '../../services/MessageService';
+import { Message } from '../../models/Message';
+import type { MessageData } from '../../models/Message';
+
+// Mock global fetch
+global.fetch = jest.fn();
+
+describe('MessageService', () => {
+  let messageService: MessageService;
+  
+  // Mock data for testing
+  const mockMessageData: MessageData = {
+    id: 1,
+    author: 'testuser',
+    content: 'Test message content',
+    timestamp: '2024-01-01T00:00:00Z',
+    reactions: []
+  };
+});
