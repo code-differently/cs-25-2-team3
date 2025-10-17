@@ -13,6 +13,7 @@ global.fetch = jest.fn();
 
 describe('MessageService', () => {
   let messageService: MessageService;
+  const mockedFetch = global.fetch as jest.MockedFunction<typeof fetch>;
   
   // Mock data for testing
   const mockMessageData: MessageData = {
@@ -22,4 +23,18 @@ describe('MessageService', () => {
     timestamp: '2024-01-01T00:00:00Z',
     reactions: []
   };
+
+  const mockCreateRequest: CreateMessageRequest = {
+    author: 'testuser',
+    content: 'Test message content'
+  };
+
+  beforeEach(() => {
+    messageService = new MessageService();
+    mockedFetch.mockClear();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 });
