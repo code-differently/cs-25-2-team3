@@ -96,5 +96,24 @@ describe('ModerationService', () => {
       expect(mockedFetch).toHaveBeenCalledWith('/api/moderation/banned-words');
       expect((moderationService as any).bannedWords).toEqual(mockBannedWords);
     });
+
+    it('should handle error gracefully when loading banned words fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404
+      } as Response);
+
+      await moderationService.loadBannedWords();
+      
+      expect((moderationService as any).bannedWords).toEqual([]);
+    });
+  });
+
+  // ============ quickValidation() Tests ============
+  describe('quickValidation()', () => {
+    it('should return true for valid content', () => {
+      const result = moderationService.quickValidation('This is valid content');
+      expect(result).toBe(true);
+    });
   });
 });
