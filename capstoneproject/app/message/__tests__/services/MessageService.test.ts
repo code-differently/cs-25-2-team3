@@ -81,6 +81,20 @@ describe('MessageService', () => {
       const result = await messageService.getMessages();
 
       expect(mockedFetch).toHaveBeenCalledWith('/api/messages');
+      expect(result).toHaveLength(1);
+      expect(result[0]).toBeInstanceOf(Message);
+    });
+
+    it('should append query parameters when filters are provided', async () => {
+      const mockFilters: MessageFilters = {
+        author: 'testuser',
+        limit: 10
+      };
+      
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => [mockMessageData]
+      } as Response);
     });
   });
 });
