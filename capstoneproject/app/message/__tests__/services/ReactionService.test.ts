@@ -32,4 +32,20 @@ describe('ReactionService', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
+
+  // ============ addReaction() Tests ============
+  describe('addReaction()', () => {
+    it('should add reaction and return Reaction instance on success', async () => {
+      const mockAddRequest: AddReactionRequest = {
+        messageId: 456,
+        userId: 123,
+        type: ReactionType.LIKE
+      };
+
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockReactionData
+      } as Response);
+    });
+  });
 });
