@@ -115,5 +115,22 @@ describe('ModerationService', () => {
       const result = moderationService.quickValidation('This is valid content');
       expect(result).toBe(true);
     });
+
+    it('should return false for empty content', () => {
+      expect(moderationService.quickValidation('')).toBe(false);
+      expect(moderationService.quickValidation('   ')).toBe(false);
+    });
+
+    it('should return false for content exceeding length limit', () => {
+      const longContent = 'a'.repeat(5001);
+      const result = moderationService.quickValidation(longContent);
+      expect(result).toBe(false);
+    });
+
+    it('should return true for content at length limit', () => {
+      const maxContent = 'a'.repeat(5000);
+      const result = moderationService.quickValidation(maxContent);
+      expect(result).toBe(true);
+    });
   });
 });
