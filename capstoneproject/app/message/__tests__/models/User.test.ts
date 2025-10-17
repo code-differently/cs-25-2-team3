@@ -35,5 +35,16 @@ describe('User Model', () => {
       expect(user.createdAt).toBe('2024-01-01T00:00:00Z');
       expect(user.isActive).toBe(true);
     });
+
+    // Constructor defaults isActive to true when omitted
+    it('should default isActive to true when not provided', () => {
+      const user = new User(mockUserDataMinimal);
+      
+      expect(user.id).toBe(2);
+      expect(user.username).toBe('minimaluser');
+      expect(user.email).toBe('minimal@example.com');
+      expect(user.createdAt).toBe('2024-01-02T00:00:00Z');
+      expect(user.isActive).toBe(true);
+    });
   });
 });
