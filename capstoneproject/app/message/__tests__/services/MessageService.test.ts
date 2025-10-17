@@ -37,4 +37,27 @@ describe('MessageService', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
+
+  // ============ createMessage() Tests ============
+  describe('createMessage()', () => {
+    // Success case: creates message and returns Message instance
+    it('should create message and return Message instance on success', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockMessageData
+      } as Response);
+
+      const result = await messageService.createMessage(mockCreateRequest);
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mockCreateRequest)
+      });
+      expect(result).toBeInstanceOf(Message);
+      expect(result.id).toBe(1);
+      expect(result.author).toBe('testuser');
+    });
+    // ✅ Commit: Add success test for createMessage()
+  });
 });
