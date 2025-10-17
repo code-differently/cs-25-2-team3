@@ -61,4 +61,24 @@ describe('ModerationService', () => {
       expect(mockedFetch).toHaveBeenCalledTimes(1);
     });
   });
+
+  // ============ filterMessage() Tests ============
+  describe('filterMessage()', () => {
+    it('should return original message when no banned words', () => {
+      const originalMessage = 'This is a clean message';
+      
+      const result = moderationService.filterMessage(originalMessage);
+      
+      expect(result).toBe(originalMessage);
+    });
+
+    it('should filter banned words when present', () => {
+      // Mock banned words for testing
+      (moderationService as any).bannedWords = ['bad', 'spam'];
+      
+      const result = moderationService.filterMessage('This is a bad spam message');
+      
+      expect(result).toBe('This is a *** **** message');
+    });
+  });
 });
