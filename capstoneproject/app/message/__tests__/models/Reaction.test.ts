@@ -35,4 +35,13 @@ describe('Reaction Model', () => {
     expect(typeof result).toBe('object');
     expect(result.constructor).toBe(Object);
   });
+
+  // isValid checks if reaction type is valid
+  it('should validate reaction type correctly', () => {
+    const validReaction = new Reaction(mockReactionData);
+    expect(validReaction.isValid()).toBe(true);
+    
+    const invalidReaction = new Reaction({ ...mockReactionData, type: 'invalid' as ReactionType });
+    expect(invalidReaction.isValid()).toBe(false);
+  });
 });
