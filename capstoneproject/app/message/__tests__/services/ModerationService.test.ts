@@ -37,6 +37,16 @@ describe('ModerationService', () => {
         ok: true,
         json: async () => mockModerationResult
       } as Response);
+
+      const result = await moderationService.checkContent('Test message');
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/moderation/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: 'Test message' })
+      });
+      expect(result).toEqual(mockModerationResult);
+      expect(result.isApproved).toBe(true);
     });
   });
 });
