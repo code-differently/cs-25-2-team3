@@ -80,7 +80,7 @@ describe('MessageService', () => {
 
       const result = await messageService.getMessages();
 
-      expect(mockedFetch).toHaveBeenCalledWith('/api/messages');
+      expect(mockedFetch).toHaveBeenCalledWith('http://localhost/api/messages');
       expect(result).toHaveLength(1);
       expect(result[0]).toBeInstanceOf(Message);
     });
