@@ -55,5 +55,17 @@ describe('MessageService', () => {
       });
       expect(result).toBeInstanceOf(Message);
     });
+
+    it('should throw error when create message fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400
+      } as Response);
+
+      await expect(messageService.createMessage(mockCreateRequest))
+        .rejects.toThrow('Failed to create message');
+      
+      expect(mockedFetch).toHaveBeenCalledTimes(1);
+    });
   });
 });
