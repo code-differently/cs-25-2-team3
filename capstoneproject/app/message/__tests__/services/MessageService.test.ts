@@ -14,4 +14,18 @@ global.fetch = jest.fn();
 describe('MessageService', () => {
   let messageService: MessageService;
   const mockedFetch = global.fetch as jest.MockedFunction<typeof fetch>;
+  
+  // Mock data for testing
+  const mockMessageData: MessageData = {
+    id: 1,
+    author: 'testuser',
+    content: 'Test message content',
+    timestamp: '2024-01-01T00:00:00Z',
+    reactions: []
+  };
+
+  beforeEach(() => {
+    messageService = new MessageService();
+    mockedFetch.mockClear();
+  });
 });
