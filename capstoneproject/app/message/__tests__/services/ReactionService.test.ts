@@ -109,4 +109,26 @@ describe('ReactionService', () => {
       expect(mockedFetch).toHaveBeenCalledTimes(1);
     });
   });
+
+  // ============ getReactions() Tests ============
+  describe('getReactions()', () => {
+    it('should fetch reactions and return Reaction array on success', async () => {
+      const mockReactionData = [
+        { id: 1, messageId: 123, userId: 456, type: 'like' as ReactionType, createdAt: new Date() },
+        { id: 2, messageId: 123, userId: 789, type: 'love' as ReactionType, createdAt: new Date() }
+      ];
+      
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockReactionData
+      } as Response);
+
+      const result = await reactionService.getReactions(123);
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/reactions/message/123');
+      expect(result).toHaveLength(2);
+      expect(result[0]).toBeInstanceOf(Reaction);
+      expect(result[0].type).toBe('like');
+    });
+  });
 });
