@@ -24,6 +24,11 @@ describe('MessageService', () => {
     reactions: []
   };
 
+  const mockCreateRequest: CreateMessageRequest = {
+    author: 'testuser',
+    content: 'Test message content'
+  };
+
   beforeEach(() => {
     messageService = new MessageService();
     mockedFetch.mockClear();
@@ -40,6 +45,15 @@ describe('MessageService', () => {
         ok: true,
         json: async () => mockMessageData
       } as Response);
+
+      const result = await messageService.createMessage(mockCreateRequest);
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mockCreateRequest)
+      });
+      expect(result).toBeInstanceOf(Message);
     });
   });
 });
