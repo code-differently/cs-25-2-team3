@@ -74,4 +74,24 @@ describe('MessageService', () => {
     });
     // ✅ Commit: Add error handling test for createMessage()
   });
+
+  // ============ getMessages() Tests ============
+  describe('getMessages()', () => {
+    // Success case: fetches messages without filters
+    it('should fetch messages without filters and return Message array', async () => {
+      const mockResponseData = [mockMessageData];
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponseData
+      } as Response);
+
+      const result = await messageService.getMessages();
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/messages');
+      expect(result).toHaveLength(1);
+      expect(result[0]).toBeInstanceOf(Message);
+      expect(result[0].id).toBe(1);
+    });
+    // ✅ Commit: Add success test for getMessages() without filters
+  });
 });
