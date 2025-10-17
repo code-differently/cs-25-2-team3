@@ -77,4 +77,21 @@ describe('ReactionService', () => {
       expect(mockedFetch).toHaveBeenCalledTimes(1);
     });
   });
+
+  // ============ removeReaction() Tests ============
+  describe('removeReaction()', () => {
+    it('should remove reaction and return true on success', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true })
+      } as Response);
+
+      const result = await reactionService.removeReaction(123, 456);
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/reactions/123/user/456', {
+        method: 'DELETE'
+      });
+      expect(result).toBe(true);
+    });
+  });
 });
