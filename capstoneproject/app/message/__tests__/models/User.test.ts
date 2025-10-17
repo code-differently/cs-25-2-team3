@@ -71,4 +71,27 @@ describe('User Model', () => {
       expect(result.isActive).toBe(true);
     });
   });
+
+  // Method Behavior Tests
+  describe('getIsActive()', () => {
+    // getIsActive returns correct boolean value
+    it('should return correct isActive status', () => {
+      const activeUser = new User(mockUserData);
+      expect(activeUser.getIsActive()).toBe(true);
+      
+      const inactiveUser = new User({ ...mockUserData, isActive: false });
+      expect(inactiveUser.getIsActive()).toBe(false);
+    });
+  });
+
+  describe('getDisplayName()', () => {
+    // getDisplayName returns username
+    it('should return username as display name', () => {
+      const user = new User(mockUserData);
+      expect(user.getDisplayName()).toBe('testuser');
+      
+      const user2 = new User(mockUserDataMinimal);
+      expect(user2.getDisplayName()).toBe('minimaluser');
+    });
+  });
 });
