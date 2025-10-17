@@ -95,6 +95,21 @@ describe('MessageService', () => {
         ok: true,
         json: async () => [mockMessageData]
       } as Response);
+
+      await messageService.getMessages(mockFilters);
+
+      const expectedUrl = expect.stringContaining('author=testuser');
+      expect(mockedFetch).toHaveBeenCalledWith(expectedUrl);
+    });
+
+    it('should throw error when fetch messages fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500
+      } as Response);
+
+      await expect(messageService.getMessages())
+        .rejects.toThrow('Failed to fetch messages');
     });
   });
 });
