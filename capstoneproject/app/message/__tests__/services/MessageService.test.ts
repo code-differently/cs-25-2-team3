@@ -28,4 +28,18 @@ describe('MessageService', () => {
     messageService = new MessageService();
     mockedFetch.mockClear();
   });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  // ============ createMessage() Tests ============
+  describe('createMessage()', () => {
+    it('should create message and return Message instance on success', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockMessageData
+      } as Response);
+    });
+  });
 });
