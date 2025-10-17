@@ -125,8 +125,21 @@ describe('MessageService', () => {
       const result = await messageService.updateMessage(1, 'Updated content');
 
       expect(mockedFetch).toHaveBeenCalledWith('/api/messages/1', {
-        method: 'PUT'
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: 'Updated content' })
       });
+      expect(result).toBeInstanceOf(Message);
+    });
+
+    it('should throw error when update message fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404
+      } as Response);
+
+      await expect(messageService.updateMessage(1, 'New content'))
+        .rejects.toThrow('Failed to update message');
     });
   });
 });
