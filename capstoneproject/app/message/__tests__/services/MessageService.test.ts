@@ -59,5 +59,19 @@ describe('MessageService', () => {
       expect(result.author).toBe('testuser');
     });
     // ✅ Commit: Add success test for createMessage()
+
+    // Error case: throws error when response is not ok
+    it('should throw error when create message fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400
+      } as Response);
+
+      await expect(messageService.createMessage(mockCreateRequest))
+        .rejects.toThrow('Failed to create message');
+      
+      expect(mockedFetch).toHaveBeenCalledTimes(1);
+    });
+    // ✅ Commit: Add error handling test for createMessage()
   });
 });
