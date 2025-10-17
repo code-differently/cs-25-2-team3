@@ -68,4 +68,19 @@ describe('MessageService', () => {
       expect(mockedFetch).toHaveBeenCalledTimes(1);
     });
   });
+
+  // ============ getMessages() Tests ============
+  describe('getMessages()', () => {
+    it('should fetch messages without filters and return Message array', async () => {
+      const mockResponseData = [mockMessageData];
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponseData
+      } as Response);
+
+      const result = await messageService.getMessages();
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/messages');
+    });
+  });
 });
