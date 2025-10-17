@@ -93,5 +93,20 @@ describe('ReactionService', () => {
       });
       expect(result).toBe(true);
     });
+
+    it('should throw error when removeReaction fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404
+      } as Response);
+
+      await expect(reactionService.removeReaction(123, 456))
+        .rejects.toThrow('Failed to remove reaction');
+      
+      expect(mockedFetch).toHaveBeenCalledWith('/api/reactions/123/user/456', {
+        method: 'DELETE'
+      });
+      expect(mockedFetch).toHaveBeenCalledTimes(1);
+    });
   });
 });
