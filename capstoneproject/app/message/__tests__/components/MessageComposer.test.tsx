@@ -3,10 +3,9 @@
  * Unit tests for MessageComposer component with ~80% coverage
  */
 
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MessageComposer } from '../../components/MessageComposer';
 import { MessageService } from '../../services/MessageService';
 import { ModerationService } from '../../services/ModerationService';
@@ -61,14 +60,14 @@ describe('MessageComposer', () => {
     expect(screen.getByPlaceholderText(customPlaceholder)).toBeInTheDocument();
   });
 
-  // Test: Validation error when fields are empty (corresponds to sequence diagram validation step)
-  test('shows validation error when submitting empty fields', async () => {
+  // Test: Submit button is disabled when fields are empty (testing HTML5 validation behavior)
+  test('disables submit button when fields are empty', async () => {
     render(<MessageComposer />);
     
     const submitButton = screen.getByRole('button', { name: /post message/i });
-    fireEvent.click(submitButton);
-
-    expect(screen.getByText('Please fill in all fields')).toBeInTheDocument();
+    expect(submitButton).toBeDisabled();
+    
+    // Verify that moderation service isn't called when button is disabled
     expect(mockModerationService.quickValidation).not.toHaveBeenCalled();
   });
 
@@ -209,16 +208,15 @@ describe('MessageComposer', () => {
   test('clears error when user starts typing after validation error', async () => {
     render(<MessageComposer />);
     
-    // Trigger validation error
-    fireEvent.click(screen.getByRole('button', { name: /post message/i }));
+    // Bypass HTML5 validation by directly triggering the form submit event
+    const form = screen.getByRole('button', { name: /post message/i }).closest('form');
+    fireEvent.submit(form!, { preventDefault: () => {} });
     expect(screen.getByText('Please fill in all fields')).toBeInTheDocument();
 
-    // Start typing in author field
-    await userEvent.type(screen.getByLabelText(/your name/i), 'J');
+    // Start typing in author field with valid content
+    await userEvent.type(screen.getByLabelText(/your name/i), 'A');
     expect(screen.queryByText('Please fill in all fields')).not.toBeInTheDocument();
-  });
-
-  // Test: Character count updates
+  });  // Test: Character count updates
   test('updates character count as user types', async () => {
     render(<MessageComposer />);
     
@@ -240,10 +238,10 @@ describe('MessageComposer', () => {
     expect(submitButton).toBeDisabled();
     
     // Still disabled with only author
-    await userEvent.type(authorInput, 'John');
+    await userEvent.type(authorInput, 'A');
     expect(submitButton).toBeDisabled();
     
-    // Enabled when both fields have content
+    // Enabled when both fields have valid content
     await userEvent.type(contentInput, 'Hello');
     expect(submitButton).toBeEnabled();
     

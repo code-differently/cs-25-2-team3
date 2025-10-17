@@ -176,31 +176,37 @@ describe('MessageList', () => {
     expect(screen.getByTestId('message-1')).toBeInTheDocument();
   });
 
-  // Test: Message deletion callback is triggered correctly
-  test('calls onMessageDelete when message is deleted', async () => {
-    const mockOnMessageDelete = jest.fn();
+  // Test: Message deletion removes message from list
+  test('removes message from list when delete is called', async () => {
     mockMessageService.getMessages.mockResolvedValue(mockMessages);
 
-    render(<MessageList onMessageDelete={mockOnMessageDelete} />);
+    render(<MessageList />);
     
     await waitFor(() => {
       expect(screen.getByTestId('message-1')).toBeInTheDocument();
+      expect(screen.getByTestId('message-2')).toBeInTheDocument();
     });
 
     // Simulate delete action
     const deleteButton = screen.getAllByText('Delete')[0];
     fireEvent.click(deleteButton);
 
-    expect(mockOnMessageDelete).toHaveBeenCalledWith('1');
+    // Should remove message from list
+    expect(screen.queryByTestId('message-1')).not.toBeInTheDocument();
+    expect(screen.getByTestId('message-2')).toBeInTheDocument();
   });
 
   // Test: Custom className is applied correctly
-  test('applies custom className to container', () => {
+  test('applies custom className to container', async () => {
     const customClass = 'custom-message-list';
+    mockMessageService.getMessages.mockResolvedValue(mockMessages);
+    
     render(<MessageList className={customClass} />);
     
-    const container = screen.getByRole('main');
-    expect(container).toHaveClass(customClass);
+    await waitFor(() => {
+      const container = screen.getByRole('main');
+      expect(container).toHaveClass(customClass);
+    });
   });
 
   // BATCH 4: Edge cases and integration tests
@@ -243,16 +249,16 @@ describe('MessageList', () => {
     test('handles rapid filter changes without race conditions', async () => {
       mockMessageService.getMessages.mockResolvedValue(mockMessages);
 
-      const { rerender } = render(<MessageList filter="user:alice" />);
+      const { rerender } = render(<MessageList filters={{ author: 'alice' }} />);
 
       await waitFor(() => {
         expect(screen.getByTestId('message-1')).toBeInTheDocument();
       });
 
       // Rapidly change filters
-      rerender(<MessageList filter="user:bob" />);
-      rerender(<MessageList filter="" />);
-      rerender(<MessageList filter="content:hello" />);
+      rerender(<MessageList filters={{ author: 'bob' }} />);
+      rerender(<MessageList filters={{}} />);
+      rerender(<MessageList filters={{ limit: 5 }} />);
 
       // Should eventually show filtered results
       await waitFor(() => {

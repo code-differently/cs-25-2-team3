@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "verbatimModuleSyntax": false,
+    "module": "commonjs",
+    "target": "es2020",
+    "types": ["jest", "node", "@testing-library/jest-dom"]
+  },
+  "include": [
+    "app/**/*",
+    "setupTests.js",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ],
+  "exclude": ["node_modules"]
+}

@@ -3,12 +3,12 @@
  * Main messaging page component integrating all messaging functionality.
  */
 
-import React, { useState, useCallback } from 'react';
-import { MessageList } from './components/MessageList';
+import { useCallback, useState } from 'react';
 import { MessageComposer } from './components/MessageComposer';
+import { MessageList } from './components/MessageList';
+import './message.css';
 import { Message } from './models/Message';
 import type { MessageFilters } from './services/MessageService';
-import './message.css';
 
 export default function MessagePage() {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);

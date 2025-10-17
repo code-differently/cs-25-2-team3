@@ -3,8 +3,8 @@
  * Handles reaction operations for messages in the messaging system.
  */
 
-import { Reaction } from '../models/Reaction';
 import type { ReactionData, ReactionType } from '../models/Reaction';
+import { Reaction } from '../models/Reaction';
 
 export interface AddReactionRequest {
   messageId: number;

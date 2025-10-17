@@ -4,9 +4,9 @@
  */
 
 import React, { useState } from 'react';
+import type { CreateMessageRequest } from '../services/MessageService';
 import { MessageService } from '../services/MessageService';
 import { ModerationService } from '../services/ModerationService';
-import type { CreateMessageRequest } from '../services/MessageService';
 
 interface MessageComposerProps {
   onMessageCreated?: (message: any) => void;

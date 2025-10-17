@@ -3,8 +3,8 @@
  * Handles message-related API operations and business logic.
  */
 
-import { Message } from '../models/Message';
 import type { MessageData } from '../models/Message';
+import { Message } from '../models/Message';
 
 export interface CreateMessageRequest {
   author: string;

@@ -5,9 +5,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { Message } from '../models/Message';
+import type { MessageFilters } from '../services/MessageService';
 import { MessageService } from '../services/MessageService';
 import { MessageItem } from './MessageItem';
-import type { MessageFilters } from '../services/MessageService';
 
 interface MessageListProps {
   filters?: MessageFilters;
@@ -55,7 +55,7 @@ export const MessageList: React.FC<MessageListProps> = ({
 
   if (loading) {
     return (
-      <div className={`flex justify-center items-center p-8 ${className}`}>
+      <div className={`flex justify-center items-center p-8 ${className}`} role="status">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         <span className="ml-2 text-gray-600">Loading messages...</span>
       </div>
@@ -76,7 +76,24 @@ export const MessageList: React.FC<MessageListProps> = ({
     );
   }
 
-  if (messages.length === 0) {
+  // Handle null/undefined messages
+  if (!messages) {
+    return (
+      <div className={`text-center p-8 text-gray-500 ${className}`}>
+        No messages yet
+      </div>
+    );
+  }
+
+  // Filter out invalid messages
+  const validMessages = messages.filter(message => 
+    message && 
+    message.id && 
+    message.content && 
+    message.author
+  );
+
+  if (validMessages.length === 0) {
     return (
       <div className={`text-center p-8 text-gray-500 ${className}`}>
         No messages found.
@@ -85,8 +102,8 @@ export const MessageList: React.FC<MessageListProps> = ({
   }
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      {messages.map(message => (
+    <div className={`space-y-4 ${className}`} role="main" aria-live="polite">
+      {validMessages.map(message => (
         <MessageItem
           key={message.id}
           message={message}
