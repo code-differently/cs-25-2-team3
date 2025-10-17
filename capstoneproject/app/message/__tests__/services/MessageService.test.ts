@@ -93,5 +93,25 @@ describe('MessageService', () => {
       expect(result[0].id).toBe(1);
     });
     // ✅ Commit: Add success test for getMessages() without filters
+
+    // Success case with filters: verifies query parameters are appended
+    it('should append query parameters when filters are provided', async () => {
+      const mockFilters: MessageFilters = {
+        author: 'testuser',
+        limit: 10,
+        startDate: '2024-01-01'
+      };
+      
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => [mockMessageData]
+      } as Response);
+
+      await messageService.getMessages(mockFilters);
+
+      const expectedUrl = expect.stringContaining('author=testuser');
+      expect(mockedFetch).toHaveBeenCalledWith(expectedUrl);
+    });
+    // ✅ Commit: Add filters test for getMessages()
   });
 });
