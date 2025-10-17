@@ -94,18 +94,18 @@ describe('ReactionService', () => {
       expect(result).toBe(true);
     });
 
-    it('should throw error when removeReaction fails', async () => {
+    it('should return false when removeReaction fails', async () => {
       mockedFetch.mockResolvedValueOnce({
         ok: false,
         status: 404
       } as Response);
 
-      await expect(reactionService.removeReaction(123, 456))
-        .rejects.toThrow('Failed to remove reaction');
-      
+      const result = await reactionService.removeReaction(123, 456);
+
       expect(mockedFetch).toHaveBeenCalledWith('/api/reactions/123/user/456', {
         method: 'DELETE'
       });
+      expect(result).toBe(false);
       expect(mockedFetch).toHaveBeenCalledTimes(1);
     });
   });
@@ -129,6 +129,56 @@ describe('ReactionService', () => {
       expect(result).toHaveLength(2);
       expect(result[0]).toBeInstanceOf(Reaction);
       expect(result[0].type).toBe('like');
+    });
+
+    it('should throw error when getReactions fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500
+      } as Response);
+
+      await expect(reactionService.getReactions(123))
+        .rejects.toThrow('Failed to fetch reactions');
+      
+      expect(mockedFetch).toHaveBeenCalledWith('/api/reactions/message/123');
+      expect(mockedFetch).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  // ✅ Commit: Add getReactions() error handling test
+
+  // ============ getReactionCounts() Tests ============
+  describe('getReactionCounts()', () => {
+    it('should return reaction counts grouped by type', async () => {
+      const mockReactionsData = [
+        { id: 1, messageId: 123, userId: 456, type: ReactionType.LIKE, timestamp: '2024-01-01T00:00:00Z' },
+        { id: 2, messageId: 123, userId: 789, type: ReactionType.LIKE, timestamp: '2024-01-01T00:01:00Z' },
+        { id: 3, messageId: 123, userId: 321, type: ReactionType.LOVE, timestamp: '2024-01-01T00:02:00Z' }
+      ];
+
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockReactionsData
+      } as Response);
+
+      const result = await reactionService.getReactionCounts(123);
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/reactions/message/123');
+      expect(result[ReactionType.LIKE]).toBe(2);
+      expect(result[ReactionType.LOVE]).toBe(1);
+    });
+
+    it('should throw error when getReactionCounts fails', async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500
+      } as Response);
+
+      await expect(reactionService.getReactionCounts(123))
+        .rejects.toThrow('Failed to fetch reactions');
+      
+      expect(mockedFetch).toHaveBeenCalledWith('/api/reactions/message/123');
+      expect(mockedFetch).toHaveBeenCalledTimes(1);
     });
   });
 });
