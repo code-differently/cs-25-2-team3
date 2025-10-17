@@ -46,6 +46,17 @@ describe('ReactionService', () => {
         ok: true,
         json: async () => mockReactionData
       } as Response);
+
+      const result = await reactionService.addReaction(mockAddRequest);
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/reactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mockAddRequest)
+      });
+      expect(result).toBeInstanceOf(Reaction);
+      expect(result.id).toBe(1);
+      expect(result.type).toBe(ReactionType.LIKE);
     });
   });
 });
