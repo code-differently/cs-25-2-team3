@@ -47,4 +47,28 @@ describe('User Model', () => {
       expect(user.isActive).toBe(true);
     });
   });
+
+  // Serialization Tests
+  describe('toObject()', () => {
+    // toObject returns plain object matching UserData interface
+    it('should return plain object via toObject method', () => {
+      const user = new User(mockUserData);
+      const result = user.toObject();
+      
+      expect(result).toEqual(mockUserData);
+      expect(typeof result).toBe('object');
+      expect(result.constructor).toBe(Object);
+    });
+
+    // toObject preserves all field values correctly
+    it('should preserve all field values in serialized object', () => {
+      const user = new User(mockUserDataMinimal);
+      const result = user.toObject();
+      
+      expect(result.id).toBe(2);
+      expect(result.username).toBe('minimaluser');
+      expect(result.email).toBe('minimal@example.com');
+      expect(result.isActive).toBe(true);
+    });
+  });
 });
