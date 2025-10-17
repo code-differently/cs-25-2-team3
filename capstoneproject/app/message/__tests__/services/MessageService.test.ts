@@ -3,10 +3,10 @@
  * Jest tests for the MessageService class
  */
 
-import { MessageService } from '../../services/MessageService';
-import type { CreateMessageRequest, MessageFilters } from '../../services/MessageService';
-import { Message } from '../../models/Message';
 import type { MessageData } from '../../models/Message';
+import { Message } from '../../models/Message';
+import type { CreateMessageRequest, MessageFilters } from '../../services/MessageService';
+import { MessageService } from '../../services/MessageService';
 
 // Mock global fetch
 global.fetch = jest.fn();
