@@ -58,5 +58,23 @@ describe('ReactionService', () => {
       expect(result.id).toBe(1);
       expect(result.type).toBe(ReactionType.LIKE);
     });
+
+    it('should throw error when add reaction fails', async () => {
+      const mockAddRequest: AddReactionRequest = {
+        messageId: 456,
+        userId: 123,
+        type: ReactionType.LIKE
+      };
+
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400
+      } as Response);
+
+      await expect(reactionService.addReaction(mockAddRequest))
+        .rejects.toThrow('Failed to add reaction');
+      
+      expect(mockedFetch).toHaveBeenCalledTimes(1);
+    });
   });
 });
