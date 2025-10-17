@@ -28,4 +28,8 @@ describe('ReactionService', () => {
     reactionService = new ReactionService();
     mockedFetch.mockClear();
   });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 });
