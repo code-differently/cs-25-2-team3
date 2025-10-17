@@ -3,7 +3,7 @@
  * Jest tests for the User model
  */
 
-import { UserData } from '../../models/User';
+import { User, UserData } from '../../models/User';
 
 describe('User Model', () => {
   // Test data setup
@@ -22,4 +22,18 @@ describe('User Model', () => {
     createdAt: '2024-01-02T00:00:00Z'
     // isActive omitted - should default to true
   };
+
+  // Constructor Tests
+  describe('Constructor', () => {
+    // Constructor initializes all fields correctly with complete data
+    it('should initialize all fields correctly with complete UserData', () => {
+      const user = new User(mockUserData);
+      
+      expect(user.id).toBe(1);
+      expect(user.username).toBe('testuser');
+      expect(user.email).toBe('test@example.com');
+      expect(user.createdAt).toBe('2024-01-01T00:00:00Z');
+      expect(user.isActive).toBe(true);
+    });
+  });
 });
