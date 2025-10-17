@@ -112,4 +112,21 @@ describe('MessageService', () => {
         .rejects.toThrow('Failed to fetch messages');
     });
   });
+
+  // ============ updateMessage() Tests ============
+  describe('updateMessage()', () => {
+    it('should update message and return Message instance on success', async () => {
+      const updatedData = { ...mockMessageData, content: 'Updated content' };
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => updatedData
+      } as Response);
+
+      const result = await messageService.updateMessage(1, 'Updated content');
+
+      expect(mockedFetch).toHaveBeenCalledWith('/api/messages/1', {
+        method: 'PUT'
+      });
+    });
+  });
 });
