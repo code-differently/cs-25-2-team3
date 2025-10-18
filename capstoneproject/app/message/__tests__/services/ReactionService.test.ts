@@ -114,8 +114,8 @@ describe('ReactionService', () => {
   describe('getReactions()', () => {
     it('should fetch reactions and return Reaction array on success', async () => {
       const mockReactionData = [
-        { id: 1, messageId: 123, userId: 456, type: 'like' as ReactionType, createdAt: new Date() },
-        { id: 2, messageId: 123, userId: 789, type: 'love' as ReactionType, createdAt: new Date() }
+        { id: 1, messageId: 123, userId: 456, type: 'like' as ReactionType, timestamp: new Date().toISOString() },
+        { id: 2, messageId: 123, userId: 789, type: 'love' as ReactionType, timestamp: new Date().toISOString() }
       ];
       
       mockedFetch.mockResolvedValueOnce({
