@@ -88,7 +88,7 @@ export const MessageList: React.FC<MessageListProps> = ({
   // Filter out invalid messages
   const validMessages = messages.filter(message => 
     message && 
-    message.id && 
+    message.id !== undefined && message.id !== null &&
     message.content && 
     message.author
   );
