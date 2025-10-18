@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { firebaseAuth } from "../firebase";
-
+import './signup.css';
 
 export const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -28,7 +28,7 @@ export const SignUpPage: React.FC = () => {
 
   return (
     <div className="signup-container">
-      <h2>Sign Up</h2>
+      <h2><em>@$%#%^&***</em></h2>
       <form onSubmit={handleSignUp}>
         <div className="form-group">
           <label htmlFor="email">Email:</label>
