@@ -21,7 +21,7 @@ export const LoginPage: React.FC = () => {
     });
    } catch (err: any){
       setError(err.message);
-      console.error('Sign-up error:', err);
+      console.error('Login error:', err);
     }
 };
     
