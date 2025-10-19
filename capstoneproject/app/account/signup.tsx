@@ -28,7 +28,7 @@ export const SignUpPage: React.FC = () => {
 
   return (
     <div className="signup-container">
-      <h2><em>@$%#%^&***</em></h2>
+      <h2><em>Sign Up</em></h2>
       <form onSubmit={handleSignUp}>
         <div className="form-group">
           <label htmlFor="email">Email:</label>
