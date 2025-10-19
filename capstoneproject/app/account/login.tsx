@@ -12,13 +12,11 @@ export const LoginPage: React.FC = () => {
      e.preventDefault();
      setError(null);
  try {
-  await signInWithEmailAndPassword(firebaseAuth, email, password)
-    .then((userCredential) => {
-    // Signed in 
-    alert('User successfully logged in!');
-    const user = userCredential.user;
-    // ...
-    });
+  const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+  // Signed in 
+  alert('User successfully logged in!');
+  const user = userCredential.user;
+  // ...
    } catch (err: any){
       setError(err.message);
       console.error('Login error:', err);
