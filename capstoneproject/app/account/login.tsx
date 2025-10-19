@@ -28,7 +28,7 @@ export const LoginPage: React.FC = () => {
 
 return (
     <div className="login-container">
-      <h1><em>@#$%&&^%$^</em></h1>
+      <h1><em>Log In</em></h1>
       <form onSubmit={handlesignin}>
         <div className="form-group">
           <label htmlFor="email">Email:</label>
