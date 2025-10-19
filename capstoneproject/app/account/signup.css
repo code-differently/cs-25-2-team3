@@ -1,4 +1,4 @@
-.login-container {
+.signup-container {
     font-family: sans-serif;
     display: grid;
     justify-content: center;
@@ -7,7 +7,7 @@
     min-height: 100vh;
     background-color:rgb(244, 244, 244);
 }
-  .login-container h1 em  {
+  .signup-container h2 em  {
     color: #007bff;
     font-size: 3.3rem;
     text-align: center;

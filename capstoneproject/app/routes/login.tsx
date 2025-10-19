@@ -7,7 +7,7 @@ import type { Route } from "./+types/login";
 export function meta({}: Route.MetaArgs) {
     return [
         { title: "Login" },
-        { name: "description", content: "Browse and participate in forums." },
+        { name: "description", content: "Log in to access your account and participate in forums." },
     ];
 }
 
