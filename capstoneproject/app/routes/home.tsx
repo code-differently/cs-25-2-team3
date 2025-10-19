@@ -1,6 +1,7 @@
 import { HomePage } from "../homepage/homepage";
 import type { Route } from "./+types/home";
 
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Home Page" },
@@ -11,3 +12,4 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   return <HomePage />;
 }
+
