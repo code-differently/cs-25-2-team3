@@ -8,7 +8,7 @@ import type { Route } from "./+types/signup";
 export function meta({}: Route.MetaArgs) {
     return [
         { title: "Signup" },
-        { name: "description", content: "Browse and participate in forums." },
+        { name: "description", content: "Create an account to participate in forums." },
     ];
 }
 
