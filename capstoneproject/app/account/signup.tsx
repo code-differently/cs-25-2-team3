@@ -28,7 +28,7 @@ export const SignUpPage: React.FC = () => {
     <div className="min-h-screen bg-white flex-col">
       <div className="grid grid-cols-2 bg-[#f4f4f4]">
         <div>
-          {/* This will be our logo*/}
+          <img src="./DevTalkLogoSmallTanBG.png" alt="DevTalk Logo" className="h-full w-full object-cover p-16" />
         </div>  
         <div className="h-full m-16">
           <h2 className="text-8xl text-gray-800 font-bold mb-12 underline decoration-[#F47D26]"><em>Sign Up</em></h2>
