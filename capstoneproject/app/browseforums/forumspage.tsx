@@ -51,7 +51,7 @@ export function ForumsPage() {
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Discussion Forums</h1>
             <Link
-              to="/forums/create"
+              to="/create-forum"
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
             >
               Create Forum
@@ -63,7 +63,7 @@ export function ForumsPage() {
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No forums yet</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">Be the first to create a discussion forum!</p>
               <Link
-                to="/forums/create"
+                to="/create-forum"
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
               >
                 Create Your First Forum
@@ -80,7 +80,7 @@ export function ForumsPage() {
                 return (
                   <li key={forum.id}>
                     <Link
-                      to={`/forums/${forum.id}`}
+                      to={`/forum/${forum.id}`}
                       className="block rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow hover:shadow-lg transition-all hover:scale-[1.02]"
                     >
                       <div className="flex items-start justify-between mb-3">

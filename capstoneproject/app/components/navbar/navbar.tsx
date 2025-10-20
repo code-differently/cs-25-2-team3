@@ -8,11 +8,11 @@ export function NavBar() {
           Forum Hub
         </Link>
         <div className="flex items-center gap-6">
+          <Link to="/create-forum" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
+            Create Forum
+          </Link>
           <Link to="/forums" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
             Forums
-          </Link>
-          <Link to="/forums/create" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
-            Create Forum
           </Link>
         </div>
       </div>

@@ -17,10 +17,10 @@ type Pages = {
   "/forums": {
     params: {};
   };
-  "/forums/create": {
+  "/create-forum": {
     params: {};
   };
-  "/forums/:forumId": {
+  "/forum/:forumId": {
     params: {
       "forumId": string;
     };
@@ -36,7 +36,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/forums" | "/forums/create" | "/forums/:forumId" | "/signup" | "/login";
+    page: "/" | "/forums" | "/create-forum" | "/forum/:forumId" | "/signup" | "/login";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -48,11 +48,11 @@ type RouteFiles = {
   };
   "routes/create-forum.tsx": {
     id: "routes/create-forum";
-    page: "/forums/create";
+    page: "/create-forum";
   };
   "routes/forum-detail.tsx": {
     id: "routes/forum-detail";
-    page: "/forums/:forumId";
+    page: "/forum/:forumId";
   };
   "routes/signup.tsx": {
     id: "routes/signup";
