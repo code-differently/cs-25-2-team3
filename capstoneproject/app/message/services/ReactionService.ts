@@ -78,4 +78,13 @@ export class ReactionService {
 
     return counts;
   }
+
+  /**
+   * Toggle user's reaction on a message (like ↔ dislike)
+   */
+  async toggleReaction(messageId: number, userId: number, newType: ReactionType): Promise<Reaction> {
+    // Remove existing reaction first, then add new one
+    await this.removeReaction(messageId, userId);
+    return await this.addReaction({ messageId, userId, type: newType });
+  }
 }
