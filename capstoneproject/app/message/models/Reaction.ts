@@ -71,4 +71,11 @@ export class Reaction {
   isValidType(): boolean {
     return ['like', 'dislike'].includes(this.type);
   }
+
+  /**
+   * Toggle reaction type for a user (like ↔ dislike)
+   */
+  static toggleReaction(userId: number, currentType: ReactionType): ReactionType {
+    return currentType === ReactionType.LIKE ? ReactionType.DISLIKE : ReactionType.LIKE;
+  }
 }
