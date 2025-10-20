@@ -4,6 +4,7 @@
     "verbatimModuleSyntax": false,
     "module": "commonjs",
     "target": "es2020",
+    "moduleResolution": "Node",
     "types": ["jest", "node", "@testing-library/jest-dom"]
   },
   "include": [
