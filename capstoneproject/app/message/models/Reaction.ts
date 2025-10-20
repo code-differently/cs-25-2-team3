@@ -60,12 +60,15 @@ export class Reaction {
   getEmoji(): string {
     const emojiMap: Record<ReactionType, string> = {
       [ReactionType.LIKE]: '👍',
-      [ReactionType.DISLIKE]: '👎',
-      [ReactionType.LOVE]: '❤️',
-      [ReactionType.LAUGH]: '😂',
-      [ReactionType.ANGRY]: '😠',
-      [ReactionType.SAD]: '😢'
+      [ReactionType.DISLIKE]: '👎'
     };
     return emojiMap[this.type] || '👍';
+  }
+
+  /**
+   * Check if the reaction type is valid (only like/dislike allowed)
+   */
+  isValidType(): boolean {
+    return ['like', 'dislike'].includes(this.type);
   }
 }
