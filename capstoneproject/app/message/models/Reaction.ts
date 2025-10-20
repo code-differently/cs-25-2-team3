@@ -13,11 +13,7 @@ export interface ReactionData {
 
 export enum ReactionType {
   LIKE = 'like',
-  DISLIKE = 'dislike',
-  LOVE = 'love',
-  LAUGH = 'laugh',
-  ANGRY = 'angry',
-  SAD = 'sad'
+  DISLIKE = 'dislike'
 }
 
 export class Reaction {
