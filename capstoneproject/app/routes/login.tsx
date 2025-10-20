@@ -1,9 +1,6 @@
 import { LoginPage } from "~/account/login";
 import type { Route } from "./+types/login";
 
-
-
-
 export function meta({}: Route.MetaArgs) {
     return [
         { title: "Login" },
