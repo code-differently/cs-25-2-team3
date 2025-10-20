@@ -26,7 +26,7 @@ export function ForumsPage() {
   // const [filter, setFilter] = React.useState("");
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
      
       <NavBar />
 
@@ -36,16 +36,16 @@ export function ForumsPage() {
           {forums.map((forum) => (
             <li
               key={forum.id}
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow hover:shadow-lg transition-shadow"
+              className="rounded-xl border border-gray-200 bg-white p-6 shadow hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xl font-semibold text-blue-700 dark:text-blue-400">{forum.title}</h2>
+                <h2 className="text-xl font-semibold text-blue-700">{forum.title}</h2>
                 <span className={`text-xs px-2 py-1 rounded-full font-bold ${forum.status === "Open" ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"}`}>
                   {forum.status}
                 </span>
               </div>
-              <p className="text-gray-700 dark:text-gray-300 mb-2">{forum.description}</p>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-gray-700 mb-2">{forum.description}</p>
+              <div className="text-sm text-gray-500">
                 By {forum.createdBy} • {forum.createdAt}
               </div>
             </li>
