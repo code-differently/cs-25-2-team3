@@ -10,7 +10,7 @@ const UserDashboard: React.FC = () => {
   const toggleUserSetting = () => {
     setIsAnonymous(prevIsAnonymous => !prevIsAnonymous);
   };
-
+  
   return (
     
     <div>
