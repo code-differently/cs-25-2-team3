@@ -43,13 +43,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const OpenAI = require('openai');
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    // Perform analysis with OpenAI...
-    // const analysis = await openai.someAnalysisMethod({ messages: messageContents });
+    // Analyze message content with GPT-4o-mini
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{
+        role: "user",
+        content: `Analyze these forum messages and extract the top 3-5 most common phrases or topics. Return only a JSON array of strings. Messages:\n\n${messageContents}`
+      }],
+      max_tokens: 150,
+      temperature: 0.3
+    });
 
-    // For now, let's mock the response
-    const analysis = {
-      topPhrases: ['example phrase 1', 'example phrase 2'],
-    };
+    const analysis = JSON.parse(completion.choices[0].message.content || '["analysis failed"]');
 
     return res.status(200).json({
       totalMessages,
