@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { Message } from '../models/Message';
 import { ReactionType } from '../models/Reaction';
 import { ReactionService } from '../services/ReactionService';
+import '../message.css';
 
 interface MessageItemProps {
   message: Message;
@@ -84,7 +85,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
 
   return (
     <div 
-      className={`bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow ${className}`}
+      className={`message-card ${className}`}
       onClick={() => onSelect?.(message)}
     >
       {/* Message Header */}
