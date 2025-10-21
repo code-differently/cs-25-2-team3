@@ -77,6 +77,11 @@ export const MessageItem: React.FC<MessageItemProps> = ({
     return new Date(timestamp).toLocaleString();
   };
 
+  const reactionEmojis: Record<ReactionType, string> = {
+    [ReactionType.LIKE]: '👍',
+    [ReactionType.DISLIKE]: '👎'
+  };
+
   return (
     <div 
       className={`bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow ${className}`}
@@ -144,7 +149,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
               onClick={(e) => { e.stopPropagation(); handleReaction(type); }}
               className="flex items-center space-x-1 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
             >
-              <span>{type === ReactionType.LIKE ? '👍' : type === ReactionType.LOVE ? '❤️' : '👎'}</span>
+              <span>{reactionEmojis[type]}</span>
               <span className="text-sm text-gray-600">{reactionCounts[type] || 0}</span>
             </button>
           ))}
