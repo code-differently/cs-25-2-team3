@@ -110,7 +110,11 @@ export class ApiClient {
    * Build complete URL with base URL and query parameters.
    */
   private buildUrl(endpoint: string, params?: Record<string, any>): string {
-    const url = new URL(endpoint, this.config.baseUrl);
+    const baseUrl = this.config.baseUrl.startsWith('http') 
+      ? this.config.baseUrl 
+      : `${window.location.origin}${this.config.baseUrl}`;
+    
+    const url = new URL(endpoint, baseUrl);
     
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
