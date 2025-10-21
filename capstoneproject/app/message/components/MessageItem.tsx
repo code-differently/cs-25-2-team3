@@ -4,10 +4,10 @@
  */
 
 import React, { useState } from 'react';
+import '../message.css';
 import { Message } from '../models/Message';
 import { ReactionType } from '../models/Reaction';
 import { ReactionService } from '../services/ReactionService';
-import '../message.css';
 
 interface MessageItemProps {
   message: Message;
@@ -112,7 +112,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
       </div>
 
       {/* Message Content */}
-      <div className="mb-3">
+      <div className="message-content">
         {isEditing ? (
           <div className="space-y-2">
             <textarea
@@ -137,7 +137,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
             </div>
           </div>
         ) : (
-          <p className="text-gray-800 whitespace-pre-wrap">{message.content}</p>
+          <p className="message-body">{message.content}</p>
         )}
       </div>
 
@@ -148,10 +148,10 @@ export const MessageItem: React.FC<MessageItemProps> = ({
             <button
               key={type}
               onClick={(e) => { e.stopPropagation(); handleReaction(type); }}
-              className="flex items-center space-x-1 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+              className="vote-button"
             >
               <span>{reactionEmojis[type]}</span>
-              <span className="text-sm text-gray-600">{reactionCounts[type] || 0}</span>
+              <span className="vote-count">{reactionCounts[type] || 0}</span>
             </button>
           ))}
         </div>
