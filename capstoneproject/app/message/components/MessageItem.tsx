@@ -95,16 +95,16 @@ export const MessageItem: React.FC<MessageItemProps> = ({
           <span className="message-timestamp">{formatTime(message.timestamp)}</span>
         </div>
         
-        <div className="flex space-x-2">
+        <div className="message-actions">
           <button
             onClick={(e) => { e.stopPropagation(); handleEdit(); }}
-            className="text-gray-400 hover:text-blue-600 text-sm"
+            className="message-action"
           >
             Edit
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-            className="text-gray-400 hover:text-red-600 text-sm"
+            className="message-action"
           >
             Delete
           </button>
@@ -142,8 +142,8 @@ export const MessageItem: React.FC<MessageItemProps> = ({
       </div>
 
       {/* Reactions */}
-      <div className="flex items-center space-x-4">
-        <div className="flex space-x-2">
+      <div className="message-footer">
+        <div className="message-votes">
           {Object.values(ReactionType).map(type => (
             <button
               key={type}
