@@ -89,10 +89,10 @@ export const MessageItem: React.FC<MessageItemProps> = ({
       onClick={() => onSelect?.(message)}
     >
       {/* Message Header */}
-      <div className="flex justify-between items-start mb-2">
-        <div className="flex items-center space-x-2">
-          <span className="font-semibold text-gray-900">{message.author}</span>
-          <span className="text-sm text-gray-500">{formatTime(message.timestamp)}</span>
+      <div className="message-header">
+        <div className="message-meta">
+          <span className="message-author">{message.author}</span>
+          <span className="message-timestamp">{formatTime(message.timestamp)}</span>
         </div>
         
         <div className="flex space-x-2">
