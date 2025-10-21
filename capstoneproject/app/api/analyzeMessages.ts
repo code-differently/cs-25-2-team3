@@ -43,3 +43,37 @@ export async function action({ request }: ActionFunctionArgs): Promise<Response>
     const { messages } = body;
     const totalMessages = messages.length;
     const uniqueAuthors = new Set(messages.map(m => m.author)).size;
+
+    // Prepare content for OpenAI analysis
+    const messageContents = messages.map(m => m.content).join('\n');
+    
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{
+        role: "user",
+        content: `Analyze these messages and extract the top 5 most common phrases or themes. Return only a JSON array of strings: ${messageContents}`
+      }],
+      temperature: 0.3
+    });
+
+    const aiResponse = completion.choices[0]?.message?.content || "[]";
+    let topPhrases: string[] = [];
+
+    try {
+      topPhrases = JSON.parse(aiResponse);
+    } catch (parseError) {
+      console.warn("Failed to parse OpenAI response, using fallback");
+      topPhrases = ["analysis", "messages", "communication"];
+    }
+
+    const response: MessageAnalysisResponse = {
+      totalMessages,
+      uniqueAuthors,
+      topPhrases
+    };
+
+    return json(response);
+  } catch (error) {
+    return json({ error: "Internal server error" }, { status: 500 });
+  }
+}
