@@ -26,15 +26,25 @@ export default function TeaModal({ onClose, messages, forumId, forumTitle, forum
   useEffect(() => {
     const fetchAnalysis = async () => {
       try {
-        const result = await analysisService.analyzeMessages({
-          forumId,
-          forumTitle,
-          forumDescription,
-          forumQuestion,
-          category,
-          messages
-        });
-        setAnalysis(result);
+        // TEMPORARY: Mock data for UI testing (remove when API is ready)
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
+        const mockResult: MessageAnalysisResponse = {
+          totalMessages: messages.length,
+          uniqueAuthors: 3,
+          summary: "This React discussion is absolutely sending me! 🔥 People are being super wholesome about sharing knowledge and the energy is immaculate. Everyone's being real about their struggles but also hyping each other up with solid advice. It's giving supportive coding community vibes fr! 💯",
+          actionRoadmap: [
+            "1️⃣ Screenshot the most fire tips and save them to your dev notes",
+            "2️⃣ Try one new debugging technique this week - no cap!",
+            "3️⃣ Drop your own React wisdom to keep this energy flowing ✨"
+          ]
+        };
+        setAnalysis(mockResult);
+        
+        // Real API call (commented out for testing):
+        // const result = await analysisService.analyzeMessages({
+        //   forumId, forumTitle, forumDescription, forumQuestion, category, messages
+        // });
+        // setAnalysis(result);
       } catch (error) {
         console.error('Analysis failed:', error);
       } finally {
