@@ -3,11 +3,10 @@
  * POST handler that analyzes messages using OpenAI API
  */
 
-import { ActionFunctionArgs, json } from "@react-router/node";
-import OpenAI from "openai";
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { createHash } from "crypto";
+import { initializeApp } from "firebase/app";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import OpenAI from "openai";
 
 interface MessageAnalysisRequest {
   forumId: string;
@@ -44,16 +43,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export async function action({ request }: ActionFunctionArgs): Promise<Response> {
+export async function action({ request }: { request: Request }): Promise<Response> {
   if (request.method !== "POST") {
-    return json({ error: "Method not allowed" }, { status: 405 });
+    return Response.json({ error: "Method not allowed" }, { status: 405 });
   }
 
   try {
     const body: MessageAnalysisRequest = await request.json();
     
     if (!OPENAI_API_KEY) {
-      return json({ error: "OpenAI API key not configured" }, { status: 500 });
+      return Response.json({ error: "OpenAI API key not configured" }, { status: 500 });
     }
 
     const openai = new OpenAI({ 
@@ -74,7 +73,7 @@ export async function action({ request }: ActionFunctionArgs): Promise<Response>
     try {
       const cachedDoc = await getDoc(doc(db, 'analysisCache', cacheKey));
       if (cachedDoc.exists()) {
-        return json(cachedDoc.data() as MessageAnalysisResponse);
+        return Response.json(cachedDoc.data() as MessageAnalysisResponse);
       }
     } catch (cacheError) {
       console.warn('Cache check failed, proceeding with fresh analysis');
@@ -153,8 +152,8 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
       console.warn('Failed to cache analysis result');
     }
 
-    return json(response);
+    return Response.json(response);
   } catch (error) {
-    return json({ error: "Internal server error" }, { status: 500 });
+    return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
