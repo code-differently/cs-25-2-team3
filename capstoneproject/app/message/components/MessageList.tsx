@@ -178,7 +178,10 @@ export const MessageList: React.FC<MessageListProps> = ({
 
       {/* Tea Modal */}
       {showAnalysisModal && (
-        <TeaModal onClose={() => setShowAnalysisModal(false)} />
+        <TeaModal 
+          onClose={() => setShowAnalysisModal(false)} 
+          messages={validMessages}
+        />
       )}
     </div>
   );

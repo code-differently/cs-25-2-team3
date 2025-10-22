@@ -42,8 +42,26 @@ export default function TeaModal({ onClose, messages }: TeaModalProps) {
           ✕
         </button>
         
-        {/* Body Placeholder */}
-        <p className="text-gray-600">Fetching summary and solutions...</p>
+        {/* Body Content */}
+        <div className="space-y-3">
+          {loading ? (
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+              <p className="text-gray-600">Fetching the tea...</p>
+            </div>
+          ) : analysis ? (
+            <div>
+              <p className="text-sm text-gray-500 mb-2">{analysis.totalMessages} messages analyzed</p>
+              <div className="space-y-2">
+                {analysis.topPhrases.map((phrase, index) => (
+                  <p key={index} className="text-gray-800">• {phrase}</p>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="text-red-600">Unable to spill the tea right now 🫖</p>
+          )}
+        </div>
       </div>
     </div>
   );
