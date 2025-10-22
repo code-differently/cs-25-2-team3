@@ -41,6 +41,41 @@ export const MessageList: React.FC<MessageListProps> = ({
   const messageService = React.useMemo(() => new MessageService(), []);
   const analysisService = React.useMemo(() => new AnalysisService(), []);
 
+  // TODO: Remove - Dummy data for testing TeaModal
+  React.useEffect(() => {
+    const dummyMessages = [
+      new Message({ 
+        id: 1, 
+        author: "Alex", 
+        content: "React hooks are amazing but confusing at first!", 
+        timestamp: "2025-10-22T10:00:00Z", 
+        forumTitle: "React Learning Forum", 
+        reactions: [{ id: 1, userId: 1, messageId: 1, type: "like", timestamp: "2025-10-22T10:05:00Z" }] 
+      }),
+      new Message({ 
+        id: 2, 
+        author: "Sam", 
+        content: "TypeScript + React is the perfect combo for scalable apps", 
+        timestamp: "2025-10-22T10:30:00Z", 
+        forumTitle: "React Learning Forum", 
+        reactions: [
+          { id: 2, userId: 2, messageId: 2, type: "like", timestamp: "2025-10-22T10:35:00Z" }, 
+          { id: 3, userId: 3, messageId: 2, type: "like", timestamp: "2025-10-22T10:40:00Z" }
+        ] 
+      }),
+      new Message({ 
+        id: 3, 
+        author: "Jordan", 
+        content: "Debugging React components can be tricky without proper dev tools", 
+        timestamp: "2025-10-22T11:00:00Z", 
+        forumTitle: "React Learning Forum", 
+        reactions: [{ id: 4, userId: 4, messageId: 3, type: "dislike", timestamp: "2025-10-22T11:05:00Z" }] 
+      })
+    ];
+    setMessages(dummyMessages);
+    setLoading(false);
+  }, []);
+
   const analyzeMessages = React.useCallback(async (messagesToAnalyze: Message[]) => {
     if (!enableAnalysis || messagesToAnalyze.length === 0) return;
     

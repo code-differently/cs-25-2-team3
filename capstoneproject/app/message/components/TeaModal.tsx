@@ -20,8 +20,20 @@ export default function TeaModal({ onClose, messages }: TeaModalProps) {
   useEffect(() => {
     const fetchAnalysis = async () => {
       try {
-        const result = await analysisService.analyzeMessages(messages);
-        setAnalysis(result);
+        // TODO: Remove - Mock data for testing
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
+        const mockResult: MessageAnalysisResponse = {
+          totalMessages: messages.length,
+          topPhrases: [
+            "React development best practices",
+            "TypeScript integration challenges", 
+            "Component debugging strategies",
+            "Hook usage patterns",
+            "Scalable app architecture"
+          ]
+        };
+        setAnalysis(mockResult);
+        // Real API call: const result = await analysisService.analyzeMessages(messages);
       } catch (error) {
         console.error('Analysis failed:', error);
       } finally {
