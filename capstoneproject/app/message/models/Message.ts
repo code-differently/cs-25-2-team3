@@ -29,6 +29,8 @@ export class Message {
   public author: string;
   public content: string;
   public timestamp: string;
+  public forumId?: number;
+  public forumTitle?: string;
   public reactions: ReactionData[];
 
   constructor(data: MessageData) {
@@ -36,6 +38,8 @@ export class Message {
     this.author = data.author;
     this.content = data.content;
     this.timestamp = data.timestamp;
+    this.forumId = data.forumId;
+    this.forumTitle = data.forumTitle;
     this.reactions = data.reactions || [];
   }
 
@@ -48,6 +52,8 @@ export class Message {
       author: this.author,
       content: this.content,
       timestamp: this.timestamp,
+      forumId: this.forumId,
+      forumTitle: this.forumTitle,
       reactions: this.reactions
     };
   }
