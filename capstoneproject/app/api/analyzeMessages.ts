@@ -5,6 +5,9 @@
 
 import { ActionFunctionArgs, json } from "@react-router/node";
 import OpenAI from "openai";
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { createHash } from "crypto";
 
 interface MessageAnalysisRequest {
   forumId: string;
@@ -32,6 +35,15 @@ interface MessageAnalysisResponse {
 // OpenAI client setup
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
+// Firebase setup
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 export async function action({ request }: ActionFunctionArgs): Promise<Response> {
   if (request.method !== "POST") {
     return json({ error: "Method not allowed" }, { status: 405 });
@@ -48,9 +60,25 @@ export async function action({ request }: ActionFunctionArgs): Promise<Response>
       apiKey: OPENAI_API_KEY 
     });
 
-    const { messages, forumTitle, forumDescription, forumQuestion, category } = body;
+    const { messages, forumId, forumTitle, forumDescription, forumQuestion, category } = body;
     const totalMessages = messages.length;
     const uniqueAuthors = new Set(messages.map(m => m.author)).size;
+
+    // Generate cache key from forum + messages content hash
+    const messageHash = createHash('md5')
+      .update(JSON.stringify(messages.map(m => ({ id: m.id, content: m.content, timestamp: m.timestamp }))))
+      .digest('hex');
+    const cacheKey = `analysis_${forumId}_${messageHash}`;
+
+    // Check for cached analysis first
+    try {
+      const cachedDoc = await getDoc(doc(db, 'analysisCache', cacheKey));
+      if (cachedDoc.exists()) {
+        return json(cachedDoc.data() as MessageAnalysisResponse);
+      }
+    } catch (cacheError) {
+      console.warn('Cache check failed, proceeding with fresh analysis');
+    }
 
     // Extract forum context from request body
     const forumContext = forumTitle 
@@ -113,6 +141,17 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
       summary: analysisResult.summary,
       actionRoadmap: analysisResult.actionRoadmap
     };
+
+    // Cache the analysis result for future use
+    try {
+      await setDoc(doc(db, 'analysisCache', cacheKey), {
+        ...response,
+        cachedAt: new Date().toISOString(),
+        forumId
+      });
+    } catch (cacheError) {
+      console.warn('Failed to cache analysis result');
+    }
 
     return json(response);
   } catch (error) {
