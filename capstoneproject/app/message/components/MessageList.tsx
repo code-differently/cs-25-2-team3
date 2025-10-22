@@ -35,6 +35,7 @@ export const MessageList: React.FC<MessageListProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<MessageAnalysisResponse | null>(null);
+  const [showAnalysisModal, setShowAnalysisModal] = useState(false);
 
   const messageService = React.useMemo(() => new MessageService(), []);
   const analysisService = React.useMemo(() => new AnalysisService(), []);
@@ -144,6 +145,17 @@ export const MessageList: React.FC<MessageListProps> = ({
 
   return (
     <div className={`space-y-4 ${className}`}>
+      {/* Analysis Button */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => setShowAnalysisModal(true)}
+          disabled={validMessages.length === 0 || analyzing}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          🍵 What's Tea ({validMessages.length})
+        </button>
+      </div>
+
       {analyzing && enableAnalysis && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center">
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
