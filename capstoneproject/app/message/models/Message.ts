@@ -8,6 +8,8 @@ export interface MessageData {
   author: string;
   content: string;
   timestamp: string;
+  forumId?: number;
+  forumTitle?: string;
   reactions?: ReactionData[];
 }
 
