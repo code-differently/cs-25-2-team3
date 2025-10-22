@@ -4,7 +4,7 @@
  */
 
 import { createHash } from "crypto";
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import OpenAI from "openai";
 
@@ -40,7 +40,7 @@ const firebaseConfig = {
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
   projectId: process.env.FIREBASE_PROJECT_ID,
 };
-const app = initializeApp(firebaseConfig);
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
 
 export async function action({ request }: { request: Request }): Promise<Response> {
