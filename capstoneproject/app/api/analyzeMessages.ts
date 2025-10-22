@@ -7,14 +7,18 @@ import { ActionFunctionArgs, json } from "@react-router/node";
 import OpenAI from "openai";
 
 interface MessageAnalysisRequest {
+  forumId: string;
+  threadId?: string;
+  forumTitle: string;
+  forumDescription?: string;
+  forumQuestion?: string;
+  category?: string;
   messages: Array<{
     id: number;
     author: string;
     content: string;
     timestamp: string;
-    forumTitle?: string;
-    forumDescription?: string;
-    forumQuestion?: string;
+    threadId?: string;
   }>;
 }
 
@@ -44,14 +48,13 @@ export async function action({ request }: ActionFunctionArgs): Promise<Response>
       apiKey: OPENAI_API_KEY 
     });
 
-    const { messages } = body;
+    const { messages, forumTitle, forumDescription, forumQuestion, category } = body;
     const totalMessages = messages.length;
     const uniqueAuthors = new Set(messages.map(m => m.author)).size;
 
-    // Extract forum context and prepare enhanced analysis
-    const firstMessage = messages[0];
-    const forumContext = firstMessage?.forumTitle 
-      ? `Forum: "${firstMessage.forumTitle}"${firstMessage.forumDescription ? `\nDescription: ${firstMessage.forumDescription}` : ''}${firstMessage.forumQuestion ? `\nQuestion: ${firstMessage.forumQuestion}` : ''}\n\n` 
+    // Extract forum context from request body
+    const forumContext = forumTitle 
+      ? `Forum: "${forumTitle}"${forumDescription ? `\nDescription: ${forumDescription}` : ''}${forumQuestion ? `\nQuestion: ${forumQuestion}` : ''}${category ? `\nCategory: ${category}` : ''}\n\n` 
       : '';
     
     const messageContents = messages.map(m => m.content).join('\n');
