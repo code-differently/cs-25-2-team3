@@ -99,26 +99,13 @@ export const MessageList: React.FC<MessageListProps> = ({
   }, [enableAnalysis, onAnalysisComplete]);
 
   const loadMessages = React.useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const fetchedMessages = await messageService.getMessages(filters);
-      setMessages(fetchedMessages);
-      onMessagesLoaded?.(fetchedMessages);
-      
-      // Auto-analyze if enabled
-      if (enableAnalysis && fetchedMessages.length > 0) {
-        analyzeMessages(fetchedMessages);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load messages');
-    } finally {
-      setLoading(false);
-    }
+    // TODO: Remove - Skip real API calls during testing, dummy data is loaded in useEffect above
+    return;
   }, [filters, messageService, onMessagesLoaded, enableAnalysis, analyzeMessages]);
 
   useEffect(() => {
-    loadMessages();
+    // Skip loadMessages during testing since we have dummy data
+    // loadMessages();
   }, [loadMessages]);
 
   const handleMessageUpdate = (updatedMessage: Message) => {

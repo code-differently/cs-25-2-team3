@@ -17,12 +17,21 @@ type Pages = {
   "/forums": {
     params: {};
   };
+  "/messages": {
+    params: {};
+  };
+  "/signup": {
+    params: {};
+  };
+  "/login": {
+    params: {};
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/forums";
+    page: "/" | "/forums" | "/messages" | "/signup" | "/login";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -32,10 +41,25 @@ type RouteFiles = {
     id: "routes/forums";
     page: "/forums";
   };
+  "message/message.tsx": {
+    id: "message/message";
+    page: "/messages";
+  };
+  "routes/signup.tsx": {
+    id: "routes/signup";
+    page: "/signup";
+  };
+  "routes/login.tsx": {
+    id: "routes/login";
+    page: "/login";
+  };
 };
 
 type RouteModules = {
   "root": typeof import("./app/root.tsx");
   "routes/home": typeof import("./app/routes/home.tsx");
   "routes/forums": typeof import("./app/routes/forums.tsx");
+  "message/message": typeof import("./app/message/message.tsx");
+  "routes/signup": typeof import("./app/routes/signup.tsx");
+  "routes/login": typeof import("./app/routes/login.tsx");
 };
