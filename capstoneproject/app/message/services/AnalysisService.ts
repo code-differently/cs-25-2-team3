@@ -12,15 +12,22 @@ export interface MessageAnalysisResponse {
 
 export class AnalysisService {
   /**
-   * Analyzes messages using the secure OpenAI API endpoint
+   * Analyzes messages using the secure OpenAI API endpoint with forum context
    */
-  async analyzeMessages(messages: any[]): Promise<MessageAnalysisResponse> {
+  async analyzeMessages(payload: {
+    forumId: string;
+    forumTitle: string;
+    forumDescription?: string;
+    forumQuestion?: string;
+    category?: string;
+    messages: any[];
+  }): Promise<MessageAnalysisResponse> {
     const response = await fetch('/api/analyzeMessages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ messages }),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {

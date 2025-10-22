@@ -10,30 +10,31 @@ import { AnalysisService, type MessageAnalysisResponse } from '../services/Analy
 interface TeaModalProps {
   onClose: () => void;
   messages: Message[];
+  forumId: string;
+  forumTitle: string;
+  forumDescription?: string;
+  forumQuestion?: string;
+  category?: string;
 }
 
-export default function TeaModal({ onClose, messages }: TeaModalProps) {
+const analysisService = new AnalysisService();
+
+export default function TeaModal({ onClose, messages, forumId, forumTitle, forumDescription, forumQuestion, category }: TeaModalProps) {
   const [analysis, setAnalysis] = useState<MessageAnalysisResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const analysisService = new AnalysisService();
 
   useEffect(() => {
     const fetchAnalysis = async () => {
       try {
-        // TODO: Remove - Mock data for testing
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
-        const mockResult: MessageAnalysisResponse = {
-          totalMessages: messages.length,
-          uniqueAuthors: 3,
-          summary: "This thread is giving major productivity vibes! People are sharing solid React tips and debugging tricks. The tone is helpful and collaborative - perfect energy! 💯",
-          actionRoadmap: [
-            "1️⃣ Save the most upvoted tips to your notes",
-            "2️⃣ Try implementing one new debugging technique",
-            "3️⃣ Share your own experience to keep the convo flowing"
-          ]
-        };
-        setAnalysis(mockResult);
-        // Real API call: const result = await analysisService.analyzeMessages(messages);
+        const result = await analysisService.analyzeMessages({
+          forumId,
+          forumTitle,
+          forumDescription,
+          forumQuestion,
+          category,
+          messages
+        });
+        setAnalysis(result);
       } catch (error) {
         console.error('Analysis failed:', error);
       } finally {
@@ -41,7 +42,7 @@ export default function TeaModal({ onClose, messages }: TeaModalProps) {
       }
     };
     fetchAnalysis();
-  }, [messages]);
+  }, [messages, forumId, forumTitle, forumDescription, forumQuestion, category]);
 
   return (
     <div className="fixed inset-0 bg-blue-900 bg-opacity-50 flex items-center justify-center z-50">
