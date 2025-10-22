@@ -10,6 +10,7 @@ import { MessageService } from '../services/MessageService';
 import { AnalysisService, type MessageAnalysisResponse } from '../services/AnalysisService';
 import { MessageItem } from './MessageItem';
 import { MessageAnalysis } from './MessageAnalysis';
+import TeaModal from './TeaModal';
 
 interface MessageListProps {
   filters?: MessageFilters;
@@ -174,6 +175,11 @@ export const MessageList: React.FC<MessageListProps> = ({
           />
         ))}
       </div>
+
+      {/* Tea Modal */}
+      {showAnalysisModal && (
+        <TeaModal onClose={() => setShowAnalysisModal(false)} />
+      )}
     </div>
   );
 };
