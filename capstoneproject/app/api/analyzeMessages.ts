@@ -57,19 +57,33 @@ export async function action({ request }: ActionFunctionArgs): Promise<Response>
       ? `Forum: "${forumTitle}"${forumDescription ? `\nDescription: ${forumDescription}` : ''}${forumQuestion ? `\nQuestion: ${forumQuestion}` : ''}${category ? `\nCategory: ${category}` : ''}\n\n` 
       : '';
     
-    const messageContents = messages.map(m => m.content).join('\n');
+    // Group messages by thread for hierarchical analysis
+    const messagesByThread = new Map<string, typeof messages>();
+    messages.forEach(msg => {
+      const threadKey = msg.threadId || 'main';
+      if (!messagesByThread.has(threadKey)) {
+        messagesByThread.set(threadKey, []);
+      }
+      messagesByThread.get(threadKey)!.push(msg);
+    });
+    
+    // Generate thread summaries first, then forum-level analysis
+    const threadSummaries: string[] = [];
+    for (const [threadKey, threadMessages] of messagesByThread) {
+      const threadContent = threadMessages.map(m => m.content).join('\n');
+      threadSummaries.push(`Thread "${threadKey}": ${threadContent}`);
+    }
     
     const analysisPrompt = `
-${forumContext}Analyze the following messages in terms of:
-- Diction (word choice and tone)
-- Sentence structure and rhythm  
-- Point of view and emotional intent
-- Punctuation and phrasing patterns
+${forumContext}Perform hierarchical analysis:
+1. Analyze each thread's diction, tone, structure, and emotional intent
+2. Synthesize into forum-level summary with Gen Z-friendly insights
+3. Create actionable 3-step roadmap
 
-Return a concise Gen Z-friendly paragraph (under 100 words) + 3-step Action Roadmap.
-Format as JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", "3️⃣ ..."]}
+Threads:
+${threadSummaries.join('\n\n')}
 
-Messages: ${messageContents}`;
+Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", "3️⃣ ..."]}`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
