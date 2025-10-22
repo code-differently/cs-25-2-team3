@@ -12,13 +12,17 @@ interface MessageAnalysisRequest {
     author: string;
     content: string;
     timestamp: string;
+    forumTitle?: string;
+    forumDescription?: string;
+    forumQuestion?: string;
   }>;
 }
 
 interface MessageAnalysisResponse {
   totalMessages: number;
   uniqueAuthors: number;
-  topPhrases: string[];
+  summary: string;
+  actionRoadmap: string[];
 }
 
 // OpenAI client setup
@@ -44,32 +48,53 @@ export async function action({ request }: ActionFunctionArgs): Promise<Response>
     const totalMessages = messages.length;
     const uniqueAuthors = new Set(messages.map(m => m.author)).size;
 
-    // Prepare content for OpenAI analysis
+    // Extract forum context and prepare enhanced analysis
+    const firstMessage = messages[0];
+    const forumContext = firstMessage?.forumTitle 
+      ? `Forum: "${firstMessage.forumTitle}"${firstMessage.forumDescription ? `\nDescription: ${firstMessage.forumDescription}` : ''}${firstMessage.forumQuestion ? `\nQuestion: ${firstMessage.forumQuestion}` : ''}\n\n` 
+      : '';
+    
     const messageContents = messages.map(m => m.content).join('\n');
     
+    const analysisPrompt = `
+${forumContext}Analyze the following messages in terms of:
+- Diction (word choice and tone)
+- Sentence structure and rhythm  
+- Point of view and emotional intent
+- Punctuation and phrasing patterns
+
+Return a concise Gen Z-friendly paragraph (under 100 words) + 3-step Action Roadmap.
+Format as JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", "3️⃣ ..."]}
+
+Messages: ${messageContents}`;
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{
         role: "user",
-        content: `Analyze these messages and extract the top 5 most common phrases or themes. Return only a JSON array of strings: ${messageContents}`
+        content: analysisPrompt
       }],
       temperature: 0.3
     });
 
-    const aiResponse = completion.choices[0]?.message?.content || "[]";
-    let topPhrases: string[] = [];
+    const aiResponse = completion.choices[0]?.message?.content || "{}";
+    let analysisResult: { summary: string; actionRoadmap: string[] } = { summary: "", actionRoadmap: [] };
 
     try {
-      topPhrases = JSON.parse(aiResponse);
+      analysisResult = JSON.parse(aiResponse);
     } catch (parseError) {
       console.warn("Failed to parse OpenAI response, using fallback");
-      topPhrases = ["analysis", "messages", "communication"];
+      analysisResult = {
+        summary: "Messages show active discussion about tech topics with mixed engagement levels.",
+        actionRoadmap: ["1️⃣ Start by identifying key themes", "2️⃣ Build on popular topics", "3️⃣ Finish with actionable insights"]
+      };
     }
 
     const response: MessageAnalysisResponse = {
       totalMessages,
       uniqueAuthors,
-      topPhrases
+      summary: analysisResult.summary,
+      actionRoadmap: analysisResult.actionRoadmap
     };
 
     return json(response);
