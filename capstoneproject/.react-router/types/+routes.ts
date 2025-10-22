@@ -26,12 +26,15 @@ type Pages = {
   "/login": {
     params: {};
   };
+  "/api/analyzeMessages": {
+    params: {};
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/forums" | "/messages" | "/signup" | "/login";
+    page: "/" | "/forums" | "/messages" | "/signup" | "/login" | "/api/analyzeMessages";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -53,6 +56,10 @@ type RouteFiles = {
     id: "routes/login";
     page: "/login";
   };
+  "api/analyzeMessages.ts": {
+    id: "api/analyzeMessages";
+    page: "/api/analyzeMessages";
+  };
 };
 
 type RouteModules = {
@@ -62,4 +69,5 @@ type RouteModules = {
   "message/message": typeof import("./app/message/message.tsx");
   "routes/signup": typeof import("./app/routes/signup.tsx");
   "routes/login": typeof import("./app/routes/login.tsx");
+  "api/analyzeMessages": typeof import("./app/api/analyzeMessages.ts");
 };
