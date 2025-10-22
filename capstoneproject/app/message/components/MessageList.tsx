@@ -5,11 +5,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { Message } from '../models/Message';
+import { AnalysisService, type MessageAnalysisResponse } from '../services/AnalysisService';
 import type { MessageFilters } from '../services/MessageService';
 import { MessageService } from '../services/MessageService';
-import { AnalysisService, type MessageAnalysisResponse } from '../services/AnalysisService';
 import { MessageItem } from './MessageItem';
-import { MessageAnalysis } from './MessageAnalysis';
 import TeaModal from './TeaModal';
 
 interface MessageListProps {
@@ -203,6 +202,11 @@ export const MessageList: React.FC<MessageListProps> = ({
         <TeaModal 
           onClose={() => setShowAnalysisModal(false)} 
           messages={validMessages}
+          forumId="forum_react_learning"
+          forumTitle="React Learning Forum"
+          forumDescription="A place to share React tips, tricks, and best practices"
+          forumQuestion="What's the most effective way to learn React development?"
+          category="Programming"
         />
       )}
     </div>
