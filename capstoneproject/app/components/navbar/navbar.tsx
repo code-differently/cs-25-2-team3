@@ -1,16 +1,17 @@
-import { onAuthStateChanged } from "firebase/auth";
-import { firebaseAuth } from "../../firebase";
 import { useEffect, useState } from "react";
 
 export function NavBar() {
-  const [isAnonymous, setAnonymous] = useState<string>(() => {
-    // Load from sessionStorage on component mount
-    return sessionStorage.getItem("anonymous") || "false";
-  });
+  const [isAnonymous, setAnonymous] = useState<string>("");
 
-  // Update sessionStorage whenever userRole changes
+  // Load from sessionStorage on component mount (client-side only)
   useEffect(() => {
-    sessionStorage.setItem("anonymous", isAnonymous);
+    if (typeof window !== "undefined") {
+      const savedAnonymous = window.sessionStorage.getItem("anonymous");
+      if (savedAnonymous !== null) {
+        setAnonymous(savedAnonymous);
+        console.log("Anonymous User: " + isAnonymous);
+      }
+    }
   }, [isAnonymous]);
 
   return (
@@ -23,6 +24,13 @@ export function NavBar() {
           TITLE_GOES_HERE
         </button>
       </div>
+      {isAnonymous === "false" ? ( <div>
+        NAME
+      </div>): (
+        <div>
+          User Is Anonymous
+        </div>
+      )}
       <button
         className="px-5 py-2 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow"
         // onClick={handleSignIn} // TODO: @Nicole

@@ -1,24 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const UserDashboardPage: React.FC = () => {
   // useState with a boolean type explicitly defined for isAdmin
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  let isAnonymous = sessionStorage.getItem("anonymous") || "false";
+  const [isAnonymous, setAnonymous] = useState<string>("");
 
 
   // Function to toggle the user role
   const toggleUserSetting = () => {
     if(isAnonymous === "false") {
       sessionStorage.setItem("anonymous", "true");
-      isAnonymous = "true"
+      setAnonymous("true");
 
     }
     else {
       sessionStorage.setItem("anonymous", "false");
-      isAnonymous = "false"
+      setAnonymous("false")
     }
     
   };
+
+    // Load from sessionStorage on component mount (client-side only)
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        const savedAnonymous = window.sessionStorage.getItem("anonymous");
+        if (savedAnonymous !== null) {
+          setAnonymous(savedAnonymous);
+          console.log("Anonymous User: " + isAnonymous);
+        }
+      }
+    }, [isAnonymous]);
   
   return (
     
