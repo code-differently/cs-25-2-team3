@@ -43,7 +43,7 @@ export function HomePage() {
             How We Work
           </h2>
           <div className="grid grid-cols-4 grid-flow-row gap-6">
-            <div className="grid grid-cols-1 gap-3 border-gray-300 border-2 rounded-lg p-4 h-120 transition-all hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]">
+            <div className="grid grid-cols-1 gap-3 border-gray-300 border-2 rounded-lg p-4 h-120 transition-all ">
               <span className="text-5xl text-[#F47D26]">1.</span>
               <div className="font-bold text-gray-800 mb-1 text-2xl">Create or Sign In</div>
               <div className="text-gray-600 text-lg">Create an account or sign in to your existing account.</div>
@@ -52,7 +52,7 @@ export function HomePage() {
                 <path stroke="currentColor" strokeWidth="1" d="M4 20c0-4 4-6 8-6s8 2 8 6" />
               </svg>
             </div>
-            <div className="grid grid-cols-1 gap-3 border-gray-300 border-2 rounded-lg p-4 h-120 transition-all hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]">
+            <div className="grid grid-cols-1 gap-3 border-gray-300 border-2 rounded-lg p-4 h-120 transition-all ">
               <span className="text-5xl text-[#F47D26]">2.</span>
               <div className="font-bold text-gray-800 mb-1 text-2xl">Start or Join a Forum</div>
               <div className="text-gray-600 text-lg">Start or join a forum about any question or problem.</div>
@@ -60,7 +60,7 @@ export function HomePage() {
                 <path stroke="currentColor" strokeWidth="1" d="M8 10h8M8 14h4M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.8L3 21l1.8-4A8.96 8.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
-            <div className="grid grid-cols-1 gap-3 border-gray-300 border-2 rounded-lg p-4 h-120 transition-all hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]">
+            <div className="grid grid-cols-1 gap-3 border-gray-300 border-2 rounded-lg p-4 h-120 transition-all ">
               <span className="text-5xl text-[#F47D26]">3.</span>
               <div className="font-bold text-gray-800 mb-1 text-2xl">Engage & Upvote</div>
               <div className="text-gray-600 text-lg">Respond to messages and upvote or downvote responses.</div>
@@ -68,7 +68,7 @@ export function HomePage() {
                 <path stroke="currentColor" strokeWidth="1" d="M12 4l6 8H6l6-8zm0 16v-8" />
               </svg>
             </div>
-            <div className="grid grid-cols-1 gap-3 border-gray-300 border-2 rounded-lg p-4 h-120 transition-all hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]">
+            <div className="grid grid-cols-1 gap-3 border-gray-300 border-2 rounded-lg p-4 h-120 transition-all ">
               <span className="text-5xl text-[#F47D26]">4.</span>
               <div className="font-bold text-gray-800 mb-1 text-2xl">Read AI Summaries</div>
               <div className="text-gray-600 text-lg">Read AI-generated summaries of discussions after the forum ends.</div>
