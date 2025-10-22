@@ -12,6 +12,8 @@ interface MessageAnalysisRequest {
     author: string;
     content: string;
     timestamp: string;
+    forumId?: number;
+    forumTitle?: string;
     reactions?: Array<{
       id: number;
       userId: number;
@@ -48,6 +50,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Extract message content and reaction data (privacy-focused)
     const messageContents = messages.map(m => m.content).join('\n');
     
+    // Add forum context if available
+    const forumContext = messages.length > 0 && messages[0].forumTitle 
+      ? `Forum: "${messages[0].forumTitle}" - ` 
+      : '';
+    
     // Calculate engagement metrics
     const engagementData = messages.map(msg => {
       const likes = msg.reactions?.filter(r => r.type === 'like').length || 0;
@@ -69,7 +76,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       model: "gpt-4o-mini",
       messages: [{
         role: "user",
-        content: `Analyze these forum messages with engagement data. Focus on highly-engaged content (${totalReactions} total reactions, avg ${avgEngagement.toFixed(1)} per message). Extract top 3-5 phrases/topics. Return JSON array of strings.
+        content: `${forumContext}Analyze these forum messages with engagement data. Focus on highly-engaged content (${totalReactions} total reactions, avg ${avgEngagement.toFixed(1)} per message). Extract top 3-5 phrases/topics. Return JSON array of strings.
 
 Messages: ${messageContents}
 
