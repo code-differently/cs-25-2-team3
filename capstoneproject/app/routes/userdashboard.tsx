@@ -1,4 +1,5 @@
 import type { Route } from "./+types/userdashboard";
+import { UserDashboardPage } from "~/account/UserDashboard";
 
 
 export function meta({}: Route.MetaArgs) {
@@ -9,11 +10,6 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function UserDashboard() {
-  return (
-    <div>
-      <h1>User Dashboard</h1>
-      <p>Welcome to your dashboard!</p>
-    </div>
-  );
+    return <UserDashboardPage />;
 }
 

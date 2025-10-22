@@ -1,8 +1,8 @@
 // import { Footer } from "../components/footer/footer";
 // import { NavBar } from "../components/navbar/navbar
 
-import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import React, { useState } from 'react';
 import { firebaseAuth } from "../firebase";
 
 export const SignUpPage: React.FC = () => {

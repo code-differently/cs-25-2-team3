@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from 'react';
 import { firebaseAuth } from "../firebase";
 
 export const LoginPage: React.FC = () => {
@@ -15,12 +15,16 @@ export const LoginPage: React.FC = () => {
   // Signed in 
   alert('User successfully logged in!');
   const user = userCredential.user;
+  sessionStorage.setItem("anonymous", "false");
+  sessionStorage.setItem("admin", "false");
+
   // ...
    } catch (err: any){
       setError(err.message);
       console.error('Login error:', err);
     }
 };
+
     
 
 return (

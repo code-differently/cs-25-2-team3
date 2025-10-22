@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
 
-const UserDashboard: React.FC = () => {
+export const UserDashboardPage: React.FC = () => {
   // useState with a boolean type explicitly defined for isAdmin
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
+  let isAnonymous = sessionStorage.getItem("anonymous") || "false";
 
 
   // Function to toggle the user role
   const toggleUserSetting = () => {
-    setIsAnonymous(prevIsAnonymous => !prevIsAnonymous);
+    if(isAnonymous === "false") {
+      sessionStorage.setItem("anonymous", "true");
+      isAnonymous = "true"
+
+    }
+    else {
+      sessionStorage.setItem("anonymous", "false");
+      isAnonymous = "false"
+    }
+    
   };
   
   return (
@@ -37,5 +46,3 @@ const UserDashboard: React.FC = () => {
     </div>
   );
 };
-
-export default UserDashboard;
