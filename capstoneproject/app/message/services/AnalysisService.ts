@@ -5,7 +5,9 @@
 
 export interface MessageAnalysisResponse {
   totalMessages: number;
-  topPhrases: string[];
+  uniqueAuthors: number;
+  summary: string;
+  actionRoadmap: string[];
 }
 
 export class AnalysisService {

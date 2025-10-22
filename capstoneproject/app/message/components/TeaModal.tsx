@@ -3,9 +3,9 @@
  * Modal popup for displaying AI analysis results in a chat-like interface
  */
 
-import React, { useState, useEffect } from 'react';
-import { AnalysisService, type MessageAnalysisResponse } from '../services/AnalysisService';
+import { useEffect, useState } from 'react';
 import type { Message } from '../models/Message';
+import { AnalysisService, type MessageAnalysisResponse } from '../services/AnalysisService';
 
 interface TeaModalProps {
   onClose: () => void;
@@ -24,12 +24,12 @@ export default function TeaModal({ onClose, messages }: TeaModalProps) {
         await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
         const mockResult: MessageAnalysisResponse = {
           totalMessages: messages.length,
-          topPhrases: [
-            "React development best practices",
-            "TypeScript integration challenges", 
-            "Component debugging strategies",
-            "Hook usage patterns",
-            "Scalable app architecture"
+          uniqueAuthors: 3,
+          summary: "This thread is giving major productivity vibes! People are sharing solid React tips and debugging tricks. The tone is helpful and collaborative - perfect energy! 💯",
+          actionRoadmap: [
+            "1️⃣ Save the most upvoted tips to your notes",
+            "2️⃣ Try implementing one new debugging technique",
+            "3️⃣ Share your own experience to keep the convo flowing"
           ]
         };
         setAnalysis(mockResult);
@@ -62,12 +62,23 @@ export default function TeaModal({ onClose, messages }: TeaModalProps) {
               <p className="text-gray-600">Fetching the tea...</p>
             </div>
           ) : analysis ? (
-            <div>
-              <p className="text-sm text-gray-500 mb-2">{analysis.totalMessages} messages analyzed</p>
-              <div className="space-y-2">
-                {analysis.topPhrases.map((phrase, index) => (
-                  <p key={index} className="text-gray-800">• {phrase}</p>
-                ))}
+            <div className="space-y-4">
+              <p className="text-sm text-gray-500">{analysis.totalMessages} messages • {analysis.uniqueAuthors} authors</p>
+              
+              {/* Summary */}
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <h3 className="font-medium text-blue-900 mb-2">The Tea ☕</h3>
+                <p className="text-blue-800">{analysis.summary}</p>
+              </div>
+              
+              {/* Action Roadmap */}
+              <div className="bg-green-50 p-3 rounded-lg">
+                <h3 className="font-medium text-green-900 mb-2">Action Plan 🚀</h3>
+                <div className="space-y-1">
+                  {analysis.actionRoadmap.map((step, index) => (
+                    <p key={index} className="text-green-800 text-sm">{step}</p>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (
