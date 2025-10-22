@@ -7,24 +7,20 @@ import React, { useEffect, useState } from 'react';
 import { Message } from '../models/Message';
 import type { MessageFilters } from '../services/MessageService';
 import { MessageService } from '../services/MessageService';
+import { AnalysisService, type MessageAnalysisResponse } from '../services/AnalysisService';
 import { MessageItem } from './MessageItem';
+import { MessageAnalysis } from './MessageAnalysis';
 
 interface MessageListProps {
   filters?: MessageFilters;
   onMessageSelect?: (message: Message) => void;
   onMessagesLoaded?: (messages: Message[]) => void;
-  onAnalysisComplete?: (analysis: MessageAnalysis) => void;
+  onAnalysisComplete?: (analysis: MessageAnalysisResponse) => void;
   enableAnalysis?: boolean;
   className?: string;
 }
 
-interface MessageAnalysis {
-  totalMessages: number;
-  uniqueAuthors: number;
-  totalReactions: number;
-  averageEngagement: number;
-  topPhrases: string[];
-}
+
 
 export const MessageList: React.FC<MessageListProps> = ({
   filters,
@@ -38,8 +34,10 @@ export const MessageList: React.FC<MessageListProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResults, setAnalysisResults] = useState<MessageAnalysisResponse | null>(null);
 
   const messageService = React.useMemo(() => new MessageService(), []);
+  const analysisService = React.useMemo(() => new AnalysisService(), []);
 
   const analyzeMessages = React.useCallback(async (messagesToAnalyze: Message[]) => {
     if (!enableAnalysis || messagesToAnalyze.length === 0) return;
@@ -54,7 +52,7 @@ export const MessageList: React.FC<MessageListProps> = ({
       
       if (!response.ok) throw new Error('Analysis failed');
       
-      const analysis: MessageAnalysis = await response.json();
+      const analysis: MessageAnalysisResponse = await response.json();
       onAnalysisComplete?.(analysis);
     } catch (err) {
       console.error('Message analysis failed:', err);
