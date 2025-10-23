@@ -172,11 +172,25 @@ export default function ForumDetailPage() {
                             </div>
                         )}
                         <button
-                          onClick={() => setShowTeaModal(true)}
-                          className="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-4 ml-4"
+                          onClick={() => {
+                            if (comments.length === 0) {
+                              console.log("[TeaModal] Disabled — no messages to analyze");
+                              return;
+                            }
+                            setShowTeaModal(true);
+                          }}
+                          disabled={comments.length === 0}
+                          className={`bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-4 ml-4 ${
+                            comments.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
                         >
                           What's Tea (🍵)
                         </button>
+                        {comments.length === 0 && (
+                          <p className="text-sm text-gray-500 mt-2">
+                            Post at least one message before spilling the tea ☕
+                          </p>
+                        )}
                     </div>
 
                     {/* Forum Messages */}

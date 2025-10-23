@@ -4,7 +4,7 @@
  */
 
 import { createHash } from "crypto";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import OpenAI from "openai";
 import { db } from "../firebase/config.js";
 
