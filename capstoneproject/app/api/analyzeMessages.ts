@@ -6,7 +6,7 @@
 import { createHash } from "crypto";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import OpenAI from "openai";
-import { firestore } from "../firebase/config.js";
+import { db } from "../firebase/config.js";
 
 interface MessageAnalysisRequest {
   forumId: string;
@@ -64,7 +64,7 @@ export async function action({ request }: { request: Request }): Promise<Respons
     // Check for cached analysis first
     try {
       console.log("[analyzeMessages] Checking Firebase cache for key:", cacheKey);
-      const cachedDoc = await getDoc(doc(firestore, 'analysisCache', cacheKey));
+      const cachedDoc = await getDoc(doc(db, 'analysisCache', cacheKey));
       if (cachedDoc.exists()) {
         return Response.json(cachedDoc.data() as MessageAnalysisResponse);
       }
@@ -138,7 +138,7 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
     };
 
         try {
-    const forumRef = doc(firestore, "forums", forumId);
+    const forumRef = doc(db, "forums", forumId);
 
     await updateDoc(forumRef, {
       analysisSummary: analysisResult.summary,
