@@ -17,21 +17,26 @@ type Pages = {
   "/forums": {
     params: {};
   };
+  "/userdashboard": {
+  "/create-forum": {
+    params: {};
+  };
+  "/forum/:forumId": {
+    params: {
+      "forumId": string;
+    };
+  };
   "/signup": {
     params: {};
   };
   "/login": {
     params: {};
   };
-  "/userdashboard": {
-    params: {};
-  };
 };
 
 type RouteFiles = {
   "root.tsx": {
-    id: "root";
-    page: "/" | "/forums" | "/signup" | "/login" | "/userdashboard";
+    page: "/" | "/forums" | "/create-forum" | "/forum/:forumId" | "/signup" | "/login" | "/userdashboard";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -40,6 +45,14 @@ type RouteFiles = {
   "routes/forums.tsx": {
     id: "routes/forums";
     page: "/forums";
+  };
+  "routes/create-forum.tsx": {
+    id: "routes/create-forum";
+    page: "/create-forum";
+  };
+  "routes/forum-detail.tsx": {
+    id: "routes/forum-detail";
+    page: "/forum/:forumId";
   };
   "routes/signup.tsx": {
     id: "routes/signup";
@@ -59,7 +72,9 @@ type RouteModules = {
   "root": typeof import("./app/root.tsx");
   "routes/home": typeof import("./app/routes/home.tsx");
   "routes/forums": typeof import("./app/routes/forums.tsx");
+  "routes/userdashboard": typeof import("./app/routes/userdashboard.tsx");
+  "routes/create-forum": typeof import("./app/routes/create-forum.tsx");
+  "routes/forum-detail": typeof import("./app/routes/forum-detail.tsx");
   "routes/signup": typeof import("./app/routes/signup.tsx");
   "routes/login": typeof import("./app/routes/login.tsx");
-  "routes/userdashboard": typeof import("./app/routes/userdashboard.tsx");
 };

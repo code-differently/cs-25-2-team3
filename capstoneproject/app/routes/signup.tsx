@@ -2,9 +2,6 @@
 import { SignUpPage } from "~/account/signup";
 import type { Route } from "./+types/signup";
 
-
-
-
 export function meta({}: Route.MetaArgs) {
     return [
         { title: "Signup" },
