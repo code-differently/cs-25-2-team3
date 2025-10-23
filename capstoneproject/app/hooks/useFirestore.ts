@@ -61,17 +61,13 @@ export interface Vote {
 export function useFirestore() {
   // Forum operations
   const createForum = async (forumData: Omit<Forum, 'id' | 'createdAt' | 'upvotes' | 'downvotes' | 'commentCount'>) => {
+    console.log("[createForum] Attempting to add forum:", forumData);
     try {
-      const docRef = await addDoc(collection(db, 'forums'), {
-        ...forumData,
-        createdAt: serverTimestamp(),
-        upvotes: 0,
-        downvotes: 0,
-        commentCount: 0,
-      });
+      const docRef = await addDoc(collection(db, 'forums'), forumData);
+      console.log("[createForum] Forum created with ID:", docRef.id);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating forum:', error);
+      console.error("[createForum] Error adding forum:", error);
       throw error;
     }
   };
