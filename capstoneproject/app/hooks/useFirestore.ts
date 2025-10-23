@@ -33,6 +33,8 @@ export interface Forum {
   downvotes: number;
   commentCount: number;
   tags?: string[];
+  summary: string; 
+  actionRoadmap: string[]; 
 }
 
 export interface Comment {

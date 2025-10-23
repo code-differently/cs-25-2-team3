@@ -4,7 +4,7 @@
  */
 
 import { createHash } from "crypto";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import OpenAI from "openai";
 import { firestore } from "../firebase/config.js";
 
@@ -126,6 +126,7 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
       analysisResult = {
         summary: "Messages show active discussion about tech topics with mixed engagement levels.",
         actionRoadmap: ["1️⃣ Start by identifying key themes", "2️⃣ Build on popular topics", "3️⃣ Finish with actionable insights"]
+
       };
     }
 
@@ -136,18 +137,22 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
       actionRoadmap: analysisResult.actionRoadmap
     };
 
-    // Cache the analysis result for future use
-    try {
-      console.log("[analyzeMessages] Caching result to Firebase");
-      await setDoc(doc(firestore, 'analysisCache', cacheKey), {
-        ...response,
-        cachedAt: new Date().toISOString(),
-        forumId
-      });
-    } catch (cacheError) {
-      console.warn('Failed to cache analysis result');
-    }
+        try {
+    const forumRef = doc(firestore, "forums", forumId);
 
+    await updateDoc(forumRef, {
+      analysisSummary: analysisResult.summary,
+      actionRoadmap: analysisResult.actionRoadmap,
+      lastAnalyzedAt: new Date().toISOString(),
+    });
+
+    console.log(`[analyzeMessages] Forum ${forumId} updated with analysis summary`);
+  } catch (forumUpdateError) {
+    console.error("[analyzeMessages] Failed to update forum with summary:", forumUpdateError);
+  }
+
+
+   
     return Response.json(response);
   } catch (error) {
     console.error("[analyzeMessages] Fatal error:", error instanceof Error ? error.message : String(error));
