@@ -122,15 +122,37 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
     console.log(aiResponse);
 
     try {
-      // Extract JSON substring if wrapped in markdown/code block or extra text
-      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        analysisResult = JSON.parse(jsonMatch[0]);
+      // 1. Remove markdown code fences and trim whitespace
+      let cleaned = aiResponse.replace(/```json|```/g, "").trim();
+
+      // 2. Extract first {...} or [...] block
+      const match = cleaned.match(/(\{[\s\S]*?\}|\[[\s\S]*?\])/);
+      let parsed: any = null;
+      if (match) {
+        try {
+          parsed = JSON.parse(match[0]);
+        } catch (err) {
+          console.warn("[analyzeMessages] Failed to parse extracted JSON block:", err);
+          try { parsed = JSON.parse(cleaned); } catch (err2) {
+            console.warn("[analyzeMessages] Failed to parse cleaned string:", err2);
+          }
+        }
+      }
+
+      // 3. Validate keys before use
+      if (
+        parsed &&
+        typeof parsed.summary === "string" &&
+        Array.isArray(parsed.actionRoadmap)
+      ) {
+        analysisResult = parsed;
       } else {
-        analysisResult = JSON.parse(aiResponse);
+        console.warn("[analyzeMessages] Parsed object missing required keys, falling back.");
+        throw new Error("Missing required keys");
       }
     } catch (parseError) {
-      console.warn("Failed to parse OpenAI response, using fallback");
+      console.warn("[analyzeMessages] Failed to parse OpenAI response, using fallback. Error:", parseError);
+      console.warn("[analyzeMessages] Problematic response:", aiResponse);
       analysisResult = {
         summary: "Messages show active discussion about tech topics with mixed engagement levels.",
         actionRoadmap: [
