@@ -41,6 +41,7 @@ export async function action({ request }: { request: Request }): Promise<Respons
 
   try {
     const body: MessageAnalysisRequest = await request.json();
+    console.log("[analyzeMessages] Request received:", { forumId: body?.forumId, messagesLength: body?.messages?.length });
     
     if (!OPENAI_API_KEY) {
       return Response.json({ error: "OpenAI API key not configured" }, { status: 500 });
@@ -62,6 +63,7 @@ export async function action({ request }: { request: Request }): Promise<Respons
 
     // Check for cached analysis first
     try {
+      console.log("[analyzeMessages] Checking Firebase cache for key:", cacheKey);
       const cachedDoc = await getDoc(doc(firestore, 'analysisCache', cacheKey));
       if (cachedDoc.exists()) {
         return Response.json(cachedDoc.data() as MessageAnalysisResponse);
@@ -103,6 +105,7 @@ ${threadSummaries.join('\n\n')}
 
 Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", "3️⃣ ..."]}`;
 
+    console.log("[analyzeMessages] Calling OpenAI API with", threadSummaries.length, "threads");
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{
@@ -113,6 +116,7 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
     });
 
     const aiResponse = completion.choices[0]?.message?.content || "{}";
+    console.log("[analyzeMessages] OpenAI response received, length:", aiResponse.length);
     let analysisResult: { summary: string; actionRoadmap: string[] } = { summary: "", actionRoadmap: [] };
 
     try {
@@ -134,6 +138,7 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
 
     // Cache the analysis result for future use
     try {
+      console.log("[analyzeMessages] Caching result to Firebase");
       await setDoc(doc(firestore, 'analysisCache', cacheKey), {
         ...response,
         cachedAt: new Date().toISOString(),
@@ -145,6 +150,8 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
 
     return Response.json(response);
   } catch (error) {
+    console.error("[analyzeMessages] Fatal error:", error instanceof Error ? error.message : String(error));
+    console.error("[analyzeMessages] Stack trace:", error instanceof Error ? error.stack : 'No stack trace');
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
