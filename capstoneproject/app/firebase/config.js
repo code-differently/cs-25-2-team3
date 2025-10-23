@@ -18,6 +18,11 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-6XN9Z2H7WN"
 };
 
+// Temporary verification log (will remove after verification)
+console.log("🔥 Firebase Frontend Config Verification:");
+console.log("- VITE_FIREBASE_API_KEY available:", !!import.meta.env.VITE_FIREBASE_API_KEY);
+console.log("- Using API Key:", import.meta.env.VITE_FIREBASE_API_KEY ? "ENV variable" : "fallback");
+
 // Initialize Firebase with singleton pattern
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 

@@ -4,9 +4,9 @@
  */
 
 import { createHash } from "crypto";
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import OpenAI from "openai";
+import { firestore } from "../firebase/config.js";
 
 interface MessageAnalysisRequest {
   forumId: string;
@@ -33,15 +33,6 @@ interface MessageAnalysisResponse {
 
 // OpenAI client setup
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-
-// Firebase setup
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-};
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
 
 export async function action({ request }: { request: Request }): Promise<Response> {
   if (request.method !== "POST") {
@@ -71,7 +62,7 @@ export async function action({ request }: { request: Request }): Promise<Respons
 
     // Check for cached analysis first
     try {
-      const cachedDoc = await getDoc(doc(db, 'analysisCache', cacheKey));
+      const cachedDoc = await getDoc(doc(firestore, 'analysisCache', cacheKey));
       if (cachedDoc.exists()) {
         return Response.json(cachedDoc.data() as MessageAnalysisResponse);
       }
@@ -143,7 +134,7 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
 
     // Cache the analysis result for future use
     try {
-      await setDoc(doc(db, 'analysisCache', cacheKey), {
+      await setDoc(doc(firestore, 'analysisCache', cacheKey), {
         ...response,
         cachedAt: new Date().toISOString(),
         forumId
