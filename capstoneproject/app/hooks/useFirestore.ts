@@ -35,6 +35,7 @@ export interface Forum {
   tags?: string[];
   summary: string; 
   actionRoadmap: string[]; 
+  messages: string[];
 }
 
 export interface Comment {
@@ -143,25 +144,52 @@ export function useForums() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+
+
   useEffect(() => {
     // Simplified query to avoid index requirement
     const forumsQuery = query(
       collection(db, 'forums'),
-      orderBy('createdAt', 'desc')
-    );
+      orderBy("endTime", "desc"));
+    
 
     const unsubscribe = onSnapshot(
       forumsQuery,
       (snapshot) => {
         try {
+          const now = Date.now();
+
           const forumsData = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
           })) as Forum[];
+          console.log(forumsData);
+     
+             // Filter active forums based on flags + time
+          const activeForums = forumsData.filter((forum) => {
+          const isActive = forum.isActive ?? true;
+          const notDeleted = !(forum.isAdminDeleted ?? false);
+
+            // Convert Firestore Timestamp to millis if present
+            const endMs =
+              forum.endTime instanceof Timestamp
+                ? forum.endTime.toMillis()
+                : typeof forum.endTime === "string"
+                ? Date.parse(forum.endTime)
+                : 0;
+
+            const withinTime = endMs === 0 || endMs > now;
+            return isActive && notDeleted && withinTime;
+          });
+
+          // Sort client-side by soonest ending (optional)
+          activeForums.sort(
+            (a, b) =>
+              (a.endTime?.toMillis?.() ?? 0) - (b.endTime?.toMillis?.() ?? 0)
+          );
+
           
-          // Filter active forums on the client side
-          const activeForums = forumsData.filter(forum => forum.isActive && !forum.isAdminDeleted);
-          
+
           setForums(activeForums);
           setError(null);
           setLoading(false);

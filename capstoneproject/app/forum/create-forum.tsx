@@ -46,6 +46,9 @@ export default function CreateForumPage() {
                 isActive: true,
                 isAdminDeleted: false,
                 tags: formData.category ? [formData.category] : [],
+                messages: [""],
+                summary: "",
+                actionRoadmap: [""],
             };
 
             const forumId = await createForum(forumData);

@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router";
 import { Footer } from "../components/footer/footer";
 import { NavBar } from "../components/navbar/navbar";
 import { useComments, useFirestore, useForum } from "../hooks/useFirestore";
+import TeaModal from "../message/components/TeaModal";
 
 export default function ForumDetailPage() {
     const { forumId } = useParams();
@@ -12,11 +13,13 @@ export default function ForumDetailPage() {
     
     const [newMessage, setNewMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showTeaModal, setShowTeaModal] = useState(false);
 
     const handleSubmitMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newMessage.trim() || !forumId || !forum) return;
 
+        
         // Check if forum is still active
         const endTime = forum.endTime?.toDate();
         const isExpired = endTime && new Date() > endTime;
@@ -168,11 +171,109 @@ export default function ForumDetailPage() {
                                 {isExpired ? 'Forum closed' : 'Forum closes'} on {endTime.toLocaleDateString()} at {endTime.toLocaleTimeString()}
                             </div>
                         )}
+                        <button
+                          onClick={() => setShowTeaModal(true)}
+                          className="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-4 ml-4"
+                        >
+                          What's Tea (🍵)
+                        </button>
                     </div>
+
+                    {/* Forum Messages */}
+                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                            Messages
+                        </h2>
+
+                        {commentsLoading ? (
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                        ) : commentsError ? (
+                            <p className="text-red-500 text-center">
+                                Failed to load messages. Please try again later.
+                            </p>
+                        ) : comments.length === 0 ? (
+                            <p className="text-gray-500 text-center">
+                                No messages yet. Be the first to respond!
+                            </p>
+                        ) : (
+                            <div className="space-y-4">
+                                {comments.map((comment) => (
+                                    <div key={comment.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <div className="flex items-center">
+                                                <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 mr-3"></div>
+                                                <div>
+                                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                                        {comment.userName}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {comment.createdAt?.toDate().toLocaleString()}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 text-xs">
+                                                    Reply
+                                                </button>
+                                                <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 text-xs">
+                                                    Upvote
+                                                </button>
+                                                <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 text-xs">
+                                                    Downvote
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p className="text-gray-700 dark:text-gray-300 text-sm">
+                                            {comment.content}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* New Message Form */}
+                    {!isExpired && (
+                        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mt-6">
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                                {comments.length > 0 ? "Reply to this forum" : "Be the first to comment"}
+                            </h2>
+
+                            <form onSubmit={handleSubmitMessage} className="flex flex-col gap-4">
+                                <textarea
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                    className="p-4 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500 transition-all"
+                                    rows={4}
+                                    placeholder="Write your message here..."
+                                    required
+                                ></textarea>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                                >
+                                    {isSubmitting ? "Sending..." : "Send Message"}
+                                </button>
+                            </form>
+                        </div>
+                    )}
                 </div>
             </main>
 
             <Footer />
+
+            {showTeaModal && (
+  <TeaModal
+    onClose={() => setShowTeaModal(false)}
+    messages={comments}
+    forumId={forumId}
+    forumTitle={forum?.title || ""}
+    forumDescription={forum?.description}
+    forumQuestion={forum?.question}
+    category={forum?.tags?.[0]}
+  />
+)}
         </div>
     );
 }

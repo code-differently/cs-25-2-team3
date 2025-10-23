@@ -93,7 +93,8 @@ export async function action({ request }: { request: Request }): Promise<Respons
       const threadContent = threadMessages.map(m => m.content).join('\n');
       threadSummaries.push(`Thread "${threadKey}": ${threadContent}`);
     }
-    
+    console.log(forumContext, threadSummaries)
+
     const analysisPrompt = `
 ${forumContext}Perform hierarchical analysis:
 1. Analyze each thread's diction, tone, structure, and emotional intent
@@ -118,15 +119,25 @@ Return JSON: {"summary": "...", "actionRoadmap": ["1️⃣ ...", "2️⃣ ...", 
     const aiResponse = completion.choices[0]?.message?.content || "{}";
     console.log("[analyzeMessages] OpenAI response received, length:", aiResponse.length);
     let analysisResult: { summary: string; actionRoadmap: string[] } = { summary: "", actionRoadmap: [] };
+    console.log(aiResponse);
 
     try {
-      analysisResult = JSON.parse(aiResponse);
+      // Extract JSON substring if wrapped in markdown/code block or extra text
+      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        analysisResult = JSON.parse(jsonMatch[0]);
+      } else {
+        analysisResult = JSON.parse(aiResponse);
+      }
     } catch (parseError) {
       console.warn("Failed to parse OpenAI response, using fallback");
       analysisResult = {
         summary: "Messages show active discussion about tech topics with mixed engagement levels.",
-        actionRoadmap: ["1️⃣ Start by identifying key themes", "2️⃣ Build on popular topics", "3️⃣ Finish with actionable insights"]
-
+        actionRoadmap: [
+          "1️⃣ Start by identifying key themes",
+          "2️⃣ Build on popular topics",
+          "3️⃣ Finish with actionable insights"
+        ]
       };
     }
 
