@@ -17,6 +17,7 @@ type Pages = {
   "/forums": {
     params: {};
   };
+  "/userdashboard": {
   "/create-forum": {
     params: {};
   };
@@ -35,8 +36,7 @@ type Pages = {
 
 type RouteFiles = {
   "root.tsx": {
-    id: "root";
-    page: "/" | "/forums" | "/create-forum" | "/forum/:forumId" | "/signup" | "/login";
+    page: "/" | "/forums" | "/create-forum" | "/forum/:forumId" | "/signup" | "/login" | "/userdashboard";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -62,12 +62,17 @@ type RouteFiles = {
     id: "routes/login";
     page: "/login";
   };
+  "routes/userdashboard.tsx": {
+    id: "routes/userdashboard";
+    page: "/userdashboard";
+  };
 };
 
 type RouteModules = {
   "root": typeof import("./app/root.tsx");
   "routes/home": typeof import("./app/routes/home.tsx");
   "routes/forums": typeof import("./app/routes/forums.tsx");
+  "routes/userdashboard": typeof import("./app/routes/userdashboard.tsx");
   "routes/create-forum": typeof import("./app/routes/create-forum.tsx");
   "routes/forum-detail": typeof import("./app/routes/forum-detail.tsx");
   "routes/signup": typeof import("./app/routes/signup.tsx");

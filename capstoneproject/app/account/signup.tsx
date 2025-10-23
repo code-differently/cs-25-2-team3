@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { firebaseAuth } from "../firebase";
-import './signup.css';
 
 export const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState<string>('');
