@@ -6,9 +6,23 @@ module.exports = {
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy"
   },
-  globals: {
-    'ts-jest': {
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: 'tsconfig.test.json'
+    }]
+  },
+  collectCoverageFrom: [
+    "app/**/*.{ts,tsx}",
+    "!app/**/*.test.{ts,tsx}",
+    "!app/**/__tests__/**",
+    "!app/**/node_modules/**"
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
     }
   }
 };

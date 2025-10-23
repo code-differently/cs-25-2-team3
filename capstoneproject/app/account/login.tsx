@@ -1,26 +1,41 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from 'react';
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Footer } from "../components/footer/footer";
 import { firebaseAuth } from "../firebase";
 
 export const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
- const handlesignin = async (e: React.FormEvent) => {
-     e.preventDefault();
-     setError(null);
- try {
-  const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
-  // Signed in 
-  alert('User successfully logged in!');
-  const user = userCredential.user;
-  // ...
-   } catch (err: any){
-      setError(err.message);
-      console.error('Login error:', err);
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+  
+  try {
+    const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+    const user = userCredential.user;
+
+    const adminUID = "g0035irux7MA70QfUOi3xb57bmg1";
+
+    if (user.uid === adminUID) {
+      // Admin user
+      sessionStorage.setItem("role", "admin");
+      sessionStorage.setItem("admin", "true");
+      sessionStorage.setItem("anonymous", "false");
+      alert("Admin logged in!");
+    } else {
+      // Regular signed-in user
+      sessionStorage.setItem("role", "user");
+      sessionStorage.setItem("admin", "false");
+      sessionStorage.setItem("anonymous", "false");
+      alert("User logged in!");
     }
+
+  } catch (err: any) {
+    setError(err.message);
+    console.error("Login error:", err);
+  }
 };
     
   return (
@@ -31,7 +46,7 @@ export const LoginPage: React.FC = () => {
         </div>  
         <div className="h-full m-16">
           <h2 className="text-8xl text-gray-800 font-bold mb-12 underline decoration-[#F47D26]"><em>Login</em></h2>
-          <form onSubmit={handlesignin}>
+          <form onSubmit={handleSignIn}>
             <div className="w-2/3">
             </div>
             <div className="w-2/3">
@@ -73,4 +88,3 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
-
