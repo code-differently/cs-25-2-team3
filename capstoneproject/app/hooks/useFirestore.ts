@@ -178,8 +178,8 @@ export function useForums() {
                 ? Date.parse(forum.endTime)
                 : 0;
 
-            const withinTime = endMs === 0 || endMs > now;
-            return isActive && notDeleted && withinTime;
+            //const withinTime = endMs === 0 || endMs > now;
+            return isActive && notDeleted;
           });
 
           // Sort client-side by soonest ending (optional)

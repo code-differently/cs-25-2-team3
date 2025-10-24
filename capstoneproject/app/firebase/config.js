@@ -29,4 +29,5 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 // Export Firebase services
 export const firebaseAuth = getAuth(app);
 export const db = getFirestore(app);
+
 export default app;

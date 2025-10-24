@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Footer } from '~/components/footer/footer';
 import { firebaseAuth } from "../firebase";
@@ -15,9 +15,30 @@ export const SignUpPage: React.FC = () => {
 
     try {
       await createUserWithEmailAndPassword(firebaseAuth, email, password);
-      alert('User created successfully!');
-      // Optionally redirect user to another page, e.g., login or dashboard
-      // window.location.replace('/login'); 
+
+      const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+      const user = userCredential.user;
+
+      await updateProfile(user, { displayName });
+        
+      const adminUID = "g0035irux7MA70QfUOi3xb57bmg1";
+  
+      if (user.uid === adminUID) {
+        // Admin user
+        sessionStorage.setItem("role", "admin");
+        sessionStorage.setItem("admin", "true");
+        sessionStorage.setItem("anonymous", "false");
+        alert("Admin logged in!");
+      } else {
+        // Regular signed-in user
+        sessionStorage.setItem("role", "user");
+        sessionStorage.setItem("admin", "false");
+        sessionStorage.setItem("anonymous", "false");
+        alert("User logged in!");
+      }
+           
+      window.location.href = '/';
+
     } catch (err: any) {
       setError(err.message);
       console.error('Sign-up error:', err);
@@ -34,18 +55,19 @@ export const SignUpPage: React.FC = () => {
           <h2 className="text-8xl text-gray-800 font-bold mb-12 underline decoration-[#F47D26]"><em>Sign Up</em></h2>
           <form onSubmit={handleSignUp}>
             <div className="w-2/3">
-              <label className="text-2xl text-gray-800 mt-2" htmlFor="displayName">Username:</label>
+              <label className="text-2xl text-gray-800 mt-2" htmlFor="displayName">Username: <span className="text-red-600">*</span></label>
               <input
                 type="text"
                 className="w-full border-gray-800 rounded px-3 py-2 border border-gray-300 my-4"
                 id="displayName"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
+                maxLength={15}
                 required
               />
             </div>
             <div className="w-2/3">
-              <label className="text-2xl text-gray-800 mt-2" htmlFor="email">Email:</label>
+              <label className="text-2xl text-gray-800 mt-2" htmlFor="email">Email: <span className="text-red-600">*</span></label>
               <input
                 type="email"
                 id="email"
@@ -56,7 +78,7 @@ export const SignUpPage: React.FC = () => {
               />
             </div>
             <div className="w-2/3">
-              <label className="text-2xl text-gray-800 mt-2" htmlFor="password">Password:</label>
+              <label className="text-2xl text-gray-800 mt-2" htmlFor="password">Password: <span className="text-red-600">*</span></label>
               <input
                 type="password"
                 id="password"

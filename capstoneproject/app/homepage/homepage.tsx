@@ -21,7 +21,9 @@ export function HomePage() {
             className="px-8 py-3 rounded-lg border-gray-800 border-2 text-gray-800 font-semibold 
             hover:bg-[#F47D26] hover:border-transparent hover:-translate-y-2 hover:text-white hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]
             transition-all shadow will-change-transform m-2"
-            // onClick={handleCreateForum} // TODO: @Jayden
+            onClick={() => {
+              window.location.href = "/create-forum";
+            }}
           >
             Create Forum
           </button>

@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { Footer } from "../components/footer/footer";
 import { NavBar } from "../components/navbar/navbar";
+import { firebaseAuth } from "../firebase";
 import { useComments, useFirestore, useForum } from "../hooks/useFirestore";
 import TeaModal from "../message/components/TeaModal";
 
@@ -14,6 +16,19 @@ export default function ForumDetailPage() {
     const [newMessage, setNewMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showTeaModal, setShowTeaModal] = useState(false);
+    const [user, setCurrentUser] = useState<any>(null);
+
+    // Set up auth state listener once on mount
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+        setCurrentUser(user);
+        if (!user) {
+            // User is redirected to login page
+            window.location.href = '/login';
+        }
+        });
+        return () => unsubscribe();
+    }, []);
 
     const handleSubmitMessage = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,10 +47,19 @@ export default function ForumDetailPage() {
         setIsSubmitting(true);
         
         try {
+            // Determine user identity for comment
+            let userId = user?.uid || "anonymous";
+            let userName = "Anonymous User";
+            if (typeof window !== "undefined") {
+                const isAnonymous = window.sessionStorage.getItem("anonymous");
+                if (isAnonymous === "false" && user) {
+                    userName = user.displayName || user.email || "User";
+                }
+            }
             await createComment({
                 forumId: forumId,
-                userId: "anonymous", // TODO: Replace with actual user ID
-                userName: "Anonymous User", // TODO: Replace with actual username
+                userId,
+                userName,
                 content: newMessage.trim(),
             });
             
@@ -50,12 +74,12 @@ export default function ForumDetailPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col">
+            <div className="min-h-screen flex flex-col">
                 <NavBar />
-                <main className="flex-1 flex items-center justify-center">
+                <main className="bg-[#f4f4f4] flex-1 flex items-center justify-center">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                        <p className="mt-4 text-gray-600 dark:text-gray-400">Loading forum...</p>
+                        <p className="mt-4 text-gray-600">Loading forum...</p>
                     </div>
                 </main>
                 <Footer />
@@ -65,14 +89,14 @@ export default function ForumDetailPage() {
 
     if (error || !forum) {
         return (
-            <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col">
+            <div className="min-h-screen flex flex-col">
                 <NavBar />
-                <main className="flex-1 flex items-center justify-center">
+                <main className="bg-[#f4f4f4] flex-1 flex items-center justify-center">
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">
                             {error || "Forum Not Found"}
                         </h2>
-                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        <p className="text-gray-600 mb-4">
                             {error === "Failed to load forum" 
                                 ? "There was an error loading the forum. Please try again."
                                 : "The forum you're looking for doesn't exist or has been deleted."
@@ -107,26 +131,26 @@ export default function ForumDetailPage() {
     const status = isExpired ? "Closed" : "Open";
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col">
+        <div className="min-h-screen flex flex-col">
             <NavBar />
 
-            <main className="flex-1 px-8 py-6">
-                <div className="max-w-4xl mx-auto">
+            <main className="bg-[#f4f4f4] flex-1 px-8 py-6">
+                <div className="max-w-full mx-32">
                     {/* Breadcrumb */}
                     <nav className="mb-6">
                         <Link
                             to="/forums"
-                            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                            className="text-blue-600 hover:text-blue-700"
                         >
                             ← Back to Forums
                         </Link>
                     </nav>
 
                     {/* Forum Header */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+                    <div className="bg-white  rounded-xl border border-gray-200  p-6 mb-6">
                         <div className="flex justify-between items-start mb-4">
                             <div className="flex-1">
-                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                                <h1 className="text-3xl font-bold text-gray-900  mb-2">
                                     {forum.title}
                                 </h1>
                                 {forum.tags && forum.tags.length > 0 && (
@@ -146,16 +170,16 @@ export default function ForumDetailPage() {
                             </span>
                         </div>
 
-                        <p className="text-gray-700 dark:text-gray-300 mb-4 text-lg">
+                        <p className="text-gray-700  mb-4 text-lg">
                             {forum.description}
                         </p>
 
-                        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-4">
-                            <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Question:</h3>
-                            <p className="text-blue-800 dark:text-blue-200">{forum.question}</p>
+                        <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                            <h3 className="font-semibold text-blue-900  mb-2">Question:</h3>
+                            <p className="text-blue-800 ">{forum.question}</p>
                         </div>
 
-                        <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex justify-between items-center text-sm text-gray-500 ">
                             <div>
                                 Created by {forum.creatorName} • {createdAt ? createdAt.toLocaleDateString() : 'Unknown date'}
                             </div>
@@ -167,7 +191,7 @@ export default function ForumDetailPage() {
                         </div>
 
                         {endTime && (
-                            <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+                            <div className="mt-3 text-sm text-gray-600 ">
                                 {isExpired ? 'Forum closed' : 'Forum closes'} on {endTime.toLocaleDateString()} at {endTime.toLocaleTimeString()}
                             </div>
                         )}
@@ -180,7 +204,8 @@ export default function ForumDetailPage() {
                             setShowTeaModal(true);
                           }}
                           disabled={comments.length === 0}
-                          className={`bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-4 ml-4 ${
+                          className={`ml-0 px-8 py-3 rounded-lg border-gray-800 border-2 text-gray-800 font-semibold \
+                          hover:bg-pink-600 hover:border-transparent hover:-translate-y-2 hover:text-white hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]\n                          transition-all shadow will-change-transform m-2 mt-4 ${
                             comments.length === 0 ? "opacity-50 cursor-not-allowed" : ""
                           }`}
                         >
@@ -194,8 +219,8 @@ export default function ForumDetailPage() {
                     </div>
 
                     {/* Forum Messages */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    <div className="bg-white  rounded-xl border border-gray-200  p-6">
+                        <h2 className="text-2xl font-bold text-gray-900  mb-4">
                             Messages
                         </h2>
 
@@ -212,32 +237,32 @@ export default function ForumDetailPage() {
                         ) : (
                             <div className="space-y-4">
                                 {comments.map((comment) => (
-                                    <div key={comment.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                    <div key={comment.id} className="p-4 bg-gray-50  rounded-lg border border-gray-200 ">
                                         <div className="flex items-center justify-between mb-2">
                                             <div className="flex items-center">
-                                                <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 mr-3"></div>
+                                                <div className="w-10 h-10 rounded-full bg-gray-300  mr-3"></div>
                                                 <div>
-                                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                                    <p className="text-sm font-semibold text-gray-900 ">
                                                         {comment.userName}
                                                     </p>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                    <p className="text-xs text-gray-500 ">
                                                         {comment.createdAt?.toDate().toLocaleString()}
                                                     </p>
                                                 </div>
                                             </div>
                                             <div className="flex gap-2">
-                                                <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 text-xs">
+                                                <button className="text-gray-500 hover:text-gray-700 text-xs">
                                                     Reply
                                                 </button>
-                                                <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 text-xs">
+                                                <button className="text-gray-500 hover:text-gray-700 text-xs">
                                                     Upvote
                                                 </button>
-                                                <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 text-xs">
+                                                <button className="text-gray-500 hover:text-gray-700 text-xs">
                                                     Downvote
                                                 </button>
                                             </div>
                                         </div>
-                                        <p className="text-gray-700 dark:text-gray-300 text-sm">
+                                        <p className="text-gray-700  text-sm">
                                             {comment.content}
                                         </p>
                                     </div>
@@ -248,8 +273,8 @@ export default function ForumDetailPage() {
 
                     {/* New Message Form */}
                     {!isExpired && (
-                        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mt-6">
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                        <div className="bg-white  rounded-xl border border-gray-200  p-6 mt-6">
+                            <h2 className="text-2xl font-bold text-gray-900  mb-4">
                                 {comments.length > 0 ? "Reply to this forum" : "Be the first to comment"}
                             </h2>
 
@@ -257,7 +282,7 @@ export default function ForumDetailPage() {
                                 <textarea
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
-                                    className="p-4 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500 transition-all"
+                                    className="p-4 text-gray-900  bg-gray-50  rounded-lg border border-gray-200  focus:ring-2 focus:ring-blue-600 transition-all"
                                     rows={4}
                                     placeholder="Write your message here..."
                                     required
@@ -265,7 +290,8 @@ export default function ForumDetailPage() {
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                                    className="px-8 py-3 rounded-lg border-gray-800 border-2 text-gray-800 font-semibold \
+                                    hover:bg-[#F47D26] hover:border-transparent hover:-translate-y-2 hover:text-white hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]\n                                    transition-all shadow will-change-transform m-2 disabled:bg-gray-300 disabled:text-gray-500 disabled:border-gray-300"
                                 >
                                     {isSubmitting ? "Sending..." : "Send Message"}
                                 </button>
@@ -291,3 +317,7 @@ export default function ForumDetailPage() {
         </div>
     );
 }
+function setCurrentUser(user: User | null) {
+    throw new Error("Function not implemented.");
+}
+
