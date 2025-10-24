@@ -1,10 +1,26 @@
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Footer } from "../components/footer/footer";
 import { NavBar } from "../components/navbar/navbar";
+import { firebaseAuth } from "../firebase";
 import { useForums } from "../hooks/useFirestore";
 
 export function ForumsPage() {
   const { forums, loading, error } = useForums();
+  const [user, setCurrentUser] = useState<any>(null);
+
+  // Set up auth state listener once on mount
+  useEffect(() => {
+      const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+      setCurrentUser(user);
+      if (!user) {
+          // User is redirected to login page
+          window.location.href = '/login';
+      }
+      });
+      return () => unsubscribe();
+  }, []);
 
   if (loading) {
     return (

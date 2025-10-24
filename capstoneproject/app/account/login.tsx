@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from 'react';
 import { Footer } from "../components/footer/footer";
 import { firebaseAuth } from "../firebase";
 
@@ -31,6 +31,8 @@ export const LoginPage: React.FC = () => {
       sessionStorage.setItem("anonymous", "false");
       alert("User logged in!");
     }
+          
+    window.location.href = '/';
 
   } catch (err: any) {
     setError(err.message);
@@ -50,7 +52,7 @@ export const LoginPage: React.FC = () => {
             <div className="w-2/3">
             </div>
             <div className="w-2/3">
-              <label className="text-2xl text-gray-800 mt-2" htmlFor="email">Email:</label>
+              <label className="text-2xl text-gray-800 mt-2" htmlFor="email">Email: <span className="text-red-600">*</span></label>
               <input
                 type="email"
                 id="email"
@@ -61,7 +63,7 @@ export const LoginPage: React.FC = () => {
               />
             </div>
             <div className="w-2/3">
-              <label className="text-2xl text-gray-800 mt-2" htmlFor="password">Password:</label>
+              <label className="text-2xl text-gray-800 mt-2" htmlFor="password">Password: <span className="text-red-600">*</span></label>
               <input
                 type="password"
                 id="password"

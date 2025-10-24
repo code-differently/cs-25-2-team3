@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { Timestamp } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { Footer } from "../components/footer/footer";
 import { NavBar } from "../components/navbar/navbar";
+import { firebaseAuth } from "../firebase";
 import { useFirestore } from "../hooks/useFirestore";
-import { Timestamp } from "firebase/firestore";
 
 export default function CreateForumPage() {
     const { createForum } = useFirestore();
     const [isLoading, setIsLoading] = useState(false);
+    const [user, setCurrentUser] = useState<User | null>(null);
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -26,6 +29,19 @@ export default function CreateForumPage() {
         "General Discussion",
         "Other"
     ];
+
+
+    // Set up auth state listener once on mount
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+        setCurrentUser(user);
+        if (!user) {
+            // User is redirected to login page
+            window.location.href = '/login';
+        }
+        });
+        return () => unsubscribe();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -197,3 +213,4 @@ export default function CreateForumPage() {
         </div>
     );
 }
+

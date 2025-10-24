@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { Footer } from "../components/footer/footer";
 import { NavBar } from "../components/navbar/navbar";
+import { firebaseAuth } from "../firebase";
 import { useComments, useFirestore, useForum } from "../hooks/useFirestore";
 import TeaModal from "../message/components/TeaModal";
 
@@ -14,6 +16,19 @@ export default function ForumDetailPage() {
     const [newMessage, setNewMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showTeaModal, setShowTeaModal] = useState(false);
+    const [user, setCurrentUser] = useState<any>(null);
+
+    // Set up auth state listener once on mount
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+        setCurrentUser(user);
+        if (!user) {
+            // User is redirected to login page
+            window.location.href = '/login';
+        }
+        });
+        return () => unsubscribe();
+    }, []);
 
     const handleSubmitMessage = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -291,3 +306,7 @@ export default function ForumDetailPage() {
         </div>
     );
 }
+function setCurrentUser(user: User | null) {
+    throw new Error("Function not implemented.");
+}
+
