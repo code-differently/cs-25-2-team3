@@ -52,12 +52,22 @@ export default function CreateForumPage() {
             const endTime = new Date();
             endTime.setMinutes(endTime.getMinutes() + formData.timeLimit * 60);
 
+            // Determine user identity
+            let creatorId = user?.uid || "anonymous";
+            let creatorName = "Anonymous User";
+            if (typeof window !== "undefined") {
+                const isAnonymous = window.sessionStorage.getItem("anonymous");
+                if (isAnonymous === "false" && user) {
+                    creatorName = user.displayName || user.email || "User";
+                }
+            }
+
             const forumData = {
                 title: formData.title,
                 description: formData.description,
                 question: formData.question,
-                creatorId: "anonymous", // TODO: Replace with actual user ID when auth is implemented
-                creatorName: "Anonymous User", // TODO: Replace with actual username
+                creatorId,
+                creatorName,
                 endTime: Timestamp.fromDate(endTime),
                 isActive: true,
                 isAdminDeleted: false,
@@ -91,7 +101,7 @@ export default function CreateForumPage() {
         <div className="min-h-screen bg-white flex flex-col">
             <NavBar />
 
-            <main className="flex-1 px-8 py-6 bg-[#f4f4f4]">
+            <main className="flex-1 px-8 py-6">
                 <div className="max-w-2xl mx-auto">
                     <h1 className="text-3xl font-bold text-gray-900 mb-8">Create New Forum</h1>
                     

@@ -47,10 +47,19 @@ export default function ForumDetailPage() {
         setIsSubmitting(true);
         
         try {
+            // Determine user identity for comment
+            let userId = user?.uid || "anonymous";
+            let userName = "Anonymous User";
+            if (typeof window !== "undefined") {
+                const isAnonymous = window.sessionStorage.getItem("anonymous");
+                if (isAnonymous === "false" && user) {
+                    userName = user.displayName || user.email || "User";
+                }
+            }
             await createComment({
                 forumId: forumId,
-                userId: "anonymous", // TODO: Replace with actual user ID
-                userName: "Anonymous User", // TODO: Replace with actual username
+                userId,
+                userName,
                 content: newMessage.trim(),
             });
             
