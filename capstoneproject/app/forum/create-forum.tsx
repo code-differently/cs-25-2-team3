@@ -15,7 +15,7 @@ export default function CreateForumPage() {
         description: "",
         question: "",
         category: "",
-        timeLimit: 24, // hours
+        timeLimit: .083, // hours
     });
 
     const categories = [
@@ -48,9 +48,9 @@ export default function CreateForumPage() {
         setIsLoading(true);
 
         try {
-            // Calculate end time based on time limit
+            // Calculate end time based on time limit (fractional hours supported)
             const endTime = new Date();
-            endTime.setHours(endTime.getHours() + formData.timeLimit);
+            endTime.setMinutes(endTime.getMinutes() + formData.timeLimit * 60);
 
             const forumData = {
                 title: formData.title,
@@ -83,22 +83,22 @@ export default function CreateForumPage() {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'timeLimit' ? parseInt(value) : value
+            [name]: name === 'timeLimit' ? parseFloat(value) : value
         }));
     };
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col">
+        <div className="min-h-screen bg-white flex flex-col">
             <NavBar />
 
-            <main className="flex-1 px-8 py-6">
+            <main className="flex-1 px-8 py-6 bg-[#f4f4f4]">
                 <div className="max-w-2xl mx-auto">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Create New Forum</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-8">Create New Forum</h1>
                     
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Forum Title *
+                            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                                Forum Title: <span className="text-red-600">*</span>
                             </label>
                             <input
                                 type="text"
@@ -107,14 +107,14 @@ export default function CreateForumPage() {
                                 required
                                 value={formData.title}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent  "
                                 placeholder="Enter a clear, descriptive title for your forum"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Description *
+                            <label htmlFor="description" className="block text-sm font-medium text-gray-700  mb-2">
+                                Description: <span className="text-red-600">*</span>
                             </label>
                             <textarea
                                 id="description"
@@ -123,14 +123,14 @@ export default function CreateForumPage() {
                                 value={formData.description}
                                 onChange={handleInputChange}
                                 rows={4}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent  "
                                 placeholder="Provide a detailed description of what this forum is about"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="question" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Main Question *
+                            <label htmlFor="question" className="block text-sm font-medium text-gray-700  mb-2">
+                                Main Question: <span className="text-red-600">*</span>
                             </label>
                             <textarea
                                 id="question"
@@ -139,21 +139,22 @@ export default function CreateForumPage() {
                                 value={formData.question}
                                 onChange={handleInputChange}
                                 rows={3}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
+                                className="w-full px-4 py-2 border border-gray-300  rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent  "
                                 placeholder="What specific question do you want the community to answer?"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Category
+                            <label htmlFor="category" className="block text-sm font-medium text-gray-700  mb-2">
+                                Category: <span className="text-red-600">*</span>
                             </label>
                             <select
                                 id="category"
                                 name="category"
                                 value={formData.category}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
+                                required
+                                className="w-full px-4 py-2 border border-gray-300  rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent  "
                             >
                                 <option value="">Select a category</option>
                                 {categories.map(category => (
@@ -165,8 +166,8 @@ export default function CreateForumPage() {
                         </div>
 
                         <div>
-                            <label htmlFor="timeLimit" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Time Limit (hours) *
+                            <label htmlFor="timeLimit" className="block text-sm font-medium text-gray-700  mb-2">
+                                Time Limit: <span className="text-red-600">*</span>
                             </label>
                             <select
                                 id="timeLimit"
@@ -174,8 +175,11 @@ export default function CreateForumPage() {
                                 required
                                 value={formData.timeLimit}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
+                                className="w-full px-4 py-2 border border-gray-300  rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent  "
                             >
+                                <option value={0.083}>5 minutes</option>
+                                <option value={0.25}>15 minutes</option>
+                                <option value={0.5}>30 minutes</option>
                                 <option value={1}>1 hour</option>
                                 <option value={6}>6 hours</option>
                                 <option value={12}>12 hours</option>
@@ -184,7 +188,7 @@ export default function CreateForumPage() {
                                 <option value={72}>72 hours (3 days)</option>
                                 <option value={168}>1 week</option>
                             </select>
-                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            <p className="mt-1 text-sm text-gray-500 ">
                                 The forum will automatically close after this time period
                             </p>
                         </div>
@@ -193,14 +197,16 @@ export default function CreateForumPage() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                                className="flex-1 px-8 py-3 rounded-lg border-gray-800 border-2 text-gray-800 font-semibold \
+                                hover:bg-[#F47D26] hover:border-transparent hover:-translate-y-2 hover:text-white hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]\n                                transition-all shadow will-change-transform m-2 disabled:bg-gray-300 disabled:text-gray-500 disabled:border-gray-300"
                             >
                                 {isLoading ? "Creating..." : "Create Forum"}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => window.history.back()}
-                                className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-8 py-3 rounded-lg border-gray-800 border-2 text-gray-800 font-semibold \
+                                hover:bg-red-600 hover:border-transparent hover:-translate-y-2 hover:text-white hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]\n                                transition-all shadow will-change-transform m-2"
                             >
                                 Cancel
                             </button>

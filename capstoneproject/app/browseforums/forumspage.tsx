@@ -81,12 +81,12 @@ export function ForumsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="min-h-screen flex flex-col">
         <NavBar />
-        <main className="flex-1 flex items-center justify-center">
+        <main className="bg-[#f4f4f4]flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading forums...</p>
+            <p className="mt-4 text-gray-600">Loading forums...</p>
           </div>
         </main>
         <Footer />
@@ -96,11 +96,11 @@ export function ForumsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="min-h-screen flex flex-col">
         <NavBar />
-        <main className="flex-1 flex items-center justify-center">
+        <main className="bg-[#f4f4f4] flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+            <p className="text-red-600 mb-4">{error}</p>
             <button 
               onClick={() => window.location.reload()} 
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
@@ -115,9 +115,9 @@ export function ForumsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <NavBar />
-      <main className="flex-1 px-8 py-6">
+      <main className="bg-[#f4f4f4] flex-1 px-8 py-6">
         <div className="max-w-full flex gap-8 mr-12">
           {/* Filter Sidebar (far left) */}
           <aside className="w-80 bg-gray-50 border border-gray-200 rounded-xl shadow p-6 h-fit sticky top-24 self-start flex-shrink-0">
@@ -205,10 +205,11 @@ export function ForumsPage() {
           {/* Forums List */}
           <div className="flex-1">
             <div className="flex justify-between items-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Discussion Forums</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Discussion Forums</h1>
               <Link
                 to="/create-forum"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                className="px-8 py-3 rounded-lg border-gray-800 border-2 text-gray-800 font-semibold \
+                hover:bg-[#F47D26] hover:border-transparent hover:-translate-y-2 hover:text-white hover:shadow-[0_0_16px_4px_rgba(244,125,38,0.5)]\n                transition-all shadow will-change-transform m-2"
               >
                 Create Forum
               </Link>
