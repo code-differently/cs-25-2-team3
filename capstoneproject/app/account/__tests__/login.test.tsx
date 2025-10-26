@@ -1,7 +1,6 @@
-import { LoginPage } from '../login';
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { LoginPage } from '../login';
 
 // Mock firebase/auth before tests
 jest.mock('firebase/auth', () => ({

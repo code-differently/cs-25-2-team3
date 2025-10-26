@@ -71,4 +71,26 @@ describe('analyzeMessages action', () => {
       throw error;
     }
   });
+
+  it('returns cached analysis if cache exists', async () => {
+    process.env.OPENAI_API_KEY = 'test-key';
+    const cachedData = { summary: 'Cached summary', actionRoadmap: ['Cached Step'] };
+    const getDoc = require('firebase/firestore').getDoc;
+    getDoc.mockResolvedValue({
+      exists: () => true,
+      data: () => cachedData,
+    });
+    const req = {
+      method: 'POST',
+      json: async () => ({
+        forumId: 'forum1',
+        forumTitle: 'Test Forum',
+        messages: [{ id: 1, author: 'A', content: 'Hello', timestamp: '2025-01-01T00:00:00Z' }]
+      })
+    };
+    const { action } = require('../analyzeMessages');
+    const res: any = await action({ request: req as any });
+    const data = await res.json();
+    expect(data).toEqual(cachedData);
+  });
 });

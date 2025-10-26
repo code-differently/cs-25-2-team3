@@ -9,20 +9,24 @@ jest.mock('~/components/footer/footer', () => ({
 jest.mock('~/components/navbar/navbar', () => ({
   NavBar: () => <nav>Mock NavBar</nav>
 }));
-jest.mock('firebase/auth', () => ({
-  onAuthStateChanged: jest.fn(() => () => {}), // Return a no-op unsubscribe function
-  getAuth: jest.fn(() => ({})), // Add this line
-}));
 const mockSetItem = jest.fn();
 Object.defineProperty(window, 'sessionStorage', {
   value: { setItem: mockSetItem, getItem: jest.fn(() => 'user') },
   writable: true,
 });
 
+const mockSignOut = jest.fn();
+jest.mock('firebase/auth', () => ({
+  signOut: (...args: any) => mockSignOut(...args),
+  onAuthStateChanged: jest.fn(() => () => {}),
+  getAuth: jest.fn(() => ({})),
+}));
+
 
 describe('UserDashboardPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockSignOut.mockClear();
   });
 
   beforeAll(() => {
@@ -36,6 +40,16 @@ describe('UserDashboardPage', () => {
     render(<UserDashboardPage />);
     // Simulate toggle button click
     const toggleButton = screen.getByRole('button', { name: /Go Anonymous/i });
+    fireEvent.click(toggleButton);
+    expect(mockSetItem).toHaveBeenCalledWith('anonymous', 'false');
+  });
+
+  test('toggles anonymous mode ON', () => {
+    // Simulate anonymous toggle ON
+    render(<UserDashboardPage />);
+    const toggleButton = screen.getByRole('button', { name: /Go Anonymous/i });
+    fireEvent.click(toggleButton);
+    // Simulate second click to toggle ON
     fireEvent.click(toggleButton);
     expect(mockSetItem).toHaveBeenCalledWith('anonymous', 'false');
   });
