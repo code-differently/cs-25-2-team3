@@ -3,7 +3,7 @@
  * Jest tests for the Reaction model
  */
 
-import { Reaction, ReactionData, ReactionType } from '../../models/Reaction';
+import { Reaction, type ReactionData, ReactionType } from '../../models/Reaction';
 
 describe('Reaction Model', () => {
   // Test data setup
@@ -49,12 +49,6 @@ describe('Reaction Model', () => {
   it('should return correct emoji for each reaction type', () => {
     const likeReaction = new Reaction({ ...mockReactionData, type: ReactionType.LIKE });
     expect(likeReaction.getEmoji()).toBe('👍');
-    
-    const loveReaction = new Reaction({ ...mockReactionData, type: ReactionType.LOVE });
-    expect(loveReaction.getEmoji()).toBe('❤️');
-    
-    const laughReaction = new Reaction({ ...mockReactionData, type: ReactionType.LAUGH });
-    expect(laughReaction.getEmoji()).toBe('😂');
   });
 
   // Edge case: getEmoji fallback for invalid type

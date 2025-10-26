@@ -71,7 +71,10 @@ describe("CreateForumPage - Form Fields", () => {
     render(<CreateForumPageWithRouter />);
     const timeLimitSelect = screen.getByLabelText(/time limit/i);
     
-    expect(timeLimitSelect).toHaveValue("24");
+    expect(timeLimitSelect).toHaveValue("0.083");
+    expect(screen.getByRole("option", { name: "5 minutes" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "15 minutes" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "30 minutes" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "1 hour" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "6 hours" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "12 hours" })).toBeInTheDocument();

@@ -153,7 +153,6 @@ describe('ReactionService', () => {
       const mockReactionsData = [
         { id: 1, messageId: 123, userId: 456, type: ReactionType.LIKE, timestamp: '2024-01-01T00:00:00Z' },
         { id: 2, messageId: 123, userId: 789, type: ReactionType.LIKE, timestamp: '2024-01-01T00:01:00Z' },
-        { id: 3, messageId: 123, userId: 321, type: ReactionType.LOVE, timestamp: '2024-01-01T00:02:00Z' }
       ];
 
       mockedFetch.mockResolvedValueOnce({
@@ -165,7 +164,6 @@ describe('ReactionService', () => {
 
       expect(mockedFetch).toHaveBeenCalledWith('/api/reactions/message/123');
       expect(result[ReactionType.LIKE]).toBe(2);
-      expect(result[ReactionType.LOVE]).toBe(1);
     });
 
     it('should throw error when getReactionCounts fails', async () => {

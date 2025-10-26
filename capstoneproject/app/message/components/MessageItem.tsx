@@ -4,7 +4,6 @@
  */
 
 import React, { useState } from 'react';
-import '../message.css';
 import { Message } from '../models/Message';
 import { ReactionType } from '../models/Reaction';
 import { ReactionService } from '../services/ReactionService';
