@@ -6,7 +6,6 @@
 import { useCallback, useState } from 'react';
 import { MessageComposer } from './components/MessageComposer';
 import { MessageList } from './components/MessageList';
-import './message.css';
 import { Message } from './models/Message';
 import type { MessageFilters } from './services/MessageService';
 
