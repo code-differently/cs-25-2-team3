@@ -1,2 +1,3 @@
 // Re-export Firebase services from centralized config
-export { default, firebaseAuth, db } from "./firebase/config.js";
+export { db, default, firebaseAuth } from "./firebase/config.js";
+

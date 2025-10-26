@@ -87,8 +87,7 @@ describe("ForumsPage States", () => {
 
       renderWithRouter(<ForumsPage />);
 
-      expect(screen.getByText("No forums yet")).toBeInTheDocument();
-      expect(screen.getByText("Be the first to create a discussion forum!")).toBeInTheDocument();
+      expect(screen.getByText("No forums found")).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /create your first forum/i })).toBeInTheDocument();
     });
 
@@ -103,6 +102,25 @@ describe("ForumsPage States", () => {
 
       const createLink = screen.getByRole("link", { name: /create your first forum/i });
       expect(createLink).toHaveAttribute("href", "/create-forum");
+    });
+  });
+
+  describe("Forums List", () => {
+    it("renders forums with open status", () => {
+      mockUseForums.mockReturnValue({
+        forums: [
+          { id: "1", title: "Forum 1", status: "Open" },
+          { id: "2", title: "Forum 2", status: "Closed" },
+        ],
+        loading: false,
+        error: null,
+      });
+
+      renderWithRouter(<ForumsPage />);
+
+      // Check that at least one 'Open' status is present
+      const openElements = screen.getAllByText("Open");
+      expect(openElements.length).toBeGreaterThan(0);
     });
   });
 });

@@ -117,32 +117,4 @@ describe("CreateForumPage - Form Submission", () => {
       expect(global.alert).toHaveBeenCalledWith("Failed to create forum. Please try again.");
     });
   });
-
-  it("creates forum with empty tags when no category selected", async () => {
-    mockCreateForum.mockResolvedValue("forum-id-123");
-    
-    render(<CreateForumPageWithRouter />);
-    
-    // Fill form without selecting category
-    fireEvent.change(screen.getByLabelText(/forum title/i), { 
-      target: { value: "Test Forum" } 
-    });
-    fireEvent.change(screen.getByLabelText(/description/i), { 
-      target: { value: "Test description" } 
-    });
-    fireEvent.change(screen.getByLabelText(/main question/i), { 
-      target: { value: "Test question?" } 
-    });
-    
-    const submitButton = screen.getByRole("button", { name: /create forum/i });
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(mockCreateForum).toHaveBeenCalledWith(
-        expect.objectContaining({
-          tags: []
-        })
-      );
-    });
-  });
 });

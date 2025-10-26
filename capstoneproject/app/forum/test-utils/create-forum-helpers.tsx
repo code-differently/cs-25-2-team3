@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { BrowserRouter } from "react-router";
+import { MemoryRouter } from "react-router";
 import CreateForumPage from "../create-forum";
 
 // Mock the useFirestore hook
@@ -12,13 +12,8 @@ jest.mock("../../hooks/useFirestore", () => ({
 }));
 
 // Mock window methods
-Object.defineProperty(window, 'location', {
-  value: {
-    href: '',
-  },
-  writable: true,
-});
-
+// @ts-ignore
+window.location = { href: '' };
 Object.defineProperty(window, 'history', {
   value: {
     back: jest.fn(),
@@ -31,9 +26,9 @@ global.alert = jest.fn();
 
 // Wrapper component to provide Router context
 export const CreateForumPageWithRouter = () => (
-  <BrowserRouter>
+  <MemoryRouter>
     <CreateForumPage />
-  </BrowserRouter>
+  </MemoryRouter>
 );
 
 // Helper function to fill valid form data

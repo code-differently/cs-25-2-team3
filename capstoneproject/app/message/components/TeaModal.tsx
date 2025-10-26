@@ -11,6 +11,7 @@ import { AnalysisService, type MessageAnalysisResponse } from '../services/Analy
 
 interface TeaModalProps {
   onClose: () => void;
+  messages: Message[];
   forumId: string;
   forumTitle: string;
   forumDescription?: string;
@@ -42,7 +43,7 @@ export default function TeaModal({ onClose, forumId, forumTitle, forumDescriptio
         };
       });
       console.log('[TeaModal] Number of messages fetched:', fetchedMessages.length);
-      setMessages(fetchedMessages as Message[]);
+      setMessages(fetchedMessages as unknown as Message[]);
     };
     fetchMessages();
   }, [forumId]);

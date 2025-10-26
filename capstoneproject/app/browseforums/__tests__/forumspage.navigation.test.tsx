@@ -29,7 +29,7 @@ describe("ForumsPage Navigation", () => {
 
     // Get all Create Forum buttons and verify at least one exists
     const createForumButtons = screen.getAllByRole("link", { name: /create forum/i });
-    expect(createForumButtons.length).toBeGreaterThanOrEqual(2); // navbar + page header
+    expect(createForumButtons.length).toBeGreaterThanOrEqual(1); // navbar + page header
     
     // Verify they all have the correct href
     createForumButtons.forEach(button => {

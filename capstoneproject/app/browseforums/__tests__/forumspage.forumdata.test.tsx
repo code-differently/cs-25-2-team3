@@ -103,7 +103,8 @@ describe("ForumsPage Forum Display", () => {
 
     renderWithRouter(<ForumsPage />);
 
-    expect(screen.getByText("Open")).toBeInTheDocument();
+    const openElements = screen.getAllByText("Open");
+    expect(openElements.length).toBeGreaterThan(0);
   });
 
   it("shows forum status as 'Closed' when endTime is in the past", () => {
@@ -130,7 +131,8 @@ describe("ForumsPage Forum Display", () => {
 
     renderWithRouter(<ForumsPage />);
 
-    expect(screen.getByText("Closed")).toBeInTheDocument();
+    const closedElements = screen.getAllByText("Closed");
+    expect(closedElements.length).toBeGreaterThan(0);
   });
 
   it("shows forum status as 'Open' when endTime is in the future", () => {
@@ -157,6 +159,79 @@ describe("ForumsPage Forum Display", () => {
 
     renderWithRouter(<ForumsPage />);
 
-    expect(screen.getByText("Open")).toBeInTheDocument();
+    const openElements = screen.getAllByText("Open");
+    expect(openElements.length).toBeGreaterThan(0);
+  });
+
+  it("renders at least one forum status as 'Open'", () => {
+    const mockForum1 = {
+      id: "1",
+      title: "Open Forum 1",
+      description: "This forum is open",
+      creatorName: "User1",
+      createdAt: { toDate: () => new Date() },
+      upvotes: 0,
+      downvotes: 0,
+      commentCount: 0,
+    };
+
+    const mockForum2 = {
+      id: "2",
+      title: "Closed Forum 1",
+      description: "This forum is closed",
+      creatorName: "User2",
+      createdAt: { toDate: () => new Date("2023-01-01") },
+      endTime: { toDate: () => new Date("2023-01-02") },
+      upvotes: 0,
+      downvotes: 0,
+      commentCount: 0,
+    };
+
+    mockUseForums.mockReturnValue({
+      forums: [mockForum1, mockForum2],
+      loading: false,
+      error: null,
+    });
+
+    renderWithRouter(<ForumsPage />);
+
+    const openElements = screen.getAllByText("Open");
+    expect(openElements.length).toBeGreaterThan(0);
+  });
+
+  it("renders at least one forum status as 'Closed'", () => {
+    const mockForum1 = {
+      id: "1",
+      title: "Open Forum 1",
+      description: "This forum is open",
+      creatorName: "User1",
+      createdAt: { toDate: () => new Date() },
+      upvotes: 0,
+      downvotes: 0,
+      commentCount: 0,
+    };
+
+    const mockForum2 = {
+      id: "2",
+      title: "Closed Forum 1",
+      description: "This forum is closed",
+      creatorName: "User2",
+      createdAt: { toDate: () => new Date("2023-01-01") },
+      endTime: { toDate: () => new Date("2023-01-02") },
+      upvotes: 0,
+      downvotes: 0,
+      commentCount: 0,
+    };
+
+    mockUseForums.mockReturnValue({
+      forums: [mockForum1, mockForum2],
+      loading: false,
+      error: null,
+    });
+
+    renderWithRouter(<ForumsPage />);
+
+    const closedElements = screen.getAllByText("Closed");
+    expect(closedElements.length).toBeGreaterThan(0);
   });
 });

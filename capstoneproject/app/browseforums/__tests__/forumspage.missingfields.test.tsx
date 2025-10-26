@@ -45,7 +45,8 @@ describe("ForumsPage Missing Fields", () => {
     expect(screen.getByText("↓ 0")).toBeInTheDocument();
     
     // Should show Open status when no endTime
-    expect(screen.getByText("Open")).toBeInTheDocument();
+    const openElements = screen.getAllByText("Open");
+    expect(openElements.length).toBeGreaterThan(0);
   });
 
   it("handles forum with missing createdAt gracefully", () => {
