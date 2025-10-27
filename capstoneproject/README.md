@@ -1,87 +1,107 @@
-# Welcome to React Router!
+# Capstone: AI Forum Voting App
 
-A modern, production-ready template for building full-stack React applications using React Router.
+## The team
+- Tyran
+- Nicole
+- Devyn
+- Jayden
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Screenshot
+![Screenshot of AI Forum Voting App](./screenshot.png)
 
-## Features
+## A description of the app
+- A full-stack web application where users create accounts, start forums based on questions or problems, vote on responses, and view AI-generated summaries after forums close.
+- Users can register, log in, post anonymously, create/join forums, upvote/downvote responses, and view AI summaries.
+- Admins can manage forums and moderate content.
+- Core features:
+  - Forum creation and participation
+  - Voting on responses
+  - AI-powered summary and action roadmap after forum closure
+  - Authentication (user and admin)
+- Key technologies:
+  - React, React Router, TypeScript, Vite, TailwindCSS
+  - Firebase (Firestore, Auth)
+  - OpenAI API for AI summaries
+  - Jest, Testing Library for tests
+  - Hosted on Vercel
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## Demo link
+- https://capstoneproject-chi.vercel.app
 
-## Getting Started
+## Installation instructions
+- Prerequisites: Node.js, npm, Firebase project and keys
+- Clone the repo and install dependencies:
+  ```sh
+  npm install
+  ```
+- Set up environment variables in `.env.local` (see Firebase and OpenAI keys)
+- Start development server:
+  ```sh
+  npm run dev
+  ```
+- Build for production:
+  ```sh
+  npm run build
+  ```
+- Run tests:
+  ```sh
+  npm test
+  ```
 
-### Installation
+## Known issues
+- User saving between sessions and pages
+- Anonymous Mode
+- Account Logout
+- Account Login
+- Account Registration
+- User Registration
+- Show Home Page With Forums Listed And Ability To Login
+- Showing Invisible Name For Anonymous
+- Revisit Forums To See Messages And Results
+- Creating Forum With Desired Requirements
+- Saving Accounts On Firebase
+- Skeleton Of An Account
+- Name Of App/Website?
+- UI For Forum Page
+- Show End Results In Forum from OpenAI
+- Upvote/downvote Forums (UI Only)
+- List Messages In Forum
+- Forum Template/Showing (title, description, author)
+- Give Suggestions From OpenAI Prompt Data
+- Give A Summary Using OpenAI From Result
+- Result Encompasses Forum, Voting, and Messages Data
+- Upvoting/Downvoting Responsiveness
+- Realtime Updates
+- Give Feedback to Message
+- User Receives Messages To Forum
 
-Install the dependencies:
+## Roadmap features
+- Showing Invisible Name For Anonymous
+- Account Logout
+- UI For Forum Page
+- User Receives Messages To Forum
+- User saving between sessions and pages
+- Revisit Forums To See Messages And Results
+- Upvoting/Downvoting Responsiveness
+- Users Send Messages To Forum
+- Skeleton Of An Account
+- Upvote/downvote Forums (UI Only)
+- Skeleton For OpenAI
+- Realtime Updates
+- Name Of App/Website?
+- Edit/Delete Feature For Admins
+- Show Home Page With Forums Listed And Ability To Login
+- Skeleton For Messaging
+- Forum Template/Showing (title, description, author)
+- User Registration
+- Saving Accounts On Firebase
+- Result Encompasses Forum, Voting, and Messages Data
+- Account Login
+- Creating Forum With Desired Requirements
+- Give A Summary Using OpenAI From Result
 
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+## Credits
+- Team: Tyran, Nicole, Devyn, Jayden
+- Libraries: [React](https://react.dev/), [React Router](https://reactrouter.com/), [Firebase](https://firebase.google.com/), [OpenAI](https://platform.openai.com/), [TailwindCSS](https://tailwindcss.com/), [Jest](https://jestjs.io/)
+- APIs: OpenAI, Firebase
+- TODO: Add dataset/icon/template credits if used
